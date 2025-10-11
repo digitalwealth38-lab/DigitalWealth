@@ -1,14 +1,23 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { useAuthStore } from "../stores/useAuthStore"
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 
 export default function Login() {
+  const { login, isLoggingIn,handleGoogleLogin} = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    name: "",
     email: "",
     password: "",
   });
+
+ const validateForm = () => {
+  if (!formData.email?.trim()) return toast.error("Email is required");
+  if (!/\S+@\S+\.\S+/.test(formData.email)) return toast.error("Invalid email format");
+  if (!formData.password) return toast.error("Password is required");
+  if (formData.password.length < 6) return toast.error("Password must be at least 6 characters");
+  return true;
+};
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -16,13 +25,9 @@ export default function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Signup data:", formData);
-    // TODO: connect your backend API here
-  };
 
-  const handleGoogleSignup = () => {
-    console.log("Continue with Google clicked");
-    // TODO: add Google OAuth logic here
+     const success = validateForm();
+    if (success === true) login(formData);
   };
 
   return (
@@ -88,7 +93,14 @@ export default function Login() {
             type="submit"
             className="w-full bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold py-2 rounded-lg hover:from-sky-400 hover:to-blue-500 transition-all shadow-md"
           >
-            Login
+            {isLoggingIn ? (
+                <>
+                  <Loader2 className=" flex justify-center  size-10  animate-spin" />
+                  Loading...
+                </>
+              ) : (
+                "Login"
+              )}
           </button>
 
           {/* OR Divider */}
@@ -101,7 +113,7 @@ export default function Login() {
           {/* Continue with Google */}
           <button
             type="button"
-            onClick={handleGoogleSignup}
+            onClick={handleGoogleLogin}
             className="w-full flex items-center justify-center gap-2 border border-gray-300 text-gray-700 font-medium py-2 rounded-lg hover:bg-sky-50 transition-all shadow-sm"
           >
             <img

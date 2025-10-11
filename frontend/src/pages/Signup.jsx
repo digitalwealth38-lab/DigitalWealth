@@ -1,14 +1,27 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import toast from "react-hot-toast";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { useAuthStore } from "../stores/useAuthStore"
 
 export default function Signup() {
+   const { signup, isSigningUp ,handleGoogleLogin} = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
   });
+const validateForm = () => {
+  if (!formData.name?.trim()) return toast.error("Full name is required");
+  if (!formData.email?.trim()) return toast.error("Email is required");
+  if (!/\S+@\S+\.\S+/.test(formData.email)) return toast.error("Invalid email format");
+  if (!formData.password) return toast.error("Password is required");
+  if (formData.password.length < 6) return toast.error("Password must be at least 6 characters");
+  return true;
+};
+
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -16,15 +29,10 @@ export default function Signup() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Signup data:", formData);
-    // TODO: connect your backend API here
+     const success = validateForm();
+     
+    if (success === true) console.log(formData) , signup(formData);
   };
-
-  const handleGoogleSignup = () => {
-    console.log("Continue with Google clicked");
-    // TODO: add Google OAuth logic here
-  };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-100 via-white to-sky-50 text-gray-800 px-4">
       <div className="w-full max-w-md bg-white/90 backdrop-blur-md p-8 rounded-2xl shadow-2xl border border-sky-100">
@@ -98,9 +106,17 @@ export default function Signup() {
           {/* Submit */}
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold py-2 rounded-lg hover:from-sky-400 hover:to-blue-500 transition-all shadow-md"
-          >
-            Create Account
+            className="w-full bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold py-2 rounded-lg hover:from-sky-400 hover:to-blue-500 transition-all shadow-md
+            disabled={isSigningUp}"
+          >{isSigningUp ? (
+                <>
+                  <Loader2 className=" flex justify-center  size-10  animate-spin" />
+                  Loading...
+                </>
+              ) : (
+                "Create Account"
+              )}
+            
           </button>
 
           {/* OR Divider */}
@@ -113,7 +129,7 @@ export default function Signup() {
           {/* Continue with Google */}
           <button
             type="button"
-            onClick={handleGoogleSignup}
+            onClick={handleGoogleLogin}
             className="w-full flex items-center justify-center gap-2 border border-gray-300 text-gray-700 font-medium py-2 rounded-lg hover:bg-sky-50 transition-all shadow-sm"
           >
             <img
