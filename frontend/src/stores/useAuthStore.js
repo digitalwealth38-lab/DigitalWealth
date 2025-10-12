@@ -23,29 +23,30 @@ export const useAuthStore=create((set,get)=>({
             set({ isCheckingAuth: false })
         }
     },
-    
-handleGoogleLogin: async () => {
+   handleGoogleLogin : async () => {
   try {
     const result = await signInWithPopup(auth, googleProvider);
     const user = result.user;
 
     // Get Firebase ID token (JWT)
     const idToken = await user.getIdToken();
-console.log(idToken)
-    // Send token to backend (dynamic URL)
-    const response = await fetch(`${API_URL}/auth/google-login`, {
+
+    // Send token to your backend
+    const response = await fetch("http://localhost:5000/api/auth/google-login", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include", // ✅ ensures cookies are sent
+      
+      headers: {
+        "Content-Type": "application/json",
+      },
+       credentials: "include",
       body: JSON.stringify({ token: idToken }),
     });
 
     const data = await response.json();
-    set({ authUser: data });
-    toast.success("Google login successful");
+        set({ authUser:data });
+          toast.success("Google login successful");
   } catch (error) {
     console.error("Google login error:", error);
-    toast.error("Google login failed");
   }
 },
     signup: async (data) => {
@@ -64,10 +65,10 @@ console.log(idToken)
         }
       },
       login: async (data) => {
-        console.log(data)
         set({ isLoggingIn: true });
         try {
           const res = await axiosInstance.post("/auth/login", data);
+          
           set({ authUser: res.data });
 
           toast.success("Log IN successfully");
