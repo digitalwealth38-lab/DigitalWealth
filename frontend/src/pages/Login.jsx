@@ -93,14 +93,15 @@ export default function Login() {
             type="submit"
             className="w-full bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold py-2 rounded-lg hover:from-sky-400 hover:to-blue-500 transition-all shadow-md"
           >
-            {isLoggingIn ? (
-                <>
-                  <Loader2 className=" flex justify-center  size-10  animate-spin" />
-                  Loading...
-                </>
-              ) : (
-                "Login"
-              )}
+           {isLoggingIn ? (
+  <div className="flex items-center justify-center gap-2">
+    <Loader2 className="size-7 animate-spin" />
+    <span>Loading...</span>
+  </div>
+) : (
+  "Login"
+)}
+
           </button>
 
           {/* OR Divider */}

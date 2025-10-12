@@ -5,21 +5,21 @@ import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useAuthStore } from "../stores/useAuthStore"
 
 export default function Signup() {
-   const { signup, isSigningUp ,handleGoogleLogin} = useAuthStore();
+  const { signup, isSigningUp, handleGoogleLogin } = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
   });
-const validateForm = () => {
-  if (!formData.name?.trim()) return toast.error("Full name is required");
-  if (!formData.email?.trim()) return toast.error("Email is required");
-  if (!/\S+@\S+\.\S+/.test(formData.email)) return toast.error("Invalid email format");
-  if (!formData.password) return toast.error("Password is required");
-  if (formData.password.length < 6) return toast.error("Password must be at least 6 characters");
-  return true;
-};
+  const validateForm = () => {
+    if (!formData.name?.trim()) return toast.error("Full name is required");
+    if (!formData.email?.trim()) return toast.error("Email is required");
+    if (!/\S+@\S+\.\S+/.test(formData.email)) return toast.error("Invalid email format");
+    if (!formData.password) return toast.error("Password is required");
+    if (formData.password.length < 6) return toast.error("Password must be at least 6 characters");
+    return true;
+  };
 
 
 
@@ -29,14 +29,14 @@ const validateForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-     const success = validateForm();
-     
-    if (success === true) console.log(formData) , signup(formData);
+    const success = validateForm();
+
+    if (success === true) console.log(formData), signup(formData);
   };
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-100 via-white to-sky-50 text-gray-800 px-4">
       <div className="w-full max-w-md bg-white/90 backdrop-blur-md p-8 rounded-2xl shadow-2xl border border-sky-100">
-        
+
         {/* Logo + App Name */}
         <div className="flex flex-col items-center mb-6">
           <img
@@ -44,7 +44,7 @@ const validateForm = () => {
             alt="Digital Wealth Logo"
             className="w- h-16 mb-2 "
           />
-        
+
           <p className="text-sm text-gray-500 mt-1">
             Invest smart. Grow with confidence.
           </p>
@@ -108,15 +108,15 @@ const validateForm = () => {
             type="submit"
             className="w-full bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold py-2 rounded-lg hover:from-sky-400 hover:to-blue-500 transition-all shadow-md
             disabled={isSigningUp}"
-          >{isSigningUp ? (
-                <>
-                  <Loader2 className=" flex justify-center  size-10  animate-spin" />
-                  Loading...
-                </>
-              ) : (
-                "Create Account"
-              )}
-            
+          >       {isSigningUp ? (
+            <div className="flex items-center justify-center gap-2">
+              <Loader2 className="size-7 animate-spin" />
+              <span>Loading...</span>
+            </div>
+          ) : (
+            "Create Account"
+          )}
+
           </button>
 
           {/* OR Divider */}
