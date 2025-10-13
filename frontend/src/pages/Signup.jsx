@@ -78,6 +78,9 @@ export default function Signup() {
               placeholder="example@email.com"
               className="w-full bg-sky-50 text-gray-800 px-4 py-2 rounded-lg outline-none focus:ring-2 focus:ring-sky-400 shadow-sm"
             />
+              <p className="text-xs text-gray-500 mt-1">
+    Please enter a valid email, otherwise you cannot recover your account and password.
+  </p>
           </div>
 
           {/* Password */}

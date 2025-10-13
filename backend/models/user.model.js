@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 
 const RewardSchema = new mongoose.Schema({
   type: String, // e.g., "Referral Bonus"
@@ -11,26 +12,31 @@ const UserSchema = new mongoose.Schema(
     name: { type: String, required: true },
     email: { type: String, unique: true, required: true },
     password: { type: String, required: true },
+emailVerifiedToken: String,
+emailVerified: { type: Boolean, default: false },
 
     referralCode: { type: String, unique: true },
     referredBy: { type: String, default: null },
 
-    balance: { type: Number, default: 0 }, // 💰 Total account balance
-    investedBalance: { type: Number, default: 0 }, // 💼 Amount currently invested
-    totalEarnings: { type: Number, default: 0 }, // 💵 Total profit/bonus earned
+    balance: { type: Number, default: 0 },
+    investedBalance: { type: Number, default: 0 },
+    totalEarnings: { type: Number, default: 0 },
     teamSize: { type: Number, default: 0 },
     directReferrals: { type: Number, default: 0 },
     rewards: [RewardSchema],
 
     isAdmin: { type: Boolean, default: false },
 
-    // 🏆 Rank + numeric level
     rank: {
       type: String,
       enum: ["Bronze", "Silver", "Gold", "Diamond"],
       default: "Bronze",
     },
-    level: { type: Number, default: 0 }, // Bronze = 0, Silver = 1, Gold = 2, Diamond = 3
+    level: { type: Number, default: 0 },
+
+    // ✅ Corrected field names for password reset
+    passwordResetToken: { type: String, default: null },
+    passwordResetExpires: { type: Date, default: null },
   },
   { timestamps: true }
 );
@@ -43,6 +49,13 @@ UserSchema.pre("save", function (next) {
       .substring(2, 8)
       .toUpperCase()}`;
   }
+  next();
+});
+
+// 🔒 Hash password before saving (for login + reset)
+UserSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  this.password = await bcrypt.hash(this.password, 10);
   next();
 });
 
