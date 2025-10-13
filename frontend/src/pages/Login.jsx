@@ -1,23 +1,25 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { useAuthStore } from "../stores/useAuthStore"
+import { useAuthStore } from "../stores/useAuthStore";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 
 export default function Login() {
-  const { login, isLoggingIn,handleGoogleLogin} = useAuthStore();
+  const { login, isLoggingIn, handleGoogleLogin } = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
- const validateForm = () => {
-  if (!formData.email?.trim()) return toast.error("Email is required");
-  if (!/\S+@\S+\.\S+/.test(formData.email)) return toast.error("Invalid email format");
-  if (!formData.password) return toast.error("Password is required");
-  if (formData.password.length < 6) return toast.error("Password must be at least 6 characters");
-  return true;
-};
+  const validateForm = () => {
+    if (!formData.email?.trim()) return toast.error("Email is required");
+    if (!/\S+@\S+\.\S+/.test(formData.email))
+      return toast.error("Invalid email format");
+    if (!formData.password) return toast.error("Password is required");
+    if (formData.password.length < 6)
+      return toast.error("Password must be at least 6 characters");
+    return true;
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -26,22 +28,20 @@ export default function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-     const success = validateForm();
+    const success = validateForm();
     if (success === true) login(formData);
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-100 via-white to-sky-50 text-gray-800 px-4">
       <div className="w-full max-w-md bg-white/90 backdrop-blur-md p-8 rounded-2xl shadow-2xl border border-sky-100">
-        
         {/* Logo + App Name */}
         <div className="flex flex-col items-center mb-6">
           <img
             src="/logo.png"
             alt="Digital Wealth Logo"
-            className="w- h-16 mb-2 "
+            className="w- h-16 mb-2"
           />
-        
           <p className="text-sm text-gray-500 mt-1">
             Invest smart. Grow with confidence.
           </p>
@@ -49,8 +49,6 @@ export default function Login() {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-5 mt-4">
-      
-
           {/* Email */}
           <div>
             <label className="block text-sm text-gray-600 mb-1">Email</label>
@@ -86,6 +84,16 @@ export default function Login() {
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
+
+            {/* 🔹 Forgot Password Link */}
+            <div className="text-right mt-2">
+              <Link
+                to="/forgot-password"
+                className="text-sm text-sky-600 hover:underline"
+              >
+                Forgot Password?
+              </Link>
+            </div>
           </div>
 
           {/* Submit */}
@@ -93,15 +101,14 @@ export default function Login() {
             type="submit"
             className="w-full bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold py-2 rounded-lg hover:from-sky-400 hover:to-blue-500 transition-all shadow-md"
           >
-           {isLoggingIn ? (
-  <div className="flex items-center justify-center gap-2">
-    <Loader2 className="size-7 animate-spin" />
-    <span>Loading...</span>
-  </div>
-) : (
-  "Login"
-)}
-
+            {isLoggingIn ? (
+              <div className="flex items-center justify-center gap-2">
+                <Loader2 className="size-7 animate-spin" />
+                <span>Loading...</span>
+              </div>
+            ) : (
+              "Login"
+            )}
           </button>
 
           {/* OR Divider */}
@@ -128,7 +135,10 @@ export default function Login() {
 
         <p className="text-sm text-gray-600 text-center mt-5">
           Create Account?{" "}
-          <Link to="/signup" className="text-sky-600 font-medium hover:underline">
+          <Link
+            to="/signup"
+            className="text-sky-600 font-medium hover:underline"
+          >
             Signup here
           </Link>
         </p>
