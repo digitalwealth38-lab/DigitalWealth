@@ -9,6 +9,8 @@ export const useAuthStore=create((set,get)=>({
     isSigningUp:false,
     isLoggingIn:false,
     isUpdatingProfile:false,
+    isUpdatingProfile:false,
+    isUpdatingProfileData:false,
     isCheckingAuth:true,
   
 
@@ -91,4 +93,34 @@ export const useAuthStore=create((set,get)=>({
           toast.error(error.response.data.message);
         }
       },
+           updateProfile: async (data) => {
+            console.log(data)
+        set({ isUpdatingProfile: true });
+        try {
+          const res = await axiosInstance.put("/auth/update-profile", data);
+          console.log(res.data)
+          set({ authUser: res.data }); // Update global authUser after profile update
+          toast.success("Profile updated successfully");
+        } catch (error) {
+          toast.error(error?.response?.data?.message || "Profile update failed");
+        } finally {
+          set({ isUpdatingProfile: false });
+        }
+      },
+        updateProfileData: async (data) => {
+    set({ isUpdatingProfileData: true });
+    try {
+      const res = await axiosInstance.put("/auth/update", data);
+      set({ authUser: res.data.user });
+       toast.success("Profile updated successfully");
+      return res.data;
+      
+    } catch (error) {
+      console.error("Profile update failed:", error.response?.data || error.message);
+        toast.error(error?.response?.data?.message || "Profile update failed");
+      throw error;
+    } finally {
+      set({ isUpdatingProfileData: false });
+    }
+  },
     }));

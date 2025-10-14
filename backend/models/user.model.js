@@ -14,6 +14,8 @@ const UserSchema = new mongoose.Schema(
     password: { type: String, required: true },
 emailVerifiedToken: String,
 emailVerified: { type: Boolean, default: false },
+ phone: String,
+address: String,
 
     referralCode: { type: String, unique: true },
     referredBy: { type: String, default: null },
@@ -33,7 +35,8 @@ emailVerified: { type: Boolean, default: false },
       default: "Bronze",
     },
     level: { type: Number, default: 0 },
-
+    profilePic: {
+      type: String,},
     // ✅ Corrected field names for password reset
     passwordResetToken: { type: String, default: null },
     passwordResetExpires: { type: Date, default: null },
