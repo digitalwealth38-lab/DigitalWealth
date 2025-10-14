@@ -5,7 +5,7 @@ import { axiosInstance } from "../lib/axios";
 
 export default function Deposit() {
   const [amount, setAmount] = useState("");
-  const [currency, setCurrency] = useState("BTC");
+  const [currency, setCurrency] = useState("TRX");
   const [minAmount, setMinAmount] = useState(null);
   const [loading, setLoading] = useState(false);
   const [minLoading, setMinLoading] = useState(false);
@@ -154,10 +154,9 @@ export default function Deposit() {
                 onChange={(e) => setCurrency(e.target.value)}
                 className="border border-sky-200 rounded-2xl p-3 bg-white/70 outline-none focus:ring-2 focus:ring-sky-400 text-gray-700 transition-all"
               >
-                <option value="BTC">BTC</option>
-                <option value="ETH">ETH</option>
-                <option value="USDT">USDT</option>
-                <option value="LTC">LTC</option>
+             <option value="TRX">TRX</option>
+             <option value="USDTTRC20">USDT (TRC20)</option>
+              
               </select>
             </div>
 
@@ -212,21 +211,26 @@ export default function Deposit() {
              <p className="text-gray-500 text-sm">{"Time:"+item.time}</p>
           </div>
           <div className="flex items-center gap-2">
-            {item.status === "Completed" && (
+            {item.status === "finished" && (
               <CheckCircle2 className="text-green-500" size={22} />
             )}
-            {item.status === "Pending" && (
+            {item.status === "waiting" && (
               <Clock className="text-yellow-500" size={22} />
             )}
-            {item.status === "Failed" && (
+            {item.status === "confirming" && (
+  <Clock className="text-blue-500" size={22} /> // or any color you prefer
+)}
+            {item.status === "failed" && (
               <XCircle className="text-red-500" size={22} />
             )}
             <span
               className={`font-medium ${
-                item.status === "Completed"
+                item.status === "finished"
                   ? "text-green-600"
-                  : item.status === "Pending"
+                  : item.status === "waiting"
                   ? "text-yellow-600"
+                  : item.status === "confirming"
+      ? "text-blue-600"
                   : "text-red-600"
               }`}
             >

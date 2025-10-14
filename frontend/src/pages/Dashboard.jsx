@@ -40,7 +40,7 @@ export default function Dashboard() {
   </div>
 
   {/* Settings Section */}
-  <div id="settings" className="min-h-screen">
+  <div id="profile" className="min-h-screen">
     <Profile/>
     {/* Your settings content here */}
   </div>

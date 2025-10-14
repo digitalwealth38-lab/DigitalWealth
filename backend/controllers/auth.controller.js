@@ -5,6 +5,7 @@ import sendEmail from "../lib/sendEmail.js"
 import admin from "../firebase.js";
 import { setUser } from "../services/auth.service.js";
 import dotenv from "dotenv";
+import cloudinary from "../lib/cloudinary.js";
 dotenv.config();
 
 
@@ -14,7 +15,7 @@ export const googleLogin = async (req, res) => {
   try {
     // 🔍 Verify Google token
     const decoded = await admin.auth().verifyIdToken(token);
-
+console.log(decoded)
     // 🧠 Find existing user
     let user = await User.findOne({ email: decoded.email });
 
@@ -28,7 +29,8 @@ export const googleLogin = async (req, res) => {
       user = new User({
         name: decoded.name || decoded.email.split("@")[0],
         email: decoded.email,
-        password: decoded.email, // dummy password since Google user
+        password: decoded.email,
+        profilePic:decoded.picture, // dummy password since Google user
         referralCode,
         referredBy: referredBy || null,
         googleId: decoded.uid,
@@ -110,8 +112,7 @@ export const signup = async (req, res) => {
 
     
     // 🔐 Hash the password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+   
 
     // 🎯 Generate a unique referral code
     const referralCode = `USR-${Math.random()
@@ -123,7 +124,7 @@ export const signup = async (req, res) => {
     const newUser = new User({
       name,
       email,
-      password: hashedPassword,
+      password: password,
       referralCode,
       referredBy: referredBy || null,
     });
@@ -298,4 +299,112 @@ export async function resetPassword(req, res) {
   return res.status(200).json({ message: "Password updated successfully" });
 }
 
+export const updateProfile =async (req, res)=>{
+try {
+  const {profilePic}=req.body
+  const userId=req.user._id
+if(!profilePic){
+  return res.status(400).json({message:"profile pic is required"})
+}
+const uploadResponse= await cloudinary.uploader.upload(profilePic)
+const updateUser= await User.findByIdAndUpdate(userId,{profilePic:uploadResponse.secure_url},{new:true})
+res.status(200).json(updateUser)
+} catch (error) {
+  console.log("error in  update profile",error)
+  res.status(500).json({ message: "Internal Server Error" });
+}
+}
+export const updateProfileData = async (req, res) => {
+  try {
+    const {
+      name,
+      email,
+      phone,
+      address,
+      oldPassword: rawOldPassword,
+      newPassword: rawNewPassword,
+      profilePic,
+    } = req.body;
+
+    const userId = req.user?.id || req.user?._id;
+    if (!userId) {
+      console.error("No user id on req.user");
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    // update basic info
+    if (name) user.name = name;
+    if (email) user.email = email;
+    if (phone) user.phone = phone;
+    if (address) user.address = address;
+    if (profilePic) user.profilePic = profilePic;
+
+    // If requesting a password change
+    if (rawOldPassword && rawNewPassword) {
+      // Normalize / sanitize inputs
+      const oldPassword = typeof rawOldPassword === "string" ? rawOldPassword.trim() : rawOldPassword;
+      const newPassword = typeof rawNewPassword === "string" ? rawNewPassword.trim() : rawNewPassword;
+
+      let isMatch = false;
+
+      // If stored password looks like a bcrypt hash (covers $2b$, $2y$, $2a$)
+      if (typeof user.password === "string" && user.password.startsWith("$2")) {
+        try {
+          // Try direct compare
+          isMatch = await bcrypt.compare(oldPassword, user.password);
+
+          // If first compare fail, also try trimmed and Unicode-normalized variants
+          if (!isMatch) {
+            const oldTrim = (oldPassword || "").trim();
+            if (oldTrim !== oldPassword) {
+              isMatch = await bcrypt.compare(oldTrim, user.password);
+            }
+          }
+          if (!isMatch) {
+            // Try NFC normalization (helps with invisible/combining characters)
+            const n1 = typeof oldPassword === "string" ? oldPassword.normalize("NFC") : oldPassword;
+            const n2 = typeof oldPassword === "string" ? oldPassword.normalize("NFKC") : oldPassword;
+            if (n1 !== oldPassword) isMatch = await bcrypt.compare(n1, user.password);
+            if (!isMatch && n2 !== oldPassword) isMatch = await bcrypt.compare(n2, user.password);
+          }
+        } catch (cmpErr) {
+          console.error("bcrypt.compare error:", cmpErr);
+        }
+      } else {
+        // Stored password does not look hashed — fallback to plain equality check (Google user or legacy)
+        console.log("Stored password is NOT a bcrypt hash, doing direct equality check");
+        isMatch = user.password === oldPassword || user.password === rawOldPassword;
+      }
+
+      console.log("final isMatch:", isMatch);
+
+      if (!isMatch) {
+        // Helpful hint in logs for debugging; respond generic to frontend
+        console.warn("Password compare failed for user:", userId.toString());
+        return res.status(400).json({ message: "Old password is incorrect" });
+      }
+
+      // Hash the new password and save (hash manually to avoid any pre-save double-hash confusion)
+      const hashed = await bcrypt.hash(newPassword, 10);
+
+      // Use findByIdAndUpdate to avoid pre-save double-hash (or you can assign & markModified)
+      await User.findByIdAndUpdate(user._id, { password: hashed });
+
+      // refresh user object for response (without password)
+      const updatedUser = await User.findById(user._id).select("-password");
+      return res.status(200).json({ message: "Profile updated successfully", user: updatedUser });
+    }
+
+    // If no password change: just save other fields (use save to trigger referral logic etc.)
+    await user.save();
+    const updatedUser = await User.findById(user._id).select("-password");
+    return res.status(200).json({ message: "Profile updated successfully", user: updatedUser });
+  } catch (err) {
+    console.error("Update Profile Error:", err);
+    return res.status(500).json({ message: "Failed to update profile" });
+  }
+};
 

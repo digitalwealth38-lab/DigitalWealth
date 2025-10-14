@@ -5,7 +5,7 @@ const transactionSchema = new mongoose.Schema({
   transactionId: { type: String, required: true },
   amount: { type: Number, required: true },
   currency: { type: String, required: true },
-  status: { type: String, enum: ["pending", "finished", "failed"], default: "pending" },
+  status: { type: String, enum: ["waiting","confirming","finished", "failed"], default: "waiting" },
   date: { type: Date, default: Date.now },
 });
 

@@ -4,18 +4,17 @@ import Transaction from "../models/Transaction.js";
 import dotenv from "dotenv"
 dotenv.config()
 // Start deposit
-export const minamount=async (req, res) => {
+
+
+
+export const minamount = async (req, res) => {
   const SAFE_MIN_AMOUNTS = {
-  BTC: 50,   // BTC requires around $50 minimum
-  ETH: 25,
-  USDT: 5,
-  LTC: 10,
-  TRX: 5,
-  BNB: 10,
-};
+    USDTTRC20: 13,
+    TRX: 2,
+  };
 
   try {
-    const { currency } = req.params.toUpperCase();
+    const currency = req.params.currency.toUpperCase();
     const baseCurrency = "USD";
     const apiKey = process.env.NOWPAYMENTS_API_KEY;
 
@@ -25,40 +24,47 @@ export const minamount=async (req, res) => {
 
     console.log(`Fetching min amount for ${currency}...`);
 
-    // Try fetching from NowPayments
+    // Fetch from API
     const response = await axios.get(
       `https://api.nowpayments.io/v1/min-amount?currency_from=${baseCurrency}&currency_to=${currency}`,
       { headers: { "x-api-key": apiKey } }
     );
 
-    let apiMin = parseFloat(response?.data?.min_amount || 0);
+    const apiMin = parseFloat(response?.data?.min_amount || 0);
+    const safeMin = SAFE_MIN_AMOUNTS[currency] || 10;
 
-    // If API gives unrealistic value, use fallback
-    const minAmount =
-      apiMin < SAFE_MIN_AMOUNTS[currency] ? SAFE_MIN_AMOUNTS[currency] : apiMin;
+    // ✅ Use whichever is smaller — your safe tested value or API’s
+    const finalMin = Math.min(apiMin || Infinity, safeMin);
 
     console.log(
-      `✅ Final minimum for ${currency}: $${minAmount} (API: ${apiMin}, fallback: ${SAFE_MIN_AMOUNTS[currency]})`
+      `✅ Final minimum for ${currency}: $${finalMin} (API: ${apiMin}, fallback: ${safeMin})`
     );
 
     return res.json({
       success: true,
       currency,
-      minAmount,
-      usedFallback: apiMin < SAFE_MIN_AMOUNTS[currency],
+      minAmount: finalMin,
+      usedFallback: finalMin === safeMin,
     });
   } catch (error) {
-    console.error("❌ Error fetching minimum amount:", error?.response?.data || error.message);
+    console.error(
+      "❌ Error fetching minimum amount:",
+      error?.response?.data || error.message
+    );
 
-    const fallback = SAFE_MIN_AMOUNTS[req.params.currency.toUpperCase()] || 10;
-    res.status(200).json({
+    const currency = req.params.currency?.toUpperCase?.() || "UNKNOWN";
+    const fallback = SAFE_MIN_AMOUNTS[currency] || 10;
+
+    return res.status(200).json({
       success: true,
-      currency: req.params.currency.toUpperCase(),
+      currency,
       minAmount: fallback,
       warning: "Used fallback amount due to API error",
     });
   }
 };
+
+
 
 export const startDeposit = async (req, res) => {
   const { amount, currency } = req.body;
@@ -75,7 +81,7 @@ export const startDeposit = async (req, res) => {
       transactionId,
       amount,
       currency,
-      status: "pending",
+      status: "waiting",
     });
     await transaction.save();
 
@@ -96,9 +102,6 @@ export const startDeposit = async (req, res) => {
         },
       }
     );
-console.log(transactionId)
-console.log("Full NowPayments response:", npRes.data);
-
     res.json({
     transactionId,
     invoice_url: npRes.data.invoice_url,
@@ -111,25 +114,54 @@ console.log("Full NowPayments response:", npRes.data);
 
 // Webhook for NowPayments
 export const paymentWebhook = async (req, res) => {
-  const { order_id, payment_status, price_amount } = req.body;
-  console.log("Webhook:", req.body);
+  try {
+    const { order_id, payment_status, price_amount } = req.body;
+    console.log("🔔 Webhook received:", req.body);
 
-  if (payment_status === "finished") {
-    // Find transaction
     const transaction = await Transaction.findOne({ transactionId: order_id });
-    if (transaction && transaction.status !== "finished") {
-      transaction.status = "finished";
-      await transaction.save();
-
-      // Update user's balance
-      const user = await User.findById(transaction.user);
-      if (user) {
-        user.balance += price_amount;
-        await user.save();
-        console.log(`User ${user.name} balance updated`);
-      }
+    if (!transaction) {
+      console.log("⚠️ Transaction not found:", order_id);
+      return res.status(404).json({ message: "Transaction not found" });
     }
-  }
 
-  res.json({ status: "ok" });
+    const status = payment_status.toLowerCase();
+
+    switch (status) {
+      case "waiting":
+        transaction.status = "waiting";
+        break;
+      case "confirming":
+        transaction.status = "confirming";
+        break;
+      case "finished":
+        if (transaction.status !== "finished") {
+          transaction.status = "finished";
+
+          const user = await User.findById(transaction.user);
+          if (user) {
+            user.balance += price_amount;
+            await user.save();
+            console.log(`✅ User ${user.name} balance updated by $${price_amount}`);
+          }
+        }
+        break;
+      case "failed":
+      case "expired":
+        transaction.status = "failed";
+        break;
+      default:
+        console.log("⚠️ Unknown payment status:", payment_status);
+        break;
+    }
+
+    await transaction.save();
+    console.log(`💾 Transaction ${order_id} updated to ${transaction.status}`);
+
+    return res.json({ success: true });
+  } catch (error) {
+    console.error("❌ Webhook error:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
 };
+
+

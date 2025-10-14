@@ -67,7 +67,7 @@ export default function Navbar() {
             Referrals
           </Link>
           <Link
-            to="settings"
+            to="profile"
             spy={true}
             smooth={true}
             offset={-70}
@@ -75,7 +75,7 @@ export default function Navbar() {
             className={linkClasses}
             activeClass="border-b-2 border-white"
           >
-            Settings
+            Profile
           </Link>
         </div>
 
