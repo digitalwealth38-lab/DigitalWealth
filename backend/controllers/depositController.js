@@ -130,25 +130,39 @@ export const paymentWebhook = async (req, res) => {
       case "waiting":
         transaction.status = "waiting";
         break;
+
       case "confirming":
         transaction.status = "confirming";
         break;
+
       case "finished":
         if (transaction.status !== "finished") {
           transaction.status = "finished";
 
           const user = await User.findById(transaction.user);
           if (user) {
-            user.balance += price_amount;
+            // ✅ Deduct 0.5% platform fee
+            const fee = (price_amount * 0.5) / 100;
+            const creditedAmount = price_amount - fee;
+
+            user.balance += creditedAmount;
             await user.save();
-            console.log(`✅ User ${user.name} balance updated by $${price_amount}`);
+
+            // Save fee info in transaction
+            transaction.fee = fee;
+            transaction.creditedAmount = creditedAmount;
+            console.log(
+              `✅ User ${user.name} credited $${creditedAmount} after 0.5% fee ($${fee} deducted)`
+            );
           }
         }
         break;
+
       case "failed":
       case "expired":
         transaction.status = "failed";
         break;
+
       default:
         console.log("⚠️ Unknown payment status:", payment_status);
         break;

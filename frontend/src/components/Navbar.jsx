@@ -24,7 +24,7 @@ export default function Navbar() {
   to="dashboard"
   spy={true}
   smooth={true}
-  offset={-70} // adjust slightly if needed
+  offset={-40} // adjust slightly if needed
   duration={500}
   className={linkClasses}
   activeClass="border-b-2 border-white"
@@ -37,7 +37,7 @@ export default function Navbar() {
             to="deposit"
             spy={true}
             smooth={true}
-            offset={-70}
+            offset={-40}
             duration={500}
             className={linkClasses}
             activeClass="border-b-2 border-white"
@@ -48,7 +48,7 @@ export default function Navbar() {
             to="packages"
             spy={true}
             smooth={true}
-            offset={-70}
+            offset={-40}
             duration={500}
             className={linkClasses}
             activeClass="border-b-2 border-white"
@@ -59,18 +59,29 @@ export default function Navbar() {
             to="referrals"
             spy={true}
             smooth={true}
-            offset={-70}
+            offset={-40}
             duration={500}
             className={linkClasses}
             activeClass="border-b-2 border-white"
           >
             Referrals
           </Link>
+             <Link
+            to="withdrawal"
+            spy={true}
+            smooth={true}
+            offset={-40}
+            duration={500}
+            className={linkClasses}
+            activeClass="border-b-2 border-white"
+          >
+            Withdrawal
+          </Link>
           <Link
             to="profile"
             spy={true}
             smooth={true}
-            offset={-70}
+            offset={-40}
             duration={500}
             className={linkClasses}
             activeClass="border-b-2 border-white"
