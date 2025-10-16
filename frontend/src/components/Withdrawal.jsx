@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Banknote, Clock, CheckCircle2, XCircle, Wallet } from "lucide-react";
 import { axiosInstance } from "../lib/axios";
+import { toast } from "react-hot-toast";
 
 export default function Withdrawal() {
   const [amount, setAmount] = useState("");
@@ -10,34 +11,39 @@ export default function Withdrawal() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [history, setHistory] = useState([]);
-console.log(walletAddress)
+
+  // ✅ Helper function to format transactions
+  const formatTransactions = (transactions) => {
+    return transactions.map((tx) => ({
+      id: tx._id,
+      amount: tx.amount,
+      currency: tx.currency,
+      address: tx.walletAddress || "N/A",
+      status: tx.status,
+      date: tx.date ? new Date(tx.date).toLocaleDateString("en-GB") : "N/A",
+      time: tx.date
+        ? new Date(tx.date).toLocaleTimeString("en-GB", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          })
+        : "N/A",
+    }));
+  };
+
   // ✅ Fetch withdrawal history
-  useEffect(() => {
-    const fetchHistory = async () => {
-      try {
-        const res = await axiosInstance.get("/withdrawals/history");
-        if (res.data.success && res.data.transactions) {
-          const formatted = res.data.transactions.map((tx) => ({
-            id: tx._id,
-            amount: tx.amount,
-            currency: tx.currency,
-            address: tx.walletAddress || "N/A",
-            status: tx.status,
-            date: tx.date ? new Date(tx.date).toLocaleDateString("en-GB") : "N/A",
-            time: tx.date
-              ? new Date(tx.date).toLocaleTimeString("en-GB", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  second: "2-digit",
-                })
-              : "N/A",
-          }));
-          setHistory(formatted);
-        }
-      } catch (err) {
-        console.error("❌ Failed to fetch withdraw history:", err);
+  const fetchHistory = async () => {
+    try {
+      const res = await axiosInstance.get("/withdrawals/history");
+      if (res.data.success && res.data.transactions) {
+        setHistory(formatTransactions(res.data.transactions));
       }
-    };
+    } catch (err) {
+      console.error("❌ Failed to fetch withdraw history:", err);
+    }
+  };
+
+  useEffect(() => {
     fetchHistory();
   }, []);
 
@@ -52,14 +58,17 @@ console.log(walletAddress)
     // Frontend validations
     if (!trimmedAmount || isNaN(trimmedAmount) || parseFloat(trimmedAmount) <= 0) {
       setError("Please enter a valid withdrawal amount.");
+      toast.error("Please enter a valid withdrawal amount.");
       return;
     }
     if (!trimmedAddress) {
       setError("Please enter your wallet address.");
+      toast.error("Please enter your wallet address.");
       return;
     }
     if (!currency) {
       setError("Please select a currency.");
+      toast.error("Please select a currency.");
       return;
     }
 
@@ -73,17 +82,23 @@ console.log(walletAddress)
       });
 
       if (res.data.success) {
-        alert("✅ Withdrawal request submitted successfully! Admin will review soon.");
+        toast.success("✅ Withdrawal request submitted successfully! Admin will review soon.");
         setAmount("");
         setWalletAddress("");
-        // refresh history
+
+        // ✅ Refresh and format updated history (fixed bug here)
         const updated = await axiosInstance.get("/withdrawals/history");
-        setHistory(updated.data.transactions || []);
+        if (updated.data.success && updated.data.transactions) {
+          setHistory(formatTransactions(updated.data.transactions));
+        }
       } else {
         setError(res.data.msg || "Failed to submit withdrawal request.");
+        toast.error(res.data.msg || "Failed to submit withdrawal request.");
       }
     } catch (err) {
-      setError(err?.response?.data?.msg || "Something went wrong, please try again.");
+      const msg = err?.response?.data?.msg || "Something went wrong, please try again.";
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -125,22 +140,14 @@ console.log(walletAddress)
                     <p className="text-gray-800 font-semibold">
                       {item.amount} USD - {item.currency}
                     </p>
-                    <p className="text-gray-500 text-sm">
-                      Address: {item.address}
-                    </p>
+                    <p className="text-gray-500 text-sm">Address: {item.address}</p>
                     <p className="text-gray-500 text-sm">Date: {item.date}</p>
                     <p className="text-gray-500 text-sm">Time: {item.time}</p>
                   </div>
                   <div className="flex items-center gap-2">
-                    {item.status === "approved" && (
-                      <CheckCircle2 className="text-green-500" size={22} />
-                    )}
-                    {item.status === "pending" && (
-                      <Clock className="text-yellow-500" size={22} />
-                    )}
-                    {item.status === "rejected" && (
-                      <XCircle className="text-red-500" size={22} />
-                    )}
+                    {item.status === "approved" && <CheckCircle2 className="text-green-500" size={22} />}
+                    {item.status === "pending" && <Clock className="text-yellow-500" size={22} />}
+                    {item.status === "rejected" && <XCircle className="text-red-500" size={22} />}
                     <span
                       className={`font-medium ${
                         item.status === "approved"
@@ -246,4 +253,5 @@ console.log(walletAddress)
     </div>
   );
 }
+
 

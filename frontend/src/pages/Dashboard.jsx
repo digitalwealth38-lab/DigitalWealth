@@ -6,6 +6,7 @@ import { scrollSpy } from "react-scroll";
 import Deposit from "../components/Deposit";
 import Profile from "../components/Profile";
 import Withdrawal from "../components/Withdrawal";
+import Contact from "../components/Contact";
 export default function Dashboard() {
    useEffect(() => {
     scrollSpy.update();   // 🔑 tells react-scroll to mark current section
@@ -47,7 +48,10 @@ export default function Dashboard() {
   {/* Settings Section */}
   <div id="profile" className="min-h-screen">
     <Profile/>
-    {/* Your settings content here */}
+  </div>
+  
+    <div id="contact" className="min-h-screen">
+      <Contact/>
   </div>
 </div>
     </div>
