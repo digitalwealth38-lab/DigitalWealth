@@ -88,6 +88,17 @@ export default function Navbar() {
           >
             Profile
           </Link>
+            <Link
+            to="contact"
+            spy={true}
+            smooth={true}
+            offset={-40}
+            duration={500}
+            className={linkClasses}
+            activeClass="border-b-2 border-white"
+          >
+            Contact
+          </Link>
         </div>
 
         {/* Logout Button (Always Visible) */}
