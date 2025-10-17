@@ -12,9 +12,7 @@ const Referral = () => {
     const shareMessage = `🚀 Join me on this amazing platform and start earning today!\nUse my referral code: *${referralCode}* to get started.\n\n👉 https://yourwebsite.com/signup`;
 
     // Copy referral code to clipboard
-    navigator.clipboard.writeText(referralCode);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+   
 
     // Try opening WhatsApp share (fallback to copy-only)
     const encodedMessage = encodeURIComponent(shareMessage);
@@ -27,6 +25,11 @@ const Referral = () => {
       console.error("WhatsApp share failed, fallback to copy only", err);
     }
   };
+   const handleCopy = () => { 
+    const referralCode = authUser?.referralCode || "";
+    navigator.clipboard.writeText(referralCode);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);}
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-sky-100 py-16 px-6 flex flex-col items-center">
@@ -65,7 +68,7 @@ const Referral = () => {
             {authUser?.referralCode || "Loading..."}
           </span>
           <button
-            onClick={handleCopyAndShare}
+            onClick={handleCopy}
             className="text-white bg-sky-500 hover:bg-sky-600 transition-all rounded-lg p-2"
           >
             <Copy size={18} />
