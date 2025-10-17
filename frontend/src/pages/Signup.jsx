@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
-import { useAuthStore } from "../stores/useAuthStore"
+import { useAuthStore } from "../stores/useAuthStore";
 
 export default function Signup() {
   const { signup, isSigningUp, handleGoogleLogin } = useAuthStore();
@@ -11,17 +11,19 @@ export default function Signup() {
     name: "",
     email: "",
     password: "",
+    referredBy: "", // ✅ added referral field
   });
+
   const validateForm = () => {
     if (!formData.name?.trim()) return toast.error("Full name is required");
     if (!formData.email?.trim()) return toast.error("Email is required");
-    if (!/\S+@\S+\.\S+/.test(formData.email)) return toast.error("Invalid email format");
+    if (!/\S+@\S+\.\S+/.test(formData.email))
+      return toast.error("Invalid email format");
     if (!formData.password) return toast.error("Password is required");
-    if (formData.password.length < 6) return toast.error("Password must be at least 6 characters");
+    if (formData.password.length < 6)
+      return toast.error("Password must be at least 6 characters");
     return true;
   };
-
-
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -33,6 +35,7 @@ export default function Signup() {
 
     if (success === true) console.log(formData), signup(formData);
   };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-100 via-white to-sky-50 text-gray-800 px-4">
       <div className="w-full max-w-md bg-white/90 backdrop-blur-md p-8 rounded-2xl shadow-2xl border border-sky-100">
@@ -78,9 +81,10 @@ export default function Signup() {
               placeholder="example@email.com"
               className="w-full bg-sky-50 text-gray-800 px-4 py-2 rounded-lg outline-none focus:ring-2 focus:ring-sky-400 shadow-sm"
             />
-              <p className="text-xs text-gray-500 mt-1">
-    Please enter a valid email, otherwise you cannot recover your account and password.
-  </p>
+            <p className="text-xs text-gray-500 mt-1">
+              Please enter a valid email, otherwise you cannot recover your
+              account and password.
+            </p>
           </div>
 
           {/* Password */}
@@ -106,20 +110,35 @@ export default function Signup() {
             </div>
           </div>
 
+          {/* ✅ Referral Code (optional) */}
+          <div>
+            <label className="block text-sm text-gray-600 mb-1">
+              Referral Code (Optional)
+            </label>
+            <input
+              type="text"
+              name="referredBy"
+              value={formData.referredBy}
+              onChange={handleChange}
+              placeholder="Enter referral code"
+              className="w-full bg-sky-50 text-gray-800 px-4 py-2 rounded-lg outline-none focus:ring-2 focus:ring-sky-400 shadow-sm"
+            />
+          </div>
+
           {/* Submit */}
           <button
             type="submit"
             className="w-full bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold py-2 rounded-lg hover:from-sky-400 hover:to-blue-500 transition-all shadow-md
             disabled={isSigningUp}"
-          >       {isSigningUp ? (
-            <div className="flex items-center justify-center gap-2">
-              <Loader2 className="size-7 animate-spin" />
-              <span>Loading...</span>
-            </div>
-          ) : (
-            "Create Account"
-          )}
-
+          >
+            {isSigningUp ? (
+              <div className="flex items-center justify-center gap-2">
+                <Loader2 className="size-7 animate-spin" />
+                <span>Loading...</span>
+              </div>
+            ) : (
+              "Create Account"
+            )}
           </button>
 
           {/* OR Divider */}
@@ -154,5 +173,6 @@ export default function Signup() {
     </div>
   );
 }
+
 
 

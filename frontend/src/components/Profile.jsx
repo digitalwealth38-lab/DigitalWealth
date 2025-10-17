@@ -20,6 +20,7 @@ export default function ProfilePage() {
     email: "",
     phone: "",
     address: "",
+    referredBy:"",
     oldPassword: "",
     newPassword: "",
   });
@@ -34,14 +35,16 @@ export default function ProfilePage() {
   // Set form values when user loads
   useEffect(() => {
     if (authUser) {
-      setForm({
-        name: authUser.name || "",
-        email: authUser.email || "",
-        phone: authUser.phone || "",
-        address: authUser.address || "",
-        oldPassword: "",
-        newPassword: "",
-      });
+  setForm({
+  name: authUser.name || "",
+  email: authUser.email || "",
+  phone: authUser.phone || "",
+  address: authUser.address || "",
+  referredBy: authUser.referredBy || "", // ✅ added referral field
+  oldPassword: "",
+  newPassword: "",
+});
+
     }
   }, [authUser]);
 console.log(authUser)
@@ -160,12 +163,12 @@ const handleImageUpload = (e) => {
       </p>
     </div>
     <div className="bg-white/80 rounded-xl p-4 shadow-sm hover:shadow-md transition">
-      <p className="text-sm text-gray-500">Sponsor ID</p>
+      <p className="text-sm text-gray-500">Referred By</p>
       <p className="font-semibold text-sky-700">{authUser?.referredBy || "-"}</p>
     </div>
     <div className="bg-white/80 rounded-xl p-4 shadow-sm hover:shadow-md transition">
-      <p className="text-sm text-gray-500">Rank</p>
-      <p className="font-semibold text-sky-700">{authUser?.rank || "Bronze"}</p>
+      <p className="text-sm text-gray-500">Level</p>
+      <p className="font-semibold text-sky-700">{authUser?.level || "0"}</p>
     </div>
 
     {/* ✅ FIXED EMAIL CARD */}
@@ -246,15 +249,35 @@ const handleImageUpload = (e) => {
                   onChange={handleChange}
                   className="p-3 border rounded-lg w-full focus:ring-2 focus:ring-sky-400"
                 />
+             
               </div>
+           
               <input
                 type="email"
                 name="email"
                 placeholder="Email"
                 value={form.email}
                 onChange={handleChange}
-                className="p-3 border rounded-lg w-full mt-4 focus:ring-2 focus:ring-sky-400"
+                className="p-3 border rounded-lg w-full mt-4 mb-4 focus:ring-2 focus:ring-sky-400"
               />
+               <input
+  type="text"
+  name="referredBy"
+  placeholder="Referred By"
+  value={form.referredBy}
+  onChange={(e) => {
+    if (!authUser?.hasActivePackage) {
+      handleChange(e);
+    }
+  }}
+  disabled={authUser?.hasActivePackage} // 🚀 disable when user already has a package
+  className={`p-3 border rounded-lg w-full focus:ring-2 ${
+    authUser?.hasActivePackage
+      ? "bg-gray-100 text-gray-500 cursor-not-allowed"
+      : "focus:ring-sky-400"
+  }`}
+/>
+
               <textarea
                 name="address"
                 placeholder="Address"
@@ -262,6 +285,7 @@ const handleImageUpload = (e) => {
                 onChange={handleChange}
                 className="p-3 border rounded-lg w-full mt-4 focus:ring-2 focus:ring-sky-400"
               />
+               
             </motion.div>
 
             {/* Password Block */}

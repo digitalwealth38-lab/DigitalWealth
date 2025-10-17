@@ -7,6 +7,8 @@ import Deposit from "../components/Deposit";
 import Profile from "../components/Profile";
 import Withdrawal from "../components/Withdrawal";
 import Contact from "../components/Contact";
+import Referral from "../components/Referral";
+import Packages from "../components/Packages";
 export default function Dashboard() {
    useEffect(() => {
     scrollSpy.update();   // 🔑 tells react-scroll to mark current section
@@ -31,14 +33,12 @@ export default function Dashboard() {
 
   {/* Packages Section */}
   <div id="packages" className="min-h-screen">
-    <h2 className="text-3xl font-bold text-center mt-20">Packages Section</h2>
-    {/* Your packages content here */}
+    <Packages/>
   </div>
 
   {/* Referrals Section */}
   <div id="referrals" className="min-h-screen">
-    <h2 className="text-3xl font-bold text-center mt-20">Referrals Section</h2>
-    {/* Your referrals content here */}
+   <Referral/>
   </div>
 
   <div id="withdrawal" className="min-h-screen">
