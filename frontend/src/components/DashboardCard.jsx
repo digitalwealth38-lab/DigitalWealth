@@ -10,6 +10,7 @@ export default function DashboardCard() {
     useEffect(() => {
     fetchUser();// fetch user on component mount
   }, []);
+  console.log(user)
   
   if (!user) return   <div className="flex justify-center items-center h-screen">
         <LoadingSpinner />
@@ -20,7 +21,7 @@ const stats = [
   { icon: DollarSign, title: "Total Earnings", value: `$${user?.totalEarnings || 0}`, color: "text-green-600" },
   { icon: Users, title: "Team Size", value: `${user?.teamSize || 0} Members`, color: "text-indigo-600" },
   { icon: Gift, title: "Direct Referrals", value: `${user?.directReferrals || 0}`, color: "text-purple-600" },
-  { icon: Trophy, title: "Rank", value: user?.rank || "Bronze", color: "text-yellow-600" },
+  { icon: Trophy, title: "Level", value: user?.level || "0", color: "text-yellow-600" },
 ];
 
   return (

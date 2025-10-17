@@ -92,9 +92,10 @@ console.log(decoded)
   }
 };
 export const signup = async (req, res) => {
-  const { name, email, password, referredBy } = req.body; // add referredBy in body
+  const { name, email, password, referredBy } = req.body;
 
   try {
+    // 1️⃣ Validate fields
     if (!name || !email || !password) {
       return res.status(400).json({ message: "All fields are required" });
     }
@@ -110,48 +111,27 @@ export const signup = async (req, res) => {
         .json({ message: "Password must be at least 6 characters long" });
     }
 
-    
-    // 🔐 Hash the password
-   
+    // 2️⃣ Verify referral code (if provided)
+    let validReferral = null;
+    if (referredBy) {
+      const refUser = await User.findOne({ referralCode: referredBy });
+      if (!refUser) {
+        return res.status(400).json({ message: "Invalid referral code" });
+      }
+      validReferral = refUser.referralCode;
+    }
 
-    // 🎯 Generate a unique referral code
-    const referralCode = `USR-${Math.random()
-      .toString(36)
-      .substring(2, 8)
-      .toUpperCase()}`;
-
-    // ✨ Create a new user
+    // 3️⃣ Create user (referralCode auto-generated in MongoDB)
     const newUser = new User({
       name,
       email,
-      password: password,
-      referralCode,
-      referredBy: referredBy || null,
+      password,
+      referredBy: validReferral || null,
     });
 
     await newUser.save();
 
-    // 🎁 If referredBy exists → reward the referrer
-    if (referredBy) {
-      const referrer = await User.findOne({ referralCode: referredBy });
-
-      if (referrer) {
-        const rewardAmount = 5; // USD or points
-        referrer.directReferrals += 1;
-        referrer.teamSize += 1;
-        referrer.balance += rewardAmount;
-        referrer.totalEarnings += rewardAmount;
-
-        referrer.rewards.push({
-          type: "Referral Bonus",
-          amount: rewardAmount,
-        });
-
-        await referrer.save();
-      }
-    }
-
-    // 🧾 Create JWT token
+    // 4️⃣ Generate JWT token
     const token = setUser(newUser);
     res.cookie("uid", token, {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
@@ -159,20 +139,21 @@ export const signup = async (req, res) => {
       sameSite: "None",
       secure: process.env.NODE_ENV !== "development",
     });
-    // ✅ Response
+
+    // ✅ 5️⃣ Success Response
     res.status(201).json({
       message: "User registered successfully",
       user: {
         _id: newUser._id,
         name: newUser.name,
         email: newUser.email,
-        referralCode: newUser.referralCode,
+        referralCode: newUser.referralCode, // auto from model
         referredBy: newUser.referredBy,
       },
     });
   } catch (error) {
-    console.log("Error in signup controller:", error);
-    res.status(500).json({ message: "Server error", error });
+    console.error("❌ Error in signup controller:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
@@ -324,6 +305,7 @@ export const updateProfileData = async (req, res) => {
       oldPassword: rawOldPassword,
       newPassword: rawNewPassword,
       profilePic,
+      referredBy, // ✅ added field for referral update
     } = req.body;
 
     const userId = req.user?.id || req.user?._id;
@@ -334,6 +316,25 @@ export const updateProfileData = async (req, res) => {
 
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ message: "User not found" });
+
+    // ✅ Handle referral code logic
+    if (referredBy) {
+      // If user tries to change it but already bought a package
+      if (user.hasActivePackage && referredBy !== user.referredBy) {
+        return res.status(400).json({
+          message:
+            "You cannot change the referral code because you already bought a package.",
+        });
+      }
+
+      // If same referral code → just proceed (no error)
+      if (referredBy === user.referredBy) {
+        // Do nothing special, let it pass to normal update
+      } else if (!user.hasActivePackage) {
+        // Allow change only if user has no active package
+        user.referredBy = referredBy;
+      }
+    }
 
     // update basic info
     if (name) user.name = name;
