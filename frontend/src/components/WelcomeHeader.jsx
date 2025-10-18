@@ -13,7 +13,7 @@ export default function WelcomeHeader() {
   if (!user) return   <div className="flex justify-center items-center h-screen">
         <LoadingSpinner />
       </div>;
-  useEffect(() => {
+      useEffect(() => {
     const interval = setInterval(() => {
       setWave((prev) => !prev);
     }, 1000);

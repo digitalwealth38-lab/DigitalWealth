@@ -28,7 +28,8 @@ export function verifyAdmin(req, res, next) {
       return res.status(401).json({ message: "Unauthorized - User not found" });
     }
 
-    if (req.user.role !== "admin") {
+    // ✅ Use isAdmin instead of role
+    if (!req.user.isAdmin) {
       return res.status(403).json({ message: "Forbidden - Admins only" });
     }
 
@@ -38,3 +39,4 @@ export function verifyAdmin(req, res, next) {
     res.status(500).json({ message: "Internal Server Error" });
   }
 }
+

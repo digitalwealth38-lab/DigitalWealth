@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard.jsx'
 import ForgotPassword from './pages/ForgotPassword.jsx'
 import ResetPassword from './pages/ResetPassword.jsx'
 import Home from"./pages/Home.jsx"
+import Dashboardadmin from './pages/Dashboardadmin.jsx'
 const App = () => {
 const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
   useEffect(() => {
@@ -25,15 +26,71 @@ const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
   }
   return (
     <div>
-         <Routes>
-          
-          <Route path='/' element={!authUser ? <Home /> : <Navigate to='/dashboard' />} />
-          	<Route path='/dashboard' element={ authUser ? <Dashboard /> : <Navigate to='/' />} />
-					<Route path='/signup' element={ !authUser ? <Signup /> : <Navigate to='/dashboard' />} />
-          	<Route path='/login' element={ !authUser ? <Login /> : <Navigate to='/dashboard' />} />
-            <Route path='/forgot-password' element={<ForgotPassword/>} />
-            <Route path='/reset-password' element={<ResetPassword/>} />
-				</Routes>
+
+       <Routes>
+      {/* Public Routes */}
+      <Route
+        path="/"
+        element={
+          !authUser ? (
+            <Home />
+          ) : authUser?.isAdmin ? (
+            <Navigate to="/admin" />
+          ) : (
+            <Navigate to="/dashboard" />
+          )
+        }
+      />
+
+      <Route
+        path="/signup"
+        element={
+          !authUser ? (
+            <Signup />
+          ) : authUser?.isAdmin ? (
+            <Navigate to="/admin" />
+          ) : (
+            <Navigate to="/dashboard" />
+          )
+        }
+      />
+
+      <Route
+        path="/login"
+        element={
+          !authUser ? (
+            <Login />
+          ) : authUser?.isAdmin ? (
+            <Navigate to="/admin" />
+          ) : (
+            <Navigate to="/dashboard" />
+          )
+        }
+      />
+
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
+
+      {/* Admin Dashboard */}
+      <Route
+        path="/admin"
+        element={
+          authUser?.isAdmin ? (
+            <Dashboardadmin />
+          ) : authUser ? (
+            <Navigate to="/dashboard" />
+          ) : (
+            <Navigate to="/" />
+          )
+        }
+      />
+
+      {/* User Dashboard */}
+      <Route
+        path="/dashboard"
+        element={authUser ? <Dashboard /> : <Navigate to="/" />}
+      />
+    </Routes>
          <Toaster/>
     </div>
   )
