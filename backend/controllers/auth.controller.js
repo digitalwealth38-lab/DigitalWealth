@@ -77,6 +77,7 @@ console.log(decoded)
         _id: user._id,
         name: user.name,
         email: user.email,
+        isAdmin: user.isAdmin,
         referralCode: user.referralCode,
         referredBy: user.referredBy,
       },
@@ -179,6 +180,7 @@ res.status(200).json({
   _id: user._id,
   fullName: user.fullName,
   email: user.email,
+  isAdmin: user.isAdmin,
   profilePic: user.profilePic,
   message: "Login successful"
 });

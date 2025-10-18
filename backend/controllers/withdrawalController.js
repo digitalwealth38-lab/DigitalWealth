@@ -28,6 +28,7 @@ await user.save();
       amount,
       currency,
       walletAddress,
+      type: "withdrawal", 
       status: "pending",
     });
 

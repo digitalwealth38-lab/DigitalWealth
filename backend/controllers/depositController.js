@@ -77,10 +77,12 @@ export const startDeposit = async (req, res) => {
 
     // Save transaction as pending
     const transaction = new Transaction({
+    
       user: userId,
       transactionId,
       amount,
       currency,
+      type: "deposit", 
       status: "waiting",
     });
     await transaction.save();
@@ -138,6 +140,7 @@ export const paymentWebhook = async (req, res) => {
       case "finished":
         if (transaction.status !== "finished") {
           transaction.status = "finished";
+          transaction.price_amount = price_amount;
 
           const user = await User.findById(transaction.user);
           if (user) {
@@ -146,6 +149,7 @@ export const paymentWebhook = async (req, res) => {
             const creditedAmount = price_amount - fee;
 
             user.balance += creditedAmount;
+            transaction.price_amount = creditedAmount;
             await user.save();
 
             // Save fee info in transaction
