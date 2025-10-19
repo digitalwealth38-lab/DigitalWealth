@@ -46,68 +46,82 @@ export const buyPackage = async (req, res) => {
       const referrer = await User.findOne({ referralCode: user.referredBy });
 
       if (referrer) {
-        // 🟩 LEVEL 1 COMMISSION
-        await addToTeam(referrer._id, user._id, 1);
+        // 🔹 Check if referrer has an active package
+        if (!referrer.hasActivePackage || !referrer.currentPackage) {
+          // Option 2: Remove referral code from user automatically
+          user.referredBy = null;
+          await user.save();
+          console.log(
+            `Referrer with code ${referrer.referralCode} has no package. Referral code removed from user.`
+          );
+        } else {
+          // 🟩 LEVEL 1 COMMISSION
+          await addToTeam(referrer._id, user._id, 1);
 
-        const level1Percent = (selectedPackage.commissions.level1 || 0) / 100;
-        const level1Bonus = selectedPackage.price * level1Percent;
-        referrer.balance += level1Bonus;
-        referrer.totalEarnings +=level1Bonus
-        referrer.directReferrals += 1;
-        referrer.teamSize += 1;
+          const referrerPackage = await Package.findById(referrer.currentPackage);
+          const level1Percent = (referrerPackage.commissions.level1 || 0) / 100;
+          const level1Bonus = selectedPackage.price * level1Percent;
 
-        // 🟨 LEVEL UPGRADE LOGIC
-        const directCount = referrer.directReferrals;
-        const thresholds = { 10: 1, 20: 2, 40: 3, 80: 4, 160: 5 };
-        const newLevel = thresholds[directCount];
+          console.log("Level 1 bonus:", level1Bonus);
 
-if (newLevel && referrer.level < newLevel) {
-  referrer.level = newLevel;
+          referrer.balance += level1Bonus;
+          referrer.totalEarnings += level1Bonus;
+          referrer.directReferrals += 1;
+          referrer.teamSize += 1;
 
-  const referrerPackage = await Package.findById(referrer.currentPackage);
-  if (referrerPackage) {
-    const rewardPercent = (referrerPackage.levelRewardPercent || 0) / 100;
-    const rewardAmount = referrerPackage.price * rewardPercent;
-    referrer.balance += rewardAmount;
-     referrer.totalEarnings +=rewardAmount;
+          await referrer.save();
 
-    // 🆕 Add to rewards history
-    referrer.rewards.push({
-      type: newLevel,
-     amount: rewardAmount,
-      date: new Date(),
-    });
-  }
-}
+          // 🟨 LEVEL UPGRADE LOGIC
+          const directCount = referrer.directReferrals;
+          const levelUpRequirement = 10;
+          const newLevel = Math.floor(directCount / levelUpRequirement);
 
+          if (newLevel > referrer.level) {
+            referrer.level = newLevel;
 
-        await referrer.save();
+            const rewardPercent = (referrerPackage.levelRewardPercent || 0) / 100;
+            const rewardAmount = referrerPackage.price * rewardPercent;
 
-        // 🟦 LEVEL 2 COMMISSION
-        if (referrer.referredBy) {
-          const level2 = await User.findOne({ referralCode: referrer.referredBy });
-          if (level2) {
-            await addToTeam(level2._id, user._id, 2);
+            referrer.balance += rewardAmount;
+            referrer.totalEarnings += rewardAmount;
 
-            const level2Percent = (selectedPackage.commissions.level2 || 0) / 100;
-            const level2Bonus = selectedPackage.price * level2Percent;
-            level2.balance += level2Bonus;
-            level2.totalEarnings +=level1Bonus
-            level2.teamSize += 1;
-            await level2.save();
+            referrer.rewards.push({
+              type: `Level ${newLevel}`,
+              amount: rewardAmount,
+              date: new Date(),
+            });
 
-            // 🟧 LEVEL 3 COMMISSION
-            if (level2.referredBy) {
-              const level3 = await User.findOne({ referralCode: level2.referredBy });
-              if (level3) {
-                await addToTeam(level3._id, user._id, 3);
+            await referrer.save();
+          }
 
-                const level3Percent = (selectedPackage.commissions.level3  || 0) / 100;
-                const level3Bonus = selectedPackage.price * level3Percent;
-                level3.balance += level3Bonus;
-                level3.totalEarnings +=level1Bonus
-                level3.teamSize += 1;
-                await level3.save();
+          // 🟦 LEVEL 2 & LEVEL 3 COMMISSION
+          if (referrer.referredBy) {
+            const level2 = await User.findOne({ referralCode: referrer.referredBy });
+            if (level2) {
+              await addToTeam(level2._id, user._id, 2);
+
+              const level2Percent = (referrerPackage.commissions.level2 || 0) / 100;
+              const level2Bonus = selectedPackage.price * level2Percent;
+              console.log(level2Bonus);
+              level2.balance += level2Bonus;
+              level2.totalEarnings += level2Bonus;
+              level2.teamSize += 1;
+              await level2.save();
+
+              if (level2.referredBy) {
+                const level3 = await User.findOne({ referralCode: level2.referredBy });
+                if (level3) {
+                  await addToTeam(level3._id, user._id, 3);
+
+                  const level3Percent = (referrerPackage.commissions.level3 || 0) / 100;
+                  const level3Bonus = selectedPackage.price * level3Percent;
+                  level3.balance += level3Bonus;
+                  console.log(level3Bonus);
+                  level3.totalEarnings += level3Bonus;
+                  level3.teamSize += 1;
+                  console.log(level3Bonus);
+                  await level3.save();
+                }
               }
             }
           }
@@ -145,6 +159,7 @@ const addToTeam = async (uplineId, newMemberId, level) => {
 
   await hierarchy.save();
 };
+
 // 🟢 GET ALL PACKAGES
 export const getAllPackages = async (req, res) => {
   try {

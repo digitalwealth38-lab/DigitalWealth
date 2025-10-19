@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../lib/axios";
 import { motion } from "framer-motion";
 import { Crown, Rocket, Star, Gem, Zap, Medal } from "lucide-react";
+import toast from "react-hot-toast";
 
 const icons = [Rocket, Star, Zap, Crown, Medal, Gem];
 
@@ -17,6 +18,7 @@ const Packages = () => {
         setPackages(data.packages);
       } catch (error) {
         console.error("❌ Error fetching packages:", error);
+        toast.error("Failed to load packages");
       } finally {
         setLoading(false);
       }
@@ -29,10 +31,11 @@ const Packages = () => {
     try {
       const { data } = await axiosInstance.post("/packages/buy", { packageId });
       console.log("✅ Purchase successful:", data);
-      alert(`Successfully purchased package!`);
+      toast.success(data.message || "Successfully purchased package!");
     } catch (error) {
       console.error("❌ Error buying package:", error);
-      alert("Failed to purchase package. Please try again.");
+      const msg = error.response?.data?.message || "Failed to purchase package. Please try again.";
+      toast.error(msg);
     }
   };
 
@@ -46,6 +49,8 @@ const Packages = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-sky-100 py-20 px-6">
+      {/* Toaster for showing toast messages */}
+
       <h2 className="text-4xl font-bold text-center text-sky-700 mb-10">
         💎 Our Investment Packages
       </h2>

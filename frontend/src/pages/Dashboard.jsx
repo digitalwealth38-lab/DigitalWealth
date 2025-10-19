@@ -9,6 +9,8 @@ import Withdrawal from "../components/Withdrawal";
 import Contact from "../components/Contact";
 import Referral from "../components/Referral";
 import Packages from "../components/Packages";
+import ProgressRewards from "../components/ProgressRewards";
+import Tree from "../components/Tree";
 export default function Dashboard() {
    useEffect(() => {
     scrollSpy.update();   // 🔑 tells react-scroll to mark current section
@@ -45,6 +47,10 @@ export default function Dashboard() {
     <Withdrawal/>
     {/* Your referrals content here */}
   </div>
+    <div id="Rewards" className="min-h-screen">
+      <ProgressRewards/>
+    {/* Your referrals content here */}
+  </div>
   {/* Settings Section */}
   <div id="profile" className="min-h-screen">
     <Profile/>
@@ -52,6 +58,9 @@ export default function Dashboard() {
   
     <div id="contact" className="min-h-screen">
       <Contact/>
+  </div>
+   <div id="team" className="min-h-screen">
+      <Tree/>
   </div>
 </div>
     </div>

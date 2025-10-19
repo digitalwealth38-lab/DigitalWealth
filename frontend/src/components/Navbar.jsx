@@ -77,6 +77,17 @@ export default function Navbar() {
           >
             Withdrawal
           </Link>
+               <Link
+            to="Rewards"
+            spy={true}
+            smooth={true}
+            offset={-40}
+            duration={500}
+            className={linkClasses}
+            activeClass="border-b-2 border-white"
+          >
+            Rewards
+          </Link>
           <Link
             to="profile"
             spy={true}
@@ -99,6 +110,18 @@ export default function Navbar() {
           >
             Contact
           </Link>
+          <Link
+            to="team"
+            spy={true}
+            smooth={true}
+            offset={-40}
+            duration={500}
+            className={linkClasses}
+            activeClass="border-b-2 border-white"
+          >
+            My Team
+          </Link>
+          
         </div>
 
         {/* Logout Button (Always Visible) */}
