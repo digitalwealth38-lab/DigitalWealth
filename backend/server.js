@@ -1,6 +1,7 @@
 import express from "express"
 import dotenv from "dotenv"
 import cors from "cors";
+import User from "./models/user.model.js";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/authRoutes.js" 
 import userRoutes from"./routes/userRoutes.js"
@@ -33,5 +34,6 @@ app.use("/api/packages",restrictToLoggedinUserOnly,packagesRoutes);
 app.use("/api/admin",adminRoutes);
 app.listen(PORT,()=>{
     console.log("server is running",PORT)
-    connectDB()
+     connectDB()
+     
 })

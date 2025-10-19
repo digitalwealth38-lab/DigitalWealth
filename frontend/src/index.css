@@ -1,22 +1,123 @@
 @import "tailwindcss";
+
+/* Scrollbar styling */
 ::-webkit-scrollbar {
-  width: 3px; /* width of vertical scrollbar */
-  height: 5px; /* height of horizontal scrollbar */
+  width: 3px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9; /* light background */
+  background: #f1f5f9;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #38bdf8; /* sky blue */
+  background: #38bdf8;
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #0ea5e9; /* darker sky blue on hover */
+  background: #0ea5e9;
 }
+
+/* Global */
 body {
   font-family: 'Inter', sans-serif;
   background-color: #f0f8ff;
 }
+
+/* Wrapper keeps layout centered */
+.tree-wrapper {
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* prevent full page scroll */
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Container for all tree levels */
+.tree-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 40px;
+}
+
+/* Root level (YOU 👑) fixed at top center */
+.tree-level:first-child {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 40px;
+  position: sticky;
+  top: 0;
+  background: #f0f8ff; /* match background */
+  z-index: 10;
+  padding: 10px 0;
+}
+
+/* Other levels (scroll horizontally) */
+.tree-level:not(:first-child) {
+  display: flex;
+  justify-content: flex-start;
+  gap: 50px;
+  position: relative;
+  margin-bottom: 30px;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 10px;
+  scroll-behavior: smooth;
+  width: 100%;
+  max-width: 90vw;
+}
+
+/* Line between levels */
+.tree-line {
+  width: 2px;
+  height: 30px;
+  background: #94a3b8;
+}
+
+/* Member box */
+.member-box {
+  background: white;
+  border: 2px solid #3b82f6;
+  border-radius: 10px;
+  padding: 10px 20px;
+  min-width: 160px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  flex: 0 0 auto; /* Prevent shrinking so scroll works */
+}
+
+.member-box:hover {
+  transform: scale(1.05);
+  background: #f0f9ff;
+}
+
+/* Root box (YOU 👑) */
+.member-box.root {
+  background: linear-gradient(to right, #0369a1, #0284c7);
+  color: white;
+  border: none;
+}
+
+/* Icons and text */
+.member-box .icon {
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+
+.member-box .name {
+  font-weight: 600;
+}
+
+.member-box .id,
+.member-box .level {
+  font-size: 12px;
+  color: #6b7280;
+}
+
