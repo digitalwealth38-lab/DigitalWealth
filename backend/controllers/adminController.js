@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import Transaction from "../models/Transaction.js";
 import withdrawal from "../models/Withdrawal.js";
+import Package from "../models/Package.js";
 
 
 export const getAdminStats = async (req, res) => {
@@ -60,5 +61,31 @@ export const getAdminStats = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+
+export const updatePackage = async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log(id)
+    const updates = req.body;
+
+    const updatedPackage = await Package.findByIdAndUpdate(id, updates, {
+      new: true,
+    });
+
+    if (!updatedPackage) {
+      return res.status(404).json({ message: "Package not found" });
+    }
+
+    res.json({
+      message: "✅ Package updated successfully!",
+      package: updatedPackage,
+    });
+  } catch (error) {
+    console.error("❌ Error updating package:", error);
+    res.status(500).json({ message: "Failed to update package" });
+  }
+};
+
 
 

@@ -18,6 +18,7 @@ export default function Withdrawal() {
       id: tx._id,
       amount: tx.amount,
       currency: tx.currency,
+      txHash: tx.txHash,
       address: tx.walletAddress || "N/A",
       status: tx.status,
       date: tx.date ? new Date(tx.date).toLocaleDateString("en-GB") : "N/A",
@@ -80,7 +81,6 @@ export default function Withdrawal() {
         currency,
         walletAddress: trimmedAddress,
       });
-
       if (res.data.success) {
         toast.success("✅ Withdrawal request submitted successfully! Admin will review soon.");
         setAmount("");
@@ -88,6 +88,7 @@ export default function Withdrawal() {
 
         // ✅ Refresh and format updated history (fixed bug here)
         const updated = await axiosInstance.get("/withdrawals/history");
+        
         if (updated.data.success && updated.data.transactions) {
           setHistory(formatTransactions(updated.data.transactions));
         }
@@ -131,6 +132,7 @@ export default function Withdrawal() {
           {history.length > 0 ? (
             <div className="flex flex-col gap-4 max-h-[18rem] overflow-y-auto pr-2">
               {history.map((item) => (
+                console.log(item),
                 <motion.div
                   key={item.id}
                   whileHover={{ scale: 1.02 }}
@@ -141,6 +143,7 @@ export default function Withdrawal() {
                       {item.amount} USD - {item.currency}
                     </p>
                     <p className="text-gray-500 text-sm">Address: {item.address}</p>
+                     <p className="text-gray-500 text-sm">txHash: {item.txHash}</p>
                     <p className="text-gray-500 text-sm">Date: {item.date}</p>
                     <p className="text-gray-500 text-sm">Time: {item.time}</p>
                   </div>
