@@ -2,6 +2,8 @@ import React, { useEffect } from 'react'
 import Navbaradmin from '../components/Navbaradmin'
 import { scrollSpy } from "react-scroll";
 import DashbaordadminCard from '../components/DashbaordadminCard'
+import Packagesadmin from '../components/Packagesadmin';
+import AdminWithdrawals from '../components/AdminWithdrawals';
 
 const Dashboardadmin = () => {
       useEffect(() => {
@@ -13,6 +15,12 @@ const Dashboardadmin = () => {
 <Navbaradmin/>
 <div id="dashboardadmin" className="">
   <DashbaordadminCard/>
+</div>
+<div id="packagesadmin" className="">
+  <Packagesadmin/>
+</div>
+<div id="adminwithdrawals" className="">
+  <AdminWithdrawals/>
 </div>
     </div>
   )

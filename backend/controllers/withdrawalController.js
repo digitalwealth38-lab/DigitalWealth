@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Withdrawal from "../models/Withdrawal.js";
 import User from "../models/user.model.js";
 
@@ -24,7 +25,7 @@ await user.save();
 
 
     const withdrawal = new Withdrawal({
-      user: userId,
+      user: new mongoose.Types.ObjectId(userId),
       amount,
       currency,
       walletAddress,
@@ -48,6 +49,7 @@ await user.save();
 export const getUserWithdrawals = async (req, res) => {
   try {
     const withdrawals = await Withdrawal.find({ user: req.user.id }).sort({ date: -1 });
+    console.log(withdrawals)
     res.json({ success: true, transactions: withdrawals });
   } catch (error) {
     console.error(error);
@@ -59,20 +61,40 @@ export const getUserWithdrawals = async (req, res) => {
 export const getAllWithdrawals = async (req, res) => {
   try {
     const withdrawals = await Withdrawal.find()
-      .populate("user", "name email")
+      .populate("user", "name email _id") // ✅ Include name, email, and user ID
       .sort({ date: -1 });
-    res.json({ success: true, withdrawals });
+
+    // 🧩 Optional check: handle empty result gracefully
+    if (!withdrawals || withdrawals.length === 0) {
+      return res.status(200).json({
+        success: true,
+        message: "No withdrawals found.",
+        withdrawals: [],
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      count: withdrawals.length,
+      withdrawals,
+    });
   } catch (error) {
-    res.status(500).json({ msg: "Server error" });
+    console.error("❌ Error fetching withdrawals:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Server error while fetching withdrawals.",
+      error: error.message,
+    });
   }
 };
+
+
 
 // 🟢 Admin approves or rejects request
 export const updateWithdrawalStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const { status, adminNote, txHash } = req.body; // ✅ Include txHash
-
     const withdrawal = await Withdrawal.findById(id);
     if (!withdrawal) {
       return res.status(404).json({ msg: "Withdrawal not found" });

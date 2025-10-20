@@ -32,7 +32,7 @@ export default function Navbaradmin() {
   Admin Dashboard
 </Link>
           <Link
-            to="packages"
+            to="packagesadmin"
             spy={true}
             smooth={true}
             offset={-40}
@@ -43,7 +43,7 @@ export default function Navbaradmin() {
            Update Packages
           </Link>
              <Link
-            to="withdrawal"
+            to="adminwithdrawals"
             spy={true}
             smooth={true}
             offset={-40}
@@ -51,7 +51,7 @@ export default function Navbaradmin() {
             className={linkClasses}
             activeClass="border-b-2 border-white"
           >
-            Withdrawal
+            Withdrawals Requests
           </Link>
           <Link
             to="profile"
