@@ -170,3 +170,36 @@ export const getAllPackages = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
+// 🟢 Create a new package
+export const createPackage = async (req, res) => {
+  try {
+    const { name, price, commissions, levelRewardPercent } = req.body;
+
+    // Simple validation
+    if (!name || !price || !commissions || !levelRewardPercent) {
+      return res.status(400).json({ success: false, message: "All fields are required" });
+    }
+
+    const newPackage = new Package({
+      name,
+      price,
+      commissions,
+      levelRewardPercent,
+    });
+
+    await newPackage.save();
+
+    res.status(201).json({
+      success: true,
+      message: "Package created successfully",
+      package: newPackage,
+    });
+  } catch (error) {
+    console.error("❌ Error creating package:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while creating package",
+    });
+  }
+};
+

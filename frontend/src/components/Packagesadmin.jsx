@@ -40,24 +40,42 @@ const Packagesadmin = () => {
 
   const handleUpdate = async (id) => {
     try {
-      const { data } = await axiosInstance.put(`/admin/${id}`,  {
-        name: formData.name,
-        price: formData.price,
-        commissions: {
-          level1: formData.level1,
-          level2: formData.level2,
-          level3: formData.level3,
+      const { data } = await axiosInstance.put(
+        `/admin/${id}`,
+        {
+          name: formData.name,
+          price: formData.price,
+          commissions: {
+            level1: formData.level1,
+            level2: formData.level2,
+            level3: formData.level3,
+          },
+          levelRewardPercent: formData.levelRewardPercent,
         },
-        levelRewardPercent: formData.levelRewardPercent,
-      },
-    { withCredentials: true }
-    );
+        { withCredentials: true }
+      );
       toast.success(data.message);
       setEditingId(null);
       fetchPackages();
     } catch (error) {
       console.error(error);
       toast.error(error.response?.data?.message || "Failed to update package");
+    }
+  };
+
+  // ✅ Delete package
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this package?")) return;
+
+    try {
+      const { data } = await axiosInstance.delete(`/admin/${id}`, {
+        withCredentials: true,
+      });
+      toast.success(data.message || "Package deleted successfully");
+      fetchPackages();
+    } catch (error) {
+      console.error(error);
+      toast.error(error.response?.data?.message || "Failed to delete package");
     }
   };
 
@@ -129,22 +147,31 @@ const Packagesadmin = () => {
                 </td>
 
                 <td className="p-3 text-center">
-                  {editingId === pkg._id ? (
-                    <button
-                      onClick={() => handleUpdate(pkg._id)}
-                      className="bg-green-600 hover:bg-green-700 text-white py-1 px-3 rounded-md"
-                    >
-                      Save
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => handleEdit(pkg)}
-                      className="bg-sky-600 hover:bg-sky-700 text-white py-1 px-3 rounded-md"
-                    >
-                      Edit
-                    </button>
-                  )}
-                </td>
+  {editingId === pkg._id ? (
+    <button
+      onClick={() => handleUpdate(pkg._id)}
+      className="bg-green-600 hover:bg-green-700 text-white py-1 px-3 rounded-md"
+    >
+      Save
+    </button>
+  ) : (
+    <div className="flex justify-center items-center gap-2">
+      <button
+        onClick={() => handleEdit(pkg)}
+        className="bg-sky-600 hover:bg-sky-700 text-white py-1 px-3 rounded-md"
+      >
+        Edit
+      </button>
+      <button
+        onClick={() => handleDelete(pkg._id)}
+        className="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded-md"
+      >
+        Delete
+      </button>
+    </div>
+  )}
+</td>
+
               </tr>
             ))}
           </tbody>
@@ -155,3 +182,4 @@ const Packagesadmin = () => {
 };
 
 export default Packagesadmin;
+

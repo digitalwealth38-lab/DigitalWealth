@@ -1,4 +1,5 @@
 import Transaction from "../models/Transaction.js";
+import User from "../models/user.model.js";
 
 export const getSingleUserData = async (req, res) => {
   try {
@@ -24,6 +25,15 @@ console.log(transactions)
   } catch (err) {
     console.error(err);
     return res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find().sort({ createdAt: -1 }); // latest first
+    res.json({ users });
+  } catch (error) {
+    console.error("Failed to fetch users:", error);
+    res.status(500).json({ message: "Failed to fetch users" });
   }
 };
 
