@@ -53,6 +53,29 @@ export default function Navbaradmin() {
           >
             Withdrawals Requests
           </Link>
+               <Link
+            to="adminaddpackage"
+            spy={true}
+            smooth={true}
+            offset={-40}
+            duration={500}
+            className={linkClasses}
+            activeClass="border-b-2 border-white"
+          >
+           Add Packages
+          </Link>
+             <Link
+            to="manageusers"
+            spy={true}
+            smooth={true}
+            offset={-40}
+            duration={500}
+            className={linkClasses}
+            activeClass="border-b-2 border-white"
+          >
+           Manage Users
+          </Link>
+          
           <Link
             to="profile"
             spy={true}

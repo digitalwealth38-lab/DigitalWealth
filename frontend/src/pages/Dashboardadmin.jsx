@@ -4,6 +4,9 @@ import { scrollSpy } from "react-scroll";
 import DashbaordadminCard from '../components/DashbaordadminCard'
 import Packagesadmin from '../components/Packagesadmin';
 import AdminWithdrawals from '../components/AdminWithdrawals';
+import AdminAddPackage from '../components/AdminAddPackage';
+import ProfilePage from '../components/Profile';
+import AdminManageUsers from '../components/AdminManageUsers';
 
 const Dashboardadmin = () => {
       useEffect(() => {
@@ -21,6 +24,12 @@ const Dashboardadmin = () => {
 </div>
 <div id="adminwithdrawals" className="">
   <AdminWithdrawals/>
+</div>
+<div id="adminaddpackage" className="">
+  <AdminAddPackage/>
+</div>
+<div id="manageusers" className="">
+  <AdminManageUsers/>
 </div>
     </div>
   )

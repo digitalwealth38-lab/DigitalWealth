@@ -66,7 +66,6 @@ export const getAdminStats = async (req, res) => {
 export const updatePackage = async (req, res) => {
   try {
     const { id } = req.params;
-    console.log(id)
     const updates = req.body;
 
     const updatedPackage = await Package.findByIdAndUpdate(id, updates, {
@@ -84,6 +83,22 @@ export const updatePackage = async (req, res) => {
   } catch (error) {
     console.error("❌ Error updating package:", error);
     res.status(500).json({ message: "Failed to update package" });
+  }
+};
+export const deletePackage = async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log(id)
+    const deletedPackage = await Package.findByIdAndDelete(id);
+
+    if (!deletedPackage) {
+      return res.status(404).json({ message: "Package not found" });
+    }
+
+    res.json({ message: "✅ Package deleted successfully!" });
+  } catch (error) {
+    console.error("❌ Error deleting package:", error);
+    res.status(500).json({ message: "Failed to delete package" });
   }
 };
 
