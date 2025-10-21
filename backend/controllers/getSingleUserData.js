@@ -4,8 +4,8 @@ import User from "../models/user.model.js";
 export const getSingleUserData = async (req, res) => {
   try {
     if (!req.user) return res.status(404).json({ message: "User not found" });
-    const { name, investedBalance, totalEarnings, balance ,teamSize,directReferrals,level,rewards  } = req.user;
-    res.json({ name, balance, totalEarnings, investedBalance,teamSize,directReferrals,level,rewards });
+    const { name, investedBalance, totalEarnings, balance ,teamSize,directReferrals,level,rewards,currentPackage  } = req.user;
+    res.json({ name, balance, totalEarnings, investedBalance,teamSize,directReferrals,level,rewards,currentPackage });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
