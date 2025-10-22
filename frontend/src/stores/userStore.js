@@ -1,23 +1,21 @@
 import { create } from "zustand";
+import { axiosInstance } from "../lib/axios";
 
 export const useUserStore = create((set) => ({
-  user: null, // Stores the logged-in user dashboard data
-  token: localStorage.getItem("token") || null, // JWT token
+  user: null,
+  token: localStorage.getItem("token") || null,
 
   // Fetch the logged-in user's dashboard data
- fetchUser: async () => {
-  try {
-    const res = await fetch("http://localhost:5000/api/users/me", {
-      credentials: "include", // <-- important for cookies
-    });
+  fetchUser: async () => {
+    try {
+      const res = await axiosInstance.get("/users/me", {
+        withCredentials: true, // ✅ correct for axios
+      });
 
-    if (!res.ok) throw new Error("Failed to fetch user");
-
-    const data = await res.json();
-    set({ user: data }); // store user globally
-  } catch (err) {
-    console.error(err);
-    set({ user: null });
-  }
-},
+      set({ user: res.data }); // ✅ axios already gives parsed JSON
+    } catch (err) {
+      console.error("Error fetching user:", err);
+      set({ user: null });
+    }
+  },
 }));
