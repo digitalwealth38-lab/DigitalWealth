@@ -3,10 +3,6 @@ import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import {
   FaEnvelope,
-  FaPhone,
-  FaInstagram,
-  FaLinkedinIn,
-  FaGithub,
 } from "react-icons/fa";
 import emailjs from "@emailjs/browser";
 
@@ -158,39 +154,10 @@ export default function Contact() {
           <FaEnvelope className="text-blue-600" />
           <span>stoneghold4103@gmail.com</span>
         </div>
-        <div className="flex items-center gap-3">
-          <FaPhone className="text-blue-600" />
-          <span>+92 306 3305700</span>
-        </div>
+      
       </div>
 
       {/* Social Links */}
-      <div className="flex gap-6 mt-8 text-white">
-        <a
-          href="https://www.linkedin.com/in/aitezaz-ahmed-888b9233a/"
-          target="_blank"
-          rel="noreferrer"
-          className="p-3 rounded-full bg-blue-600 hover:bg-sky-500 transition"
-        >
-          <FaLinkedinIn />
-        </a>
-        <a
-          href="https://github.com/AitezazAhmed"
-          target="_blank"
-          rel="noreferrer"
-          className="p-3 rounded-full bg-gray-800 hover:bg-blue-600 transition"
-        >
-          <FaGithub />
-        </a>
-        <a
-          href="https://www.instagram.com/itx_aitezaz/"
-          target="_blank"
-          rel="noreferrer"
-          className="p-3 rounded-full bg-sky-500 hover:bg-blue-600 transition"
-        >
-          <FaInstagram />
-        </a>
-      </div>
     </section>
   );
 }
