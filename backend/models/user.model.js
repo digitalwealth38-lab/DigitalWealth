@@ -27,7 +27,7 @@ const UserSchema = new mongoose.Schema(
     referredBy: { type: String, default: null }, // Referral code of who referred this user
 
     // Financial Fields
-    balance: { type: Number, default: 100 }, // Current wallet balance
+    balance: { type: Number, default: 0 }, // Current wallet balance
     investedBalance: { type: Number, default: 0 }, // Total amount invested
     totalEarnings: { type: Number, default: 0 }, // Total income from referrals and rewards
 

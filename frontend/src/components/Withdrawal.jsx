@@ -13,12 +13,14 @@ export default function Withdrawal() {
   const [history, setHistory] = useState([]);
 
   // ✅ Helper function to format transactions
+ 
   const formatTransactions = (transactions) => {
     return transactions.map((tx) => ({
       id: tx._id,
       amount: tx.amount,
       currency: tx.currency,
       txHash: tx.txHash,
+      adminNote: tx.adminNote,
       address: tx.walletAddress || "N/A",
       status: tx.status,
       date: tx.date ? new Date(tx.date).toLocaleDateString("en-GB") : "N/A",
@@ -144,6 +146,7 @@ export default function Withdrawal() {
                     </p>
                     <p className="text-gray-500 text-sm">Address: {item.address}</p>
                      <p className="text-gray-500 text-sm">txHash: {item.txHash}</p>
+                     <p className="text-gray-500 text-sm">Admin Note: {item.adminNote}</p>
                     <p className="text-gray-500 text-sm">Date: {item.date}</p>
                     <p className="text-gray-500 text-sm">Time: {item.time}</p>
                   </div>
