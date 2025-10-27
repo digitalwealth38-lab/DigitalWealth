@@ -1,7 +1,20 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { motion, useAnimation, useInView } from 'framer-motion';
-
+import { axiosInstance } from "../lib/axios";
 const Home = () => {
+    const [stats, setStats] = useState(null);
+    useEffect(() => {
+      const fetchStats = async () => {
+        try {
+          const res = await axiosInstance.get("/home/stat");
+          setStats(res.data);
+        } catch (error) {
+          console.error("Error fetching admin stats:", error);
+        }
+      };
+      fetchStats();
+    }, []);
+    console.log(stats)
   // Profit mock component
   const MockProfitChange = ({ value }) => (
     <span className={`text-sm font-medium ${value >= 0 ? 'text-green-500' : 'text-red-500'}`}>
@@ -127,6 +140,7 @@ const Section = ({ children, startVisible = false }) => {
   </motion.div>
 
   {/* Profit Cards */}
+  {/* Profit Cards */}
   <motion.div
     className="flex justify-around bg-white p-6 rounded-2xl border border-gray-200 shadow-lg max-w-4xl mx-auto"
     initial={{ opacity: 0, y: 30 }}
@@ -134,21 +148,30 @@ const Section = ({ children, startVisible = false }) => {
     transition={{ duration: 0.8, delay: 0.5, ease: 'easeOut' }}
   >
     <div className="text-left">
-      <p className="text-gray-500 text-xs uppercase">Today's Profit</p>
-      <p className="text-2xl font-bold">$1,256.50</p>
+      <p className="text-gray-500 text-xs uppercase">Total Profit</p>
+      <p className="text-2xl font-bold">
+        ${stats?.totalEarnings?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || "0.00"}
+      </p>
       <MockProfitChange value={2.54} />
     </div>
+
     <div className="text-left">
       <p className="text-gray-500 text-xs uppercase">Total Invested</p>
-      <p className="text-2xl font-bold">$54,120.00</p>
+      <p className="text-2xl font-bold">
+        ${stats?.totalInvestedBalance?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || "0.00"}
+      </p>
       <p className="text-sm text-gray-400">Portfolio</p>
     </div>
+
     <div className="text-left hidden sm:block">
       <p className="text-gray-500 text-xs uppercase">Active Users</p>
-      <p className="text-2xl font-bold">12,340</p>
+      <p className="text-2xl font-bold">
+        {stats?.totalUsers?.toLocaleString() || "0"}
+      </p>
       <p className="text-sm text-gray-400">Community</p>
     </div>
   </motion.div>
+
 </section>
 
 
