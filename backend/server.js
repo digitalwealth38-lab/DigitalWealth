@@ -21,7 +21,7 @@ app.use(express.urlencoded({ limit: '100mb', extended: true }));
 const PORT=process.env.PORT || 5000
 app.use(
   cors({
-    origin: ["http://localhost:5173","https://investment-website-zbpe.vercel.app"],
+    origin: ["http://localhost:5173"],
     credentials: true
   })
 );
