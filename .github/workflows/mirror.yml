@@ -14,10 +14,12 @@ jobs:
 
       - name: Push to client repo
         env:
-          CLIENT_REPO: ${{ digitalwealth38-lab/DigitalWealth }}
-          CLIENT_TOKEN: ${{ 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 }}
+          CLIENT_REPO: digitalwealth38-lab/DigitalWealth
+          PAT: ${{ secrets.CLIENT_PAT }}
         run: |
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
-          git remote add client https://${CLIENT_TOKEN}@github.com/${CLIENT_REPO}.git
+          git config --global user.name "AitezazAhmed"
+          git config --global user.email "stoneghold4103@gmail.com"
+
+          git remote add client https://$PAT@github.com/$CLIENT_REPO.git
+          git fetch client
           git push client main --force
