@@ -1,0 +1,23 @@
+name: Mirror to client repo
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Push to client repo
+        env:
+          CLIENT_REPO: ${{ digitalwealth38-lab/DigitalWealth }}
+          CLIENT_TOKEN: ${{ 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 }}
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git remote add client https://${CLIENT_TOKEN}@github.com/${CLIENT_REPO}.git
+          git push client main --force
