@@ -212,9 +212,7 @@ export const checkAuth = (req, res) => {
     console.log("Error in checkAuth controller", error.message);
     res.status(500).json({ message: "Internal Server Error" });
   }
-};
-
-export async function forgotPassword(req, res) {
+};export async function forgotPassword(req, res) {
   const { email } = req.body;
   if (!email) return res.status(400).json({ message: "Email required" });
 
