@@ -21,7 +21,7 @@ app.use(express.urlencoded({ limit: '100mb', extended: true }));
 const PORT=process.env.PORT || 5000
 app.use(
   cors({
-    origin: ["http://localhost:5173","https://www.digitalwealthpk.com","hi"],
+    origin: ["http://localhost:5173","https://www.digitalwealthpk.com",],
     credentials: true
   })
 );
