@@ -214,52 +214,32 @@ export const checkAuth = (req, res) => {
   }
 };
 
-async function sendEmail({ to, subject, html }) {
-  const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,        // smtp.sendgrid.net
-    port: process.env.SMTP_PORT,        // 587
-    secure: process.env.SMTP_SECURE === "true", // false for STARTTLS
-    auth: {
-      user: process.env.SMTP_USER,      // "apikey"
-      pass: process.env.SMTP_PASS,      // your SendGrid API key
-    },
-  });
-
-  await transporter.sendMail({
-    from: `"Digital Wealth" <no-reply@digitalwealthpk.com>`, // verified domain email
-    to,
-    subject,
-    html,
-    replyTo: "no-reply@digitalwealthpk.com",
-  });
-}
-
-// Forgot Password function
 export async function forgotPassword(req, res) {
   const { email } = req.body;
   if (!email) return res.status(400).json({ message: "Email required" });
 
   const user = await User.findOne({ email: email.toLowerCase() });
+  // Always respond with same message to avoid account probing
   const genericResponse = { message: "If an account exists for that email, we sent a reset link." };
 
   if (!user) return res.status(200).json(genericResponse);
 
-  // Generate token
-  const token = crypto.randomBytes(32).toString("hex");
+  // generate token (raw)
+  const token = crypto.randomBytes(32).toString("hex"); // 64 chars
   const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
 
-  // Save token and expiry (1 hour)
+  // save hashed token and expiry (e.g., 1 hour)
   user.passwordResetToken = hashedToken;
-  user.passwordResetExpires = Date.now() + 60 * 60 * 1000;
+  user.passwordResetExpires = Date.now() + 60 * 60 * 1000; // 1 hour
   await user.save();
 
-  // Reset URL
+  // create reset link (adjust domain)
   const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${token}&email=${encodeURIComponent(user.email)}`;
 
-  // Email content
+  // email text/html
   const html = `
     <p>Hello ${user.name || ""},</p>
-    <p>You requested a password reset. Click below to set a new password (valid for 1 hour):</p>
+    <p>You requested a password reset. Click the link below to set a new password (valid for 1 hour):</p>
     <p><a href="${resetUrl}">Reset Password</a></p>
     <p>If you did not request this, ignore this email.</p>
   `;
@@ -272,7 +252,7 @@ export async function forgotPassword(req, res) {
     });
     return res.status(200).json(genericResponse);
   } catch (err) {
-    // Clean up if email sending fails
+    // Clean up if email send fails
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
     await user.save();
