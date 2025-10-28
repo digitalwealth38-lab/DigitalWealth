@@ -152,7 +152,7 @@ export default function Contact() {
       <div className="flex flex-col items-center mt-12 space-y-4 text-gray-700">
         <div className="flex items-center gap-3">
           <FaEnvelope className="text-blue-600" />
-          <span>stoneghold4103@gmail.com</span>
+          <span>digitalwealth38@gmail.com</span>
         </div>
       
       </div>
