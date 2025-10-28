@@ -16,13 +16,11 @@ jobs:
       - name: Push to client repo
         env:
           CLIENT_REPO: "digitalwealth38-lab/DigitalWealth"
-          CLIENT_TOKEN: ${{ secrets.CLIENT_TOKEN }}
+          PAT: ${{ secrets.CLIENT_TOKEN }}
         run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
+          git config --global user.name "AitezazAhmed"
+          git config --global user.email "stoneghold4103@gmail.com"
 
-          # Add client repo as remote
-          git remote add client https://${CLIENT_TOKEN}@github.com/${CLIENT_REPO}.git
-
-          # Push changes forcefully to client repo
+          git remote add client https://AitezazAhmed:${PAT}@github.com/${CLIENT_REPO}.git
+          git fetch client || echo "No client branch yet"
           git push client main --force
