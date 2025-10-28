@@ -21,7 +21,7 @@ app.use(express.urlencoded({ limit: '100mb', extended: true }));
 const PORT=process.env.PORT || 5000
 app.use(
   cors({
-    origin: ["http://localhost:5173","hi i gggggggggggg"],
+    origin: ["http://localhost:5173","hi i gggggggggggggggg"],
     credentials: true
   })
 );
