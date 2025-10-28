@@ -15,7 +15,7 @@ jobs:
       - name: Push to client repo
         env:
           CLIENT_REPO: "digitalwealth38-lab/DigitalWealth"
-          PAT: ${{ secrets.CLIENT_PAT }}
+          PAT: ${{ secrets.CLIENT_TOKEN }}
         run: |
           git config --global user.name "AitezazAhmed"
           git config --global user.email "stoneghold4103@gmail.com"
