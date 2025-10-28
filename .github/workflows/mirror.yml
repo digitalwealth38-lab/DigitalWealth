@@ -8,6 +8,7 @@ on:
 jobs:
   sync:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -15,11 +16,13 @@ jobs:
       - name: Push to client repo
         env:
           CLIENT_REPO: "digitalwealth38-lab/DigitalWealth"
-          PAT: ${{ secrets.CLIENT_TOKEN }}
+          CLIENT_TOKEN: ${{ secrets.CLIENT_TOKEN }}
         run: |
-          git config --global user.name "AitezazAhmed"
-          git config --global user.email "stoneghold4103@gmail.com"
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
 
-          git remote add client https://$PAT@github.com/$CLIENT_REPO.git
-          git fetch client
+          # Add client repo as remote
+          git remote add client https://${CLIENT_TOKEN}@github.com/${CLIENT_REPO}.git
+
+          # Push changes forcefully to client repo
           git push client main --force
