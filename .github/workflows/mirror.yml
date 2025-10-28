@@ -16,9 +16,9 @@ jobs:
       - name: Checkout source repo
         uses: actions/checkout@v4
         with:
-          persist-credentials: false  # ❗ prevents github-actions bot token
+          persist-credentials: false
 
-      - name: Mirror to client repo
+      - name: Mirror to client repo (clean push)
         env:
           PAT: ${{ secrets.CLIENT_TOKEN }}
           CLIENT_REPO: "digitalwealth38-lab/DigitalWealth"
@@ -26,8 +26,16 @@ jobs:
           git config --global user.name "AitezazAhmed"
           git config --global user.email "stoneghold4103@gmail.com"
 
+          echo "Cleaning up..."
+          git remote remove client || true
+          git gc --prune=now
+          git repack -a -d --depth=250 --window=250
+          git fsck --full
+
           echo "Adding client remote..."
           git remote add client https://AitezazAhmed:${PAT}@github.com/${CLIENT_REPO}.git
-          git fetch client || echo "No client branch yet"
-          echo "Pushing to client..."
+
+          echo "Force pushing clean data..."
+          git fetch --all
           git push client main --force
+
