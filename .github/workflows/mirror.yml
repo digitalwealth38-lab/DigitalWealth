@@ -5,22 +5,29 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+
 jobs:
   sync:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout source repo
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false  # ❗ prevents github-actions bot token
 
-      - name: Push to client repo
+      - name: Mirror to client repo
         env:
-          CLIENT_REPO: "digitalwealth38-lab/DigitalWealth"
           PAT: ${{ secrets.CLIENT_TOKEN }}
+          CLIENT_REPO: "digitalwealth38-lab/DigitalWealth"
         run: |
           git config --global user.name "AitezazAhmed"
           git config --global user.email "stoneghold4103@gmail.com"
 
+          echo "Adding client remote..."
           git remote add client https://AitezazAhmed:${PAT}@github.com/${CLIENT_REPO}.git
           git fetch client || echo "No client branch yet"
+          echo "Pushing to client..."
           git push client main --force
