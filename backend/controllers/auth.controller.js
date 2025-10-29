@@ -2,6 +2,7 @@ import User from "../models/user.model.js"
 import bcrypt from "bcryptjs"
 import crypto from "crypto";
 import sendEmail from "../lib/sendEmail.js"
+import nodemailer from "nodemailer";
 import admin from "../firebase.js";
 import { setUser } from "../services/auth.service.js";
 import dotenv from "dotenv";
@@ -212,29 +213,53 @@ export const checkAuth = (req, res) => {
     console.log("Error in checkAuth controller", error.message);
     res.status(500).json({ message: "Internal Server Error" });
   }
-};export async function forgotPassword(req, res) {
+};
+export async function sendEmail({ to, subject, html }) {
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT,
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+  });
+
+  const mailOptions = {
+    from: `"Digital Wealth" <no-reply@digitalwealthpk.com>`, // Must match verified domain
+    to,
+    subject,
+    html,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log("Email sent to:", to);
+  } catch (err) {
+    console.error("Email send failed:", err);
+    throw err;
+  }
+}
+export async function forgotPassword(req, res) {
   const { email } = req.body;
   if (!email) return res.status(400).json({ message: "Email required" });
 
   const user = await User.findOne({ email: email.toLowerCase() });
-  // Always respond with same message to avoid account probing
-  const genericResponse = { message: "If an account exists for that email, we sent a reset link." };
 
+  const genericResponse = { message: "If an account exists for that email, we sent a reset link." };
   if (!user) return res.status(200).json(genericResponse);
 
-  // generate token (raw)
-  const token = crypto.randomBytes(32).toString("hex"); // 64 chars
+  // Generate token
+  const token = crypto.randomBytes(32).toString("hex");
   const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
 
-  // save hashed token and expiry (e.g., 1 hour)
+  // Save token and expiry (1 hour)
   user.passwordResetToken = hashedToken;
-  user.passwordResetExpires = Date.now() + 60 * 60 * 1000; // 1 hour
+  user.passwordResetExpires = Date.now() + 60 * 60 * 1000;
   await user.save();
 
-  // create reset link (adjust domain)
+  // Create reset URL
   const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${token}&email=${encodeURIComponent(user.email)}`;
 
-  // email text/html
   const html = `
     <p>Hello ${user.name || ""},</p>
     <p>You requested a password reset. Click the link below to set a new password (valid for 1 hour):</p>
@@ -250,11 +275,12 @@ export const checkAuth = (req, res) => {
     });
     return res.status(200).json(genericResponse);
   } catch (err) {
-    // Clean up if email send fails
+    // Clean up token if email fails
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
     await user.save();
-    console.error("Email send error:", err);
+
+    console.error("Password reset email failed:", err);
     return res.status(500).json({ message: "Unable to send reset email" });
   }
 }
