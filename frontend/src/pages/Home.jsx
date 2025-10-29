@@ -180,7 +180,7 @@ const Section = ({ children, startVisible = false }) => {
       <section id="about" className="py-20 bg-white">
         <Section>
           <h2 className="text-4xl font-bold text-center text-sky-700 mb-16">Why Choose DIGITAL WEALTH</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 px-6 md:px-16">
             {[
               { icon: '💹', title: 'High Returns', desc: 'Earn consistent profits with smart, diversified investment plans designed to maximize your returns.' },
               { icon: '🔒', title: 'Secure Platform', desc: 'All funds are encrypted and protected. We prioritize your safety with top-notch security measures.' },
@@ -200,7 +200,7 @@ const Section = ({ children, startVisible = false }) => {
       <section id="how-it-works" className="py-20 bg-sky-50">
         <Section>
           <h2 className="text-4xl font-bold text-center text-sky-700 mb-16">How It Works</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center px-6 md:px-16">
             {[
               { icon: '📝', title: 'Sign Up', desc: 'Create an account in minutes and access our investment platform easily.' },
               { icon: '💰', title: 'Invest', desc: 'Choose your plan, deposit funds securely, and start earning profits daily.' },
