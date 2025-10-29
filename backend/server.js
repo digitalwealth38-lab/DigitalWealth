@@ -9,6 +9,7 @@ import depositRoutes from "./routes/depositRoutes.js"
 import adminRoutes from "./routes/adminRoutes.js"
 import packagesRoutes from "./routes/packagesRoutes.js"
 import withdrawalRoutes from "./routes/withdrawalRoutes.js"
+import {restrictToLoggedinUserOnly} from "./middleware/auth.middleware.js"
 import {connectDB} from "./lib/db.js"
 
 dotenv.config()
