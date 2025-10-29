@@ -266,7 +266,7 @@ const Section = ({ children, startVisible = false }) => {
           <h2 className="text-4xl font-bold text-center text-sky-700 mb-16">What Our Users Say</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center px-6 md:px-16">
             {[
-              { text: '"Invest Hub changed my life! Consistent profits and easy withdrawals."', name: 'Uzair.' },
+              { text: '"Digital Wealth changed my life! Consistent profits and easy withdrawals."', name: 'Uzair.' },
               { text: '"Safe, reliable, and profitable. Highly recommend to anyone looking to invest."', name: 'Ahmed.' },
               { text: '"The daily profit system is amazing! Withdrawals are instant."', name: 'Waqar.' },
             ].map((user, i) => (
