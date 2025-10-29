@@ -28,7 +28,7 @@ export const buyPackage = async (req, res) => {
         .json({ message: "Insufficient balance to buy this package" });
 
     // 4️⃣ Deduct amount & activate package
-    user.balance -= selectedPackage.price;
+    user.balance = Number((user.balance - selectedPackage.price).toFixed(2));
     user.investedBalance += selectedPackage.price;
     user.currentPackage = selectedPackage._id;
     user.hasActivePackage = true;
