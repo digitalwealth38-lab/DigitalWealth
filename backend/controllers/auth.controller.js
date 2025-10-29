@@ -1,7 +1,6 @@
 import User from "../models/user.model.js"
 import bcrypt from "bcryptjs"
 import crypto from "crypto";
-import sendEmail from "../lib/sendEmail.js"
 import nodemailer from "nodemailer";
 import admin from "../firebase.js";
 import { setUser } from "../services/auth.service.js";
