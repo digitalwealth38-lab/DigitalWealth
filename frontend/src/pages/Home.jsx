@@ -223,7 +223,7 @@ const Section = ({ children, startVisible = false }) => {
       How You Can Earn
     </h2>
 
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center px-6 md:px-16">
       {[
         {
           title: 'Earn Profit with Plans',
@@ -264,7 +264,7 @@ const Section = ({ children, startVisible = false }) => {
       <section id="testimonials" className="py-20 bg-sky-100">
         <Section>
           <h2 className="text-4xl font-bold text-center text-sky-700 mb-16">What Our Users Say</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center px-6 md:px-16">
             {[
               { text: '"Invest Hub changed my life! Consistent profits and easy withdrawals."', name: 'Uzair.' },
               { text: '"Safe, reliable, and profitable. Highly recommend to anyone looking to invest."', name: 'Ahmed.' },
