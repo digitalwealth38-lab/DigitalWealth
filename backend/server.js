@@ -9,8 +9,6 @@ import depositRoutes from "./routes/depositRoutes.js"
 import adminRoutes from "./routes/adminRoutes.js"
 import packagesRoutes from "./routes/packagesRoutes.js"
 import withdrawalRoutes from "./routes/withdrawalRoutes.js"
-
-import {restrictToLoggedinUserOnly} from "./middleware/auth.middleware.js"
 import {connectDB} from "./lib/db.js"
 
 dotenv.config()
@@ -29,7 +27,7 @@ app.use(express.json())
 app.use("/api/auth",authRoutes)
 app.use("/api/withdrawals", withdrawalRoutes);
 app.use("/api/users",restrictToLoggedinUserOnly,userRoutes);
-app.use("/api/user",restrictToLoggedinUserOnly,depositRoutes);
+app.use("/api/user",depositRoutes);
 app.use("/api/packages",restrictToLoggedinUserOnly,packagesRoutes);
 app.use("/api/home",homeRoutes);
 app.use("/api/admin",adminRoutes);
