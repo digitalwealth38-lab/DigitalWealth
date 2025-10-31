@@ -29,12 +29,13 @@ console.log(transactions)
 };
 export const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find().sort({ createdAt: -1 }); // latest first
+    const users = await User.find({ isAdmin: false }).sort({ createdAt: -1 });
     res.json({ users });
   } catch (error) {
     console.error("Failed to fetch users:", error);
     res.status(500).json({ message: "Failed to fetch users" });
   }
 };
+
 
 
