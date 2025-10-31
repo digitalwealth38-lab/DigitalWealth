@@ -201,6 +201,9 @@ export default function Withdrawal() {
                   className="w-full bg-transparent outline-none text-gray-700 text-lg"
                 />
               </div>
+                     <p className="text-sm text-sky-600 mt-2">
+        ⚠️ Withdrawal fees: $0.50 (TRX) | $1.00 (USDT)
+      </p>
             </div>
 
             {/* Wallet Address */}
@@ -231,6 +234,7 @@ export default function Withdrawal() {
                 <option value="TRX">TRX</option>
                 <option value="USDTTRC20">USDT (TRC20)</option>
               </select>
+       
             </div>
 
             {/* Submit Button */}

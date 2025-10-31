@@ -133,7 +133,7 @@ export default function Deposit() {
 
       {/* 🆕 Deposit Fee Info */}
       <p className="text-sm text-sky-600 mt-2">
-        ⚠️ A 0.5% deposit fee will be applied.
+        ⚠️ A 1.08% deposit fee will be applied.
       </p>
 
       {minLoading ? (

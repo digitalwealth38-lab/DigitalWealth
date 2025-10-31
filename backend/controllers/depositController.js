@@ -144,8 +144,8 @@ export const paymentWebhook = async (req, res) => {
 
           const user = await User.findById(transaction.user);
           if (user) {
-            // ✅ Deduct 0.5% platform fee
-            const fee = (price_amount * 0.5) / 100;
+            // ✅ Deduct 1.08% platform fee
+            const fee = (price_amount * 1.08) / 100;
             const creditedAmount = price_amount - fee;
 
             user.balance += creditedAmount;
