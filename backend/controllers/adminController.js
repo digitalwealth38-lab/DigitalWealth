@@ -37,7 +37,7 @@ const platformBalanceAgg = await User.aggregate([
 const platformBalance = platformBalanceAgg[0]?.total || 0;
 // 💼 6. Admin profit = deposits - withdrawals - platformBalance  
 const adminProfit = totalDeposits - totalWithdrawals - platformBalance;
-    const totalEarnings = totalEarningsAgg[0]?.total || 0;
+
     console.log(
       totalUsers,
       totalDeposits,
