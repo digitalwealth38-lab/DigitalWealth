@@ -9,7 +9,6 @@ export const getAdminStats = async (req, res) => {
     // 🧾 1. Total users
    const totalUsers = await User.countDocuments({ isAdmin: false });
 
-
     // 💰 2. Total deposits
     const totalDepositsAgg = await Transaction.aggregate([
       { $match: { type: "deposit", status: "finished" } },
@@ -31,13 +30,13 @@ console.log(totalWithdrawals);
   { $group: { _id: null, total: { $sum: "$investedBalance" } } },
 ]);
     const totalInvestedBalance = totalInvestedAgg[0]?.total || 0;
-    // 🪙 5. Platform balance = deposits - withdrawals
-    const platformBalance = totalDeposits - totalWithdrawals;
-
-    // 🤑 6. Total earnings (from user model)
-    const totalEarningsAgg = await User.aggregate([
-      { $group: { _id: null, total: { $sum: "$totalEarnings" } } },
-    ]);
+   // 🪙 5. Platform balance = sum of all user balances  
+const platformBalanceAgg = await User.aggregate([
+  { $group: { _id: null, total: { $sum: "$balance" } } },
+]);
+const platformBalance = platformBalanceAgg[0]?.total || 0;
+// 💼 6. Admin profit = deposits - withdrawals - platformBalance  
+const adminProfit = totalDeposits - totalWithdrawals - platformBalance;
     const totalEarnings = totalEarningsAgg[0]?.total || 0;
     console.log(
       totalUsers,
@@ -45,7 +44,7 @@ console.log(totalWithdrawals);
       totalWithdrawals,
       totalInvestedBalance,
       platformBalance,
-      totalEarnings
+      adminProfit,
     );
 
     res.status(200).json({
@@ -54,7 +53,7 @@ console.log(totalWithdrawals);
       totalWithdrawals,
       totalInvestedBalance,
       platformBalance,
-      totalEarnings,
+      adminProfit,
     });
   } catch (error) {
     console.error("❌ Error fetching admin stats:", error);

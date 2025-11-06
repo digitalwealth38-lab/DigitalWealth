@@ -60,8 +60,8 @@ console.log(stats)
     },
     {
       icon: DollarSign,
-      title: "Total Earnings",
-      value: `$${stats.totalEarnings?.toFixed(2) || 0}`,
+      title: "Admin Profit",
+      value: `$${stats.adminProfit?.toFixed(2) || 0}`,
       color: "text-green-600",
       bg: "bg-green-100",
     },
