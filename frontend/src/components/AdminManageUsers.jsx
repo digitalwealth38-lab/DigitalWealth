@@ -104,7 +104,7 @@ const AdminManageUsers = () => {
                   </td>
                   <td className="p-2">{user.referredBy || "-"}</td>
                   <td className="p-2 text-center">${user.balance || 0}</td>
-                  <td className="p-2 text-center">${user.investedBalance || 0}</td>
+                  <td className="p-2 text-center"> ${ (user.investedBalance || 0).toFixed(2) }</td>
                   <td className="p-2 text-center">${user.totalEarnings || 0}</td>
                   <td className="p-2 text-center">{user.hasActivePackage ? "✅ Yes" : "❌ No"}</td>
                   <td className="p-2 text-center">{user.teamSize || 0}</td>
