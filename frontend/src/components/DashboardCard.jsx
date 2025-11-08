@@ -16,7 +16,7 @@ export default function DashboardCard() {
         <LoadingSpinner />
       </div>;
 const stats = [
-  { icon: Wallet, title: "Total Balance", value: `$${user?.balance || 0}`, color: "text-sky-600" },
+  { icon: Wallet, title: "Total Balance", value: `$${(user?.balance || 0).toFixed(2)}`, color: "text-sky-600" },
   { icon: Briefcase, title: "Invested Balance", value: `$${user?.investedBalance || 0}`, color: "text-blue-600" },
   { icon: DollarSign, title: "Total Earnings", value: `$${user?.totalEarnings || 0}`, color: "text-green-600" },
   { icon: Users, title: "Team Size", value: `${user?.teamSize || 0} Members`, color: "text-indigo-600" },
