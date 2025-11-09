@@ -9,7 +9,7 @@ const Referral = () => {
 
   const handleCopyAndShare = () => {
     const referralCode = authUser?.referralCode || "";
-    const shareMessage = `🚀 Join me on this amazing platform and start earning today!\nUse my referral code: *${referralCode}* to get started.\n\n👉 https://www.digitalwealthpk.com/signup`;
+const shareMessage = `🚀 Join me on this amazing platform and start earning today!\nUse my referral code: *${referralCode}* to get started.\n\n👉 https://www.digitalwealthpk.com/signup?ref=${referralCode}`;
 
     // Copy referral code to clipboard
    

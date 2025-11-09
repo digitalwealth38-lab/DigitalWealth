@@ -13,7 +13,7 @@ export default function Signup() {
     password: "",
     referredBy: "", // ✅ added referral field
   });
-
+const [searchParams] = useSearchParams();
   const validateForm = () => {
     if (!formData.name?.trim()) return toast.error("Full name is required");
     if (!formData.email?.trim()) return toast.error("Email is required");
@@ -35,6 +35,12 @@ export default function Signup() {
 
     if (success === true) console.log(formData), signup(formData);
   };
+  useEffect(() => {
+  const referral = searchParams.get("ref"); // 👈 get ?ref= from URL
+  if (referral) {
+    setFormData((prev) => ({ ...prev, referredBy: referral }));
+  }
+}, [searchParams]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-100 via-white to-sky-50 text-gray-800 px-4">
