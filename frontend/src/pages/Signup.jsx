@@ -1,5 +1,5 @@
 import { Link,useSearchParams  } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useAuthStore } from "../stores/useAuthStore";
