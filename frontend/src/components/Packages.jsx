@@ -17,8 +17,7 @@ const Packages = () => {
       try {
         // ✅ Fetch all packages
         const { data: pkgData } = await axiosInstance.get("/packages");
-        setPackages(pkgData.packages);
-
+        setPackages(pkgData.packages.sort((a, b) => a.price - b.price));
         // ✅ Fetch user (to get currentPackage)
         const { data: userData } = await axiosInstance.get("/users/me");
         console.log(userData)
