@@ -1,6 +1,5 @@
 import Transaction from "../models/Transaction.js";
 import User from "../models/user.model.js";
-
 export const getSingleUserData = async (req, res) => {
   try {
     if (!req.user) return res.status(404).json({ message: "User not found" });
@@ -36,6 +35,7 @@ export const getAllUsers = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch users" });
   }
 };
+
 
 
 

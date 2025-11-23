@@ -7,7 +7,20 @@ import { setUser } from "../services/auth.service.js";
 import dotenv from "dotenv";
 import cloudinary from "../lib/cloudinary.js";
 dotenv.config();
+export const generateUserId = async () => {
+  let id;
 
+  while (true) {
+    // Generate 6-digit number
+    id = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // Check if unique
+    const exists = await User.findOne({ userId: id });
+    if (!exists) break;
+  }
+
+  return id;
+};
 
 export const googleLogin = async (req, res) => {
   const { token, referredBy } = req.body; // frontend should send optional referredBy
@@ -34,6 +47,7 @@ console.log(decoded)
         referralCode,
         referredBy: referredBy || null,
         googleId: decoded.uid,
+        userId: await generateUserId(),
       });
 
       await user.save();
@@ -121,13 +135,13 @@ export const signup = async (req, res) => {
       }
       validReferral = refUser.referralCode;
     }
-
     // 3️⃣ Create user (referralCode auto-generated in MongoDB)
     const newUser = new User({
       name,
       email,
       password,
       referredBy: validReferral || null,
+      userId: await generateUserId(),
     });
 
     await newUser.save();

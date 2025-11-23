@@ -90,6 +90,7 @@ const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
         path="/dashboard"
         element={authUser ? <Dashboard /> : <Navigate to="/" />}
       />
+      
     </Routes>
          <Toaster/>
     </div>
