@@ -27,7 +27,7 @@ const AdminManageUsers = () => {
   }, []);
 
   const filteredUsers = users.filter(user => 
-    user._id.toLowerCase().includes(searchId.toLowerCase()) &&
+    user.userId.toLowerCase().includes(searchId.toLowerCase()) &&
     user.name.toLowerCase().includes(searchName.toLowerCase()) &&
     user.email.toLowerCase().includes(searchEmail.toLowerCase())
   );
