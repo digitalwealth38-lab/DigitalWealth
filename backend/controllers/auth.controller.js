@@ -94,6 +94,7 @@ console.log(decoded)
         isAdmin: user.isAdmin,
         referralCode: user.referralCode,
         referredBy: user.referredBy,
+        userId:user.userId,
       },
       token: appToken,
     });
@@ -164,6 +165,7 @@ export const signup = async (req, res) => {
         email: newUser.email,
         referralCode: newUser.referralCode, // auto from model
         referredBy: newUser.referredBy,
+        userId:newUser.userId,
       },
     });
   } catch (error) {
@@ -196,7 +198,9 @@ res.status(200).json({
   email: user.email,
   isAdmin: user.isAdmin,
   profilePic: user.profilePic,
-  message: "Login successful"
+   userId:user.userId,
+  message: "Login successful",
+ 
 });
 
 
