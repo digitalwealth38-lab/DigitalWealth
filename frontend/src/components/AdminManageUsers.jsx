@@ -95,8 +95,8 @@ const AdminManageUsers = () => {
               </tr>
             ) : (
               filteredUsers.map((user) => (
-                <tr key={user._id} className="border-b hover:bg-sky-50 transition-colors">
-                  <td className="p-2 ">{user._id}</td>
+                <tr key={user.userId} className="border-b hover:bg-sky-50 transition-colors">
+                  <td className="p-2 ">{user.userId}</td>
                   <td className="p-2">{user.name}</td>
                   <td className="p-2 ">{user.email}</td>
                   <td className="p-2 ">
