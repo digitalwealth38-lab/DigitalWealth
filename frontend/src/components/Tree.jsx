@@ -61,7 +61,7 @@ if (!hierarchy || hierarchy.length === 0) {
                 <div className="member-box" key={member._id}>
                   <div className="icon">👤</div>
                   <div className="name">{member.name}</div>
-                  <div className="id">Id: {member._id}</div>
+                  <div className="id">Id: {member.userId}</div>
                   <div className="level">Referral: Direct Referral</div>
                    <div className="id">Referredby: {member.referredBy}</div>
                 </div>
@@ -80,7 +80,7 @@ if (!hierarchy || hierarchy.length === 0) {
                 <div className="member-box" key={member._id}>
                   <div className="icon">👤</div>
                   <div className="name">{member.name}</div>
-                  <div className="id">Id: {member._id}</div>
+                  <div className="id">Id: {member.userId}</div>
                   <div className="level">Referral: Second Referral</div>
                     <div className="id">Referredby: {member.referredBy}</div>
                 </div>
@@ -98,7 +98,7 @@ if (!hierarchy || hierarchy.length === 0) {
                 <div className="member-box" key={member._id}>
                   <div className="icon">👤</div>
                   <div className="name">{member.name}</div>
-                  <div className="id">Id: {member._id}</div>
+                  <div className="id">Id: {member.userId}</div>
                   <div className="level">Referral: Third Referral</div>
                     <div className="id">Referredby: {member.referredBy}</div>
                 </div>

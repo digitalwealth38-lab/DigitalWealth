@@ -16,6 +16,7 @@ export const getTeamHierarchy = async (req, res) => {
     const getUserDetails = async (ids, level) => {
       const users = await User.find({ _id: { $in: ids } }).select("name level referredBy");
       return users.map((user) => ({
+        userId:user.userId,
         _id: user._id,
         name: user.name,
         level: level, // use the hierarchy level
