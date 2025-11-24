@@ -67,6 +67,17 @@ export default function Navbar() {
           >
             Referrals
           </Link>
+               <Link
+            to="transfer"
+            spy={true}
+            smooth={true}
+            offset={-40}
+            duration={500}
+            className={linkClasses}
+            activeClass="border-b-2 border-white"
+          >
+            Transfer
+          </Link>
           
              <Link
             to="withdrawal"

@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Transaction from "../models/Transaction.js";
 import User from "../models/user.model.js";
 export const getSingleUserData = async (req, res) => {
@@ -33,6 +34,31 @@ export const getAllUsers = async (req, res) => {
   } catch (error) {
     console.error("Failed to fetch users:", error);
     res.status(500).json({ message: "Failed to fetch users" });
+  }
+};
+export const searchUsers = async (req, res) => {
+  try {
+    const { id, name, email } = req.query;
+        if (!id && !name && !email) {
+      return res.status(400).json({
+        error: "At least one search field is required",
+      });
+    }
+    console.log("Query object:", req.query);
+    const query = {};
+    if (id) query.userId = { $regex: id, $options: "i" };
+    // Partial, case-insensitive match for name and email
+    if (name) query.name = { $regex: name, $options: "i" };
+    if (email) query.email = { $regex: email, $options: "i" };
+    const users = await User.find(query)
+      .select("userId name email balance") // Return only necessary fields
+      .limit(50)
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({ users });
+  } catch (err) {
+    console.error("Search users error:", err);
+    res.status(500).json({ error: "Failed to search user" });
   }
 };
 
