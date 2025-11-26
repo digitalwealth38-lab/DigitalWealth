@@ -9,6 +9,8 @@ import depositRoutes from "./routes/depositRoutes.js"
 import adminRoutes from "./routes/adminRoutes.js"
 import packagesRoutes from "./routes/packagesRoutes.js"
 import withdrawalRoutes from "./routes/withdrawalRoutes.js"
+import paymentMethodRoutes from "./routes/paymentMethodRoutes.js"
+import localWithdrawRoutes from "./routes/localWithdrawRoutes.js"
 import {restrictToLoggedinUserOnly} from "./middleware/auth.middleware.js"
 import {connectDB} from "./lib/db.js"
 
@@ -25,7 +27,9 @@ app.use(
   })
 );
 app.use(express.json())
+app.use("/api",localWithdrawRoutes)
 app.use("/api/auth",authRoutes)
+app.use("/api/payment-methods", paymentMethodRoutes);
 app.use("/api/withdrawals", withdrawalRoutes);
 app.use("/api/users",restrictToLoggedinUserOnly,userRoutes);
 app.use("/api/user",depositRoutes);

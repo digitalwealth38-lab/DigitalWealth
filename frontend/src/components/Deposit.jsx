@@ -98,7 +98,7 @@ export default function Deposit() {
         transition={{ duration: 0.7 }}
         className="text-5xl font-extrabold text-sky-800 mb-12 tracking-tight text-center"
       >
-        Deposit <span className="text-sky-500">Funds</span>
+        Crypto  <span className="text-sky-500">Deposit</span>
       </motion.h1>
 
       {/* Main Content Grid */}

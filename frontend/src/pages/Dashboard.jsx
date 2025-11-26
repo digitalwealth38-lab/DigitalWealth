@@ -13,6 +13,11 @@ import ProgressRewards from "../components/ProgressRewards";
 import Tree from "../components/Tree";
 import TransferUsers from "../components/Transferuser";
 import TransferHistory from "../components/TransferHistory";
+import UserDepositPage from "../components/UserDepositPage";
+import LocalWithdrawal from "../components/LocalWithdrawal";
+import DepositSwitcher from "../components/DepositSwitcher";
+import WithdrawSwitcher from "../components/WithdrawSwitcher";
+import TransferSwitcher from "../components/TransferSwitcher";
 export default function Dashboard() {
    useEffect(() => {
     scrollSpy.update();   // 🔑 tells react-scroll to mark current section
@@ -31,7 +36,7 @@ export default function Dashboard() {
 
   {/* Deposit Section */}
   <div id="deposit" className="min-h-screen">
-    <Deposit/>
+    <DepositSwitcher/>
     {/* Your deposit content here */}
   </div>
 
@@ -45,11 +50,10 @@ export default function Dashboard() {
    <Referral/>
   </div>
    <div id="transfer" className="min-h-screen">
-   <TransferUsers/>
-   <TransferHistory/>
+   <TransferSwitcher/>
   </div>
   <div id="withdrawal" className="min-h-screen">
-    <Withdrawal/>
+   <WithdrawSwitcher/>
     {/* Your referrals content here */}
   </div>
     <div id="Rewards" className="min-h-screen">

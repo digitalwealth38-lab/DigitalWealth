@@ -70,7 +70,6 @@ handleGoogleLogin: async () => {
           const res = await axiosInstance.post("/auth/login", data);
           
           set({ authUser: res.data });
-
           toast.success("Log IN successfully");
           
         } catch (error) {

@@ -29,7 +29,7 @@ export default function Navbaradmin() {
   className={linkClasses}
   activeClass="border-b-2 border-white"
 >
-  Admin Dashboard
+  Dashboard
 </Link>
           <Link
             to="packagesadmin"
@@ -40,7 +40,7 @@ export default function Navbaradmin() {
             className={linkClasses}
             activeClass="border-b-2 border-white"
           >
-           Update Packages
+           Packages
           </Link>
              <Link
             to="adminwithdrawals"
@@ -51,10 +51,10 @@ export default function Navbaradmin() {
             className={linkClasses}
             activeClass="border-b-2 border-white"
           >
-            Withdrawals Requests
+            Withdrawals
           </Link>
                <Link
-            to="adminaddpackage"
+            to="payment"
             spy={true}
             smooth={true}
             offset={-40}
@@ -62,7 +62,7 @@ export default function Navbaradmin() {
             className={linkClasses}
             activeClass="border-b-2 border-white"
           >
-           Add Packages
+           Payment
           </Link>
              <Link
             to="manageusers"
@@ -73,7 +73,7 @@ export default function Navbaradmin() {
             className={linkClasses}
             activeClass="border-b-2 border-white"
           >
-           Manage Users
+          Users
           </Link>
 
         </div>

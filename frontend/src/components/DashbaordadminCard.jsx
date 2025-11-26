@@ -75,7 +75,7 @@ console.log(stats)
     {
       icon: ArrowDownCircle,
       title: "Total Deposits",
-      value: `$${stats.totalDeposits?.toFixed(2) || 0}`,
+      value: `$${stats.finalDeposits?.toFixed(2) || 0}`,
       color: "text-emerald-600",
       bg: "bg-emerald-100",
     },

@@ -7,6 +7,9 @@ import AdminWithdrawals from '../components/AdminWithdrawals';
 import AdminAddPackage from '../components/AdminAddPackage';
 import ProfilePage from '../components/Profile';
 import AdminManageUsers from '../components/AdminManageUsers';
+import AdminPaymentMethods from '../components/AdminPaymentMethods';
+import AdminManualDeposits from '../components/Adminmanualdeposite';
+import AdminLocalWithdrawals from '../components/AdminLocalWithdrawals';
 
 const Dashboardadmin = () => {
       useEffect(() => {
@@ -21,12 +24,15 @@ const Dashboardadmin = () => {
 </div>
 <div id="packagesadmin" className="">
   <Packagesadmin/>
+  <AdminAddPackage/>
 </div>
 <div id="adminwithdrawals" className="">
   <AdminWithdrawals/>
+  <AdminLocalWithdrawals/>
 </div>
-<div id="adminaddpackage" className="">
-  <AdminAddPackage/>
+<div id="payment" className="">
+  <AdminManualDeposits/>
+  <AdminPaymentMethods/>
 </div>
 <div id="manageusers" className="">
   <AdminManageUsers/>

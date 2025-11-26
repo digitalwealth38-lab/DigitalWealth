@@ -70,7 +70,6 @@ export const getUsertransfer = async (req, res) => {
       .populate("fromUser", "name email")
       .populate("toUser", "name email")
       .sort({ createdAt: -1 });
-      console.log(transactions)
 
     res.status(200).json({ success: true, transactions });
   } catch (err) {

@@ -2,6 +2,7 @@ import User from "../models/user.model.js";
 import Transaction from "../models/Transaction.js";
 import Withdrawal from "../models/Withdrawal.js";
 import Package from "../models/Package.js";
+import ManualDeposit from "../models/ManualDeposit.js";
 
 
 export const getAdminStats = async (req, res) => {
@@ -14,7 +15,15 @@ export const getAdminStats = async (req, res) => {
       { $match: { type: "deposit", status: "finished" } },
       { $group: { _id: null, total: { $sum: "$price_amount" } } },
     ]);
+    const manualDepAgg = await ManualDeposit.aggregate([
+  { $match: { status: "approved" } },          // only count approved ones
+  { $group: { _id: null, total: { $sum: "$price_amount" } } },
+]);
+
+const manualTotal = manualDepAgg[0]?.total || 0;
+
     const totalDeposits = totalDepositsAgg[0]?.total || 0;
+const finalDeposits=totalDeposits+manualTotal
 
     // 💸 3. Total withdrawals
 const totalWithdrawalsAgg = await Withdrawal.aggregate([
@@ -36,11 +45,11 @@ const platformBalanceAgg = await User.aggregate([
 ]);
 const platformBalance = platformBalanceAgg[0]?.total || 0;
 // 💼 6. Admin profit = deposits - withdrawals - platformBalance  
-const adminProfit = totalDeposits - totalWithdrawals - platformBalance;
+const adminProfit = finalDeposits - totalWithdrawals - platformBalance;
 
     console.log(
       totalUsers,
-      totalDeposits,
+      finalDeposits,
       totalWithdrawals,
       totalInvestedBalance,
       platformBalance,
@@ -49,7 +58,7 @@ const adminProfit = totalDeposits - totalWithdrawals - platformBalance;
 
     res.status(200).json({
       totalUsers,
-      totalDeposits,
+      finalDeposits,
       totalWithdrawals,
       totalInvestedBalance,
       platformBalance,

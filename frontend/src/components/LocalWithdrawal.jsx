@@ -4,28 +4,31 @@ import { Banknote, Clock, CheckCircle2, XCircle, Wallet } from "lucide-react";
 import { axiosInstance } from "../lib/axios";
 import { toast } from "react-hot-toast";
 
-export default function Withdrawal() {
+export default function LocalWithdrawal() {
   const [amount, setAmount] = useState("");
-  const [currency, setCurrency] = useState("TRX");
-  const [walletAddress, setWalletAddress] = useState("");
+  const [method, setMethod] = useState("");
+  const [accountName, setAccountName] = useState("");
+  const [accountNumber, setAccountNumber] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [history, setHistory] = useState([]);
-
-  // ✅ Helper function to format transactions
- 
+  const [methods, setMethods] = useState([]);
+console.log(history)
+  // Format transactions for display
   const formatTransactions = (transactions) => {
     return transactions.map((tx) => ({
       id: tx._id,
       amount: tx.amount,
-      currency: tx.currency,
-      txHash: tx.txHash,
+      method: tx.method,
+      accountName: tx.accountName,
+      accountNumber: tx.accountNumber,
       adminNote: tx.adminNote,
-      address: tx.walletAddress || "N/A",
       status: tx.status,
-      date: tx.date ? new Date(tx.date).toLocaleDateString("en-GB") : "N/A",
-      time: tx.date
-        ? new Date(tx.date).toLocaleTimeString("en-GB", {
+      date: tx.createdAt
+        ? new Date(tx.createdAt).toLocaleDateString("en-GB")
+        : "N/A",
+      time: tx.createdAt
+        ? new Date(tx.createdAt).toLocaleTimeString("en-GB", {
             hour: "2-digit",
             minute: "2-digit",
             second: "2-digit",
@@ -34,74 +37,81 @@ export default function Withdrawal() {
     }));
   };
 
-  // ✅ Fetch withdrawal history
+  // Fetch withdrawal methods (JazzCash, EasyPaisa, etc.)
+  const fetchMethods = async () => {
+    try {
+      const res = await axiosInstance.get("/payment-methods"); // same as deposit fetch
+      setMethods(res.data);
+    } catch (err) {
+      console.error("Failed to fetch methods:", err);
+    }
+  };
+
+  // Fetch user withdrawal history
   const fetchHistory = async () => {
     try {
-      const res = await axiosInstance.get("/withdrawals/history");
-      if (res.data.success && res.data.transactions) {
-        setHistory(formatTransactions(res.data.transactions));
+      const res = await axiosInstance.get("/history");
+      
+      if (res.data.transactions) {
+        setHistory(formatTransactions(res.data.transactions
+));
+
       }
     } catch (err) {
-      console.error("❌ Failed to fetch withdraw history:", err);
+      console.error("Failed to fetch withdraw history:", err);
     }
   };
 
   useEffect(() => {
+    fetchMethods();
     fetchHistory();
   }, []);
 
-  // ✅ Handle withdrawal request
+  // Handle withdrawal submission
   const handleWithdraw = async (e) => {
     e.preventDefault();
     setError("");
 
-    const trimmedAddress = walletAddress.trim();
-    const trimmedAmount = amount.trim();
-
-    // Frontend validations
-    if (!trimmedAmount || isNaN(trimmedAmount) || parseFloat(trimmedAmount) <= 0) {
-      setError("Please enter a valid withdrawal amount.");
-      toast.error("Please enter a valid withdrawal amount.");
+    if (!amount || parseFloat(amount) <= 0) {
+      toast.error("Enter a valid amount");
+      setError("Enter a valid amount");
       return;
     }
-    if (!trimmedAddress) {
-      setError("Please enter your wallet address.");
-      toast.error("Please enter your wallet address.");
+    if (!method) {
+      toast.error("Select a withdrawal method");
+      setError("Select a withdrawal method");
       return;
     }
-    if (!currency) {
-      setError("Please select a currency.");
-      toast.error("Please select a currency.");
+    if (!accountName || !accountNumber) {
+      toast.error("Enter account name and number");
+      setError("Enter account name and number");
       return;
     }
 
     try {
       setLoading(true);
-
-      const res = await axiosInstance.post("/withdrawals", {
-        amount: parseFloat(trimmedAmount),
-        currency,
-        walletAddress: trimmedAddress,
+      const res = await axiosInstance.post("/withdraw/create", {
+        amount: parseFloat(amount),
+        method,
+        accountName,
+        accountNumber,
       });
-      if (res.data.success) {
-        toast.success("✅ Withdrawal request submitted successfully! Admin will review soon.");
-        setAmount("");
-        setWalletAddress("");
 
-        // ✅ Refresh and format updated history (fixed bug here)
-        const updated = await axiosInstance.get("/withdrawals/history");
-        
-        if (updated.data.success && updated.data.transactions) {
-          setHistory(formatTransactions(updated.data.transactions));
-        }
+      if (res.data.withdraw) {
+        toast.success("✅ Withdrawal request submitted successfully!");
+        setAmount("");
+        setMethod("");
+        setAccountName("");
+        setAccountNumber("");
+        fetchHistory();
       } else {
-        setError(res.data.msg || "Failed to submit withdrawal request.");
-        toast.error(res.data.msg || "Failed to submit withdrawal request.");
+        toast.error(res.data.message || "Failed to submit withdrawal request");
+        setError(res.data.message || "Failed to submit withdrawal request");
       }
     } catch (err) {
-      const msg = err?.response?.data?.msg || "Something went wrong, please try again.";
-      setError(msg);
+      const msg = err?.response?.data?.message || "Something went wrong";
       toast.error(msg);
+      setError(msg);
     } finally {
       setLoading(false);
     }
@@ -109,18 +119,17 @@ export default function Withdrawal() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-sky-100 flex flex-col items-center justify-center px-6 py-16">
-      {/* Heading */}
       <motion.h1
         initial={{ opacity: 0, y: -40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7 }}
         className="text-5xl font-extrabold text-sky-800 mb-12 tracking-tight text-center"
       >
-        Crypto <span className="text-sky-500">Withdraw</span>
+        Local  <span className="text-sky-500">Withdraw</span>
       </motion.h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 w-full max-w-6xl">
-        {/* ✅ Withdrawal History */}
+        {/* Withdrawal History */}
         <motion.div
           initial={{ opacity: 0, x: -40 }}
           animate={{ opacity: 1, x: 0 }}
@@ -134,7 +143,6 @@ export default function Withdrawal() {
           {history.length > 0 ? (
             <div className="flex flex-col gap-4 max-h-[18rem] overflow-y-auto pr-2">
               {history.map((item) => (
-                console.log(item),
                 <motion.div
                   key={item.id}
                   whileHover={{ scale: 1.02 }}
@@ -142,18 +150,28 @@ export default function Withdrawal() {
                 >
                   <div>
                     <p className="text-gray-800 font-semibold">
-                      {item.amount} USD - {item.currency}
+                      {item.amount} USD - {item.method}
                     </p>
-                    <p className="text-gray-500 text-sm">Address: {item.address}</p>
-                     <p className="text-gray-500 text-sm">txHash: {item.txHash}</p>
-                     <p className="text-gray-500 text-sm">Admin Note: {item.adminNote}</p>
+                    <p className="text-gray-500 text-sm">
+                      Account Name: {item.accountName}
+                    </p>
+                    <p className="text-gray-500 text-sm">
+                      Account Number: {item.accountNumber}
+                    </p>
+                    <p className="text-gray-500 text-sm">Admin Note: {item.adminNote}</p>
                     <p className="text-gray-500 text-sm">Date: {item.date}</p>
                     <p className="text-gray-500 text-sm">Time: {item.time}</p>
                   </div>
                   <div className="flex items-center gap-2">
-                    {item.status === "approved" && <CheckCircle2 className="text-green-500" size={22} />}
-                    {item.status === "pending" && <Clock className="text-yellow-500" size={22} />}
-                    {item.status === "rejected" && <XCircle className="text-red-500" size={22} />}
+                    {item.status === "approved" && (
+                      <CheckCircle2 className="text-green-500" size={22} />
+                    )}
+                    {item.status === "pending" && (
+                      <Clock className="text-yellow-500" size={22} />
+                    )}
+                    {item.status === "rejected" && (
+                      <XCircle className="text-red-500" size={22} />
+                    )}
                     <span
                       className={`font-medium ${
                         item.status === "approved"
@@ -174,7 +192,7 @@ export default function Withdrawal() {
           )}
         </motion.div>
 
-        {/* ✅ Withdrawal Form */}
+        {/* Withdrawal Form */}
         <motion.div
           initial={{ opacity: 0, x: 40 }}
           animate={{ opacity: 1, x: 0 }}
@@ -201,40 +219,59 @@ export default function Withdrawal() {
                   className="w-full bg-transparent outline-none text-gray-700 text-lg"
                 />
               </div>
-                     <p className="text-sm text-sky-600 mt-2">
-        ⚠️ Withdrawal fees: $0.50 (TRX) | $1.00 (USDT)
-      </p>
             </div>
 
-            {/* Wallet Address */}
+            {/* Method Selector */}
             <div>
               <label className="text-gray-700 font-semibold mb-2 block">
-                Wallet Address
+                Select Method
+              </label>
+              <select
+                value={method}
+                onChange={(e) => setMethod(e.target.value)}
+                className="border border-sky-200 rounded-2xl p-3 bg-white/70 outline-none focus:ring-2 focus:ring-sky-400 text-gray-700 w-full"
+              >
+                <option value="">Select Method</option>
+                {methods.map((m) => (
+                  <option key={m._id} value={m.method}>
+                    {m.method}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Account Name */}
+            <div>
+              <label className="text-gray-700 font-semibold mb-2 block">
+                Account Name
               </label>
               <div className="flex items-center gap-3 border border-sky-200 rounded-2xl p-3 bg-white/70 focus-within:ring-2 focus-within:ring-sky-400">
                 <Wallet className="text-sky-500" size={24} />
                 <input
                   type="text"
-                  placeholder="Enter your TRX / USDT wallet address"
-                  value={walletAddress}
-                  onChange={(e) => setWalletAddress(e.target.value)}
+                  placeholder="Enter account name"
+                  value={accountName}
+                  onChange={(e) => setAccountName(e.target.value)}
                   className="w-full bg-transparent outline-none text-gray-700 text-lg"
                 />
               </div>
             </div>
 
-            {/* Currency Selector */}
-            <div className="flex flex-col gap-2">
-              <label className="text-gray-700 font-semibold">Currency</label>
-              <select
-                value={currency}
-                onChange={(e) => setCurrency(e.target.value)}
-                className="border border-sky-200 rounded-2xl p-3 bg-white/70 outline-none focus:ring-2 focus:ring-sky-400 text-gray-700"
-              >
-                <option value="TRX">TRX</option>
-                <option value="USDTTRC20">USDT (TRC20)</option>
-              </select>
-       
+            {/* Account Number */}
+            <div>
+              <label className="text-gray-700 font-semibold mb-2 block">
+                Account Number
+              </label>
+              <div className="flex items-center gap-3 border border-sky-200 rounded-2xl p-3 bg-white/70 focus-within:ring-2 focus-within:ring-sky-400">
+                <Wallet className="text-sky-500" size={24} />
+                <input
+                  type="text"
+                  placeholder="Enter account number"
+                  value={accountNumber}
+                  onChange={(e) => setAccountNumber(e.target.value)}
+                  className="w-full bg-transparent outline-none text-gray-700 text-lg"
+                />
+              </div>
             </div>
 
             {/* Submit Button */}
@@ -263,5 +300,3 @@ export default function Withdrawal() {
     </div>
   );
 }
-
-
