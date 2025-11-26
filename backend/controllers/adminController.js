@@ -3,6 +3,7 @@ import Transaction from "../models/Transaction.js";
 import Withdrawal from "../models/Withdrawal.js";
 import Package from "../models/Package.js";
 import ManualDeposit from "../models/ManualDeposit.js";
+import LocalWithdraw from "../models/LocalWithdraw.js";
 
 
 export const getAdminStats = async (req, res) => {
@@ -30,9 +31,15 @@ const totalWithdrawalsAgg = await Withdrawal.aggregate([
   { $match: { status: "approved" } },
   { $group: { _id: null, total: { $sum: "$amount" } } },
 ]);
+const totalManualAgg = await LocalWithdraw.aggregate([
+  { $match: { status: "approved" } },
+  { $group: { _id: null, total: { $sum: "$amount" } } },
+]);
+const totalManual = totalManualAgg[0]?.total || 0;
 
 const totalWithdrawals = totalWithdrawalsAgg[0]?.total || 0;
 console.log(totalWithdrawals);
+const finalWithdrawal=totalWithdrawals+totalManual
 
     // 📊 4. Total invested balance (check field name in Package model)
   const totalInvestedAgg = await User.aggregate([
@@ -50,7 +57,7 @@ const adminProfit = finalDeposits - totalWithdrawals - platformBalance;
     console.log(
       totalUsers,
       finalDeposits,
-      totalWithdrawals,
+      finalWithdrawal,
       totalInvestedBalance,
       platformBalance,
       adminProfit,
@@ -59,7 +66,7 @@ const adminProfit = finalDeposits - totalWithdrawals - platformBalance;
     res.status(200).json({
       totalUsers,
       finalDeposits,
-      totalWithdrawals,
+      finalWithdrawal,
       totalInvestedBalance,
       platformBalance,
       adminProfit,

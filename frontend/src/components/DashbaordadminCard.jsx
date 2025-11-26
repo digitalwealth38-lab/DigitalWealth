@@ -82,7 +82,7 @@ console.log(stats)
     {
       icon: ArrowUpCircle,
       title: "Total Withdrawals",
-      value: `$${stats.totalWithdrawals?.toFixed(2) || 0}`,
+      value: `$${stats.finalWithdrawal?.toFixed(2) || 0}`,
       color: "text-rose-600",
       bg: "bg-rose-100",
     },
