@@ -29,7 +29,45 @@ const stats = [
     >
         <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
         <WelcomeHeader />
+<div className="fixed right-4 top-28 w-80 sm:w-96 bg-white border border-sky-200 shadow-xl rounded-xl p-5 z-50">
+  <div className="flex justify-between items-start">
+    <h2 className="text-lg font-bold text-sky-700">🔔 Coming Soon!</h2>
 
+    <button
+      onClick={(e) => {
+        e.target.closest("div.fixed").style.display = "none";
+      }}
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="h-5 w-5 text-gray-500 hover:text-red-500"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+      >
+        <path
+          fillRule="evenodd"
+          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+          clipRule="evenodd"
+        />
+      </svg>
+    </button>
+  </div>
+
+  <p className="text-gray-600 mt-2 text-sm">
+    A new <strong>Ticket & Lucky Draw System</strong> is launching on <strong>1 January</strong>.
+  </p>
+
+  <ul className="list-disc ml-5 mt-3 text-sm text-gray-700">
+    <li>Tickets added automatically when you buy any package.</li>
+    <li>You can buy extra tickets separately.</li>
+    <li>Old users get tickets based on active packages.</li>
+    <li>Use tickets to join Weekly & Monthly Lucky Draws.</li>
+  </ul>
+
+  <p className="mt-3 text-sky-600 font-medium text-sm">
+    Get ready — exciting rewards are on the way!
+  </p>
+</div>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
