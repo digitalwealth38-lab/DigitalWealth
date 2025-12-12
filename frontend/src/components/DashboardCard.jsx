@@ -17,8 +17,8 @@ export default function DashboardCard() {
       </div>;
 const stats = [
   { icon: Wallet, title: "Total Balance", value: `$${(user?.balance || 0).toFixed(2)}`, color: "text-sky-600" },
-  { icon: Briefcase, title: "Invested Balance", value: `$${user?.investedBalance || 0}`, color: "text-blue-600" },
-  { icon: DollarSign, title: "Total Earnings", value: `$${user?.totalEarnings || 0}`, color: "text-green-600" },
+  { icon: Briefcase, title: "Invested Balance", value: `$${(user?.investedBalance || 0).toFixed(2)}`, color: "text-blue-600" },
+  { icon: DollarSign, title: "Total Earnings", value: `$${(user?.totalEarnings || 0).toFixed(2)}`, color: "text-green-600" },
   { icon: Users, title: "Team Size", value: `${user?.teamSize || 0} Members`, color: "text-indigo-600" },
   { icon: Gift, title: "Direct Referrals", value: `${user?.directReferrals || 0}`, color: "text-purple-600" },
   { icon: Trophy, title: "Level", value: user?.level || "0", color: "text-yellow-600" },
