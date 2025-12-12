@@ -79,7 +79,7 @@ console.log(decoded)
     // 🍪 Set cookie
     res.cookie("uid", appToken, {
       httpOnly: true,
-      sameSite: "None",
+      sameSite: "Lax",
       secure: true,
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
@@ -152,7 +152,7 @@ export const signup = async (req, res) => {
     res.cookie("uid", token, {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       httpOnly: true,
-      sameSite: "None",
+      sameSite: "Lax",
       secure: true,
     });
 
@@ -189,7 +189,7 @@ if(!iscorrectPassword){
   res.cookie("uid", token, { 
     maxAge: 7 * 24 * 60 * 60 * 1000, // MS
     httpOnly: true, // prevent XSS attacks cross-site scripting attacks
-    sameSite: "None", // CSRF attacks cross-site request forgery attacks
+    sameSite: "Lax", // CSRF attacks cross-site request forgery attacks
     secure: true,
    });
 res.status(200).json({
