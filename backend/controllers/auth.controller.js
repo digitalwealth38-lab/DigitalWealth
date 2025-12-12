@@ -77,14 +77,12 @@ console.log(decoded)
     const appToken = setUser(user);
 
     // 🍪 Set cookie
-res.cookie("uid", appToken, {
-  httpOnly: true,
-  secure: false,     // ❗ Must be false for HTTP
-  sameSite: "Lax",   // ❗ Cannot use None on HTTP
-  maxAge: 7 * 24 * 60 * 60 * 1000
-});
-
-
+    res.cookie("uid", appToken, {
+      httpOnly: true,
+      sameSite: "None",
+      secure: process.env.NODE_ENV !== "development",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
 
     // ✅ Send success response
     res.status(200).json({
@@ -151,14 +149,12 @@ export const signup = async (req, res) => {
 
     // 4️⃣ Generate JWT token
     const token = setUser(newUser);
-    
-res.cookie("uid", token, {
-  httpOnly: true,
-  secure: false,     // ❗ Must be false for HTTP
-  sameSite: "Lax",   // ❗ Cannot use None on HTTP
-  maxAge: 7 * 24 * 60 * 60 * 1000
-});
-
+    res.cookie("uid", token, {
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      httpOnly: true,
+      sameSite: "None",
+      secure: process.env.NODE_ENV !== "development",
+    });
 
     // ✅ 5️⃣ Success Response
     res.status(201).json({
@@ -190,13 +186,12 @@ if(!iscorrectPassword){
   return res.status(400).json({ message: "Invalid Credentials" });
 }
   const token = setUser(user);
-res.cookie("uid", token, {
-  httpOnly: true,
-  secure: false,     // ❗ Must be false for HTTP
-  sameSite: "Lax",   // ❗ Cannot use None on HTTP
-  maxAge: 7 * 24 * 60 * 60 * 1000
-});
-
+  res.cookie("uid", token, { 
+    maxAge: 7 * 24 * 60 * 60 * 1000, // MS
+    httpOnly: true, // prevent XSS attacks cross-site scripting attacks
+    sameSite: "None", // CSRF attacks cross-site request forgery attacks
+    secure: process.env.NODE_ENV !== "development",
+   });
 res.status(200).json({
   _id: user._id,
   fullName: user.fullName,
