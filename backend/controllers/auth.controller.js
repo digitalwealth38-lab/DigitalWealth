@@ -80,7 +80,7 @@ console.log(decoded)
     res.cookie("uid", appToken, {
       httpOnly: true,
       sameSite: "None",
-      secure: process.env.NODE_ENV !== "development",
+      secure: true,
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
@@ -153,7 +153,7 @@ export const signup = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       httpOnly: true,
       sameSite: "None",
-      secure: process.env.NODE_ENV !== "development",
+      secure: true,
     });
 
     // ✅ 5️⃣ Success Response
@@ -190,7 +190,7 @@ if(!iscorrectPassword){
     maxAge: 7 * 24 * 60 * 60 * 1000, // MS
     httpOnly: true, // prevent XSS attacks cross-site scripting attacks
     sameSite: "None", // CSRF attacks cross-site request forgery attacks
-    secure: process.env.NODE_ENV !== "development",
+    secure: true,
    });
 res.status(200).json({
   _id: user._id,
