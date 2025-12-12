@@ -79,8 +79,8 @@ console.log(decoded)
     // 🍪 Set cookie
     res.cookie("uid", appToken, {
       httpOnly: true,
-      sameSite: "Lax",
-      secure: true,
+      sameSite: "None",
+      secure: process.env.NODE_ENV !== "development",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
@@ -152,8 +152,8 @@ export const signup = async (req, res) => {
     res.cookie("uid", token, {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       httpOnly: true,
-      sameSite: "Lax",
-      secure: true,
+      sameSite: "None",
+      secure: process.env.NODE_ENV !== "development",
     });
 
     // ✅ 5️⃣ Success Response
@@ -189,8 +189,8 @@ if(!iscorrectPassword){
   res.cookie("uid", token, { 
     maxAge: 7 * 24 * 60 * 60 * 1000, // MS
     httpOnly: true, // prevent XSS attacks cross-site scripting attacks
-    sameSite: "Lax", // CSRF attacks cross-site request forgery attacks
-    secure: true,
+    sameSite: "None", // CSRF attacks cross-site request forgery attacks
+    secure: process.env.NODE_ENV !== "development",
    });
 res.status(200).json({
   _id: user._id,
