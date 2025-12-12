@@ -42,7 +42,7 @@ console.log(decoded)
       user = new User({
         name: decoded.name || decoded.email.split("@")[0],
         email: decoded.email,
-        password: decoded.email,
+        password: crypto.randomBytes(16).toString("hex"),
         profilePic:decoded.picture, // dummy password since Google user
         referralCode,
         referredBy: referredBy || null,
