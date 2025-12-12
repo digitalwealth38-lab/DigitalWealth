@@ -166,6 +166,7 @@ export const signup = async (req, res) => {
         referralCode: newUser.referralCode, // auto from model
         referredBy: newUser.referredBy,
         userId:newUser.userId,
+        token: token
       },
     });
   } catch (error) {
@@ -199,6 +200,7 @@ res.status(200).json({
   isAdmin: user.isAdmin,
   profilePic: user.profilePic,
    userId:user.userId,
+   token: token,
   message: "Login successful",
  
 });

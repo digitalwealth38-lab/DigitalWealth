@@ -3,12 +3,24 @@ import { getUser } from "../services/auth.service.js";
 // 🔒 Middleware for logged-in users
 export async function restrictToLoggedinUserOnly(req, res, next) {
   try {
-    const userUid = req.cookies?.uid;
-    if (!userUid) {
+    let token;
+
+    // 1️⃣ Check Authorization header
+    if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
+      token = req.headers.authorization.split(" ")[1];
+    }
+
+    // 2️⃣ Fallback to cookie
+    if (!token && req.cookies?.uid) {
+      token = req.cookies.uid;
+    }
+
+    if (!token) {
       return res.status(401).json({ message: "Unauthorized - No token provided" });
     }
 
-    const user = await getUser(userUid);
+    // ✅ Get user from token
+    const user = await getUser(token);
     if (!user) {
       return res.status(401).json({ message: "Invalid token or session expired" });
     }
