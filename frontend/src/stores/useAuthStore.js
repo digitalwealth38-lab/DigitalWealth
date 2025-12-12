@@ -20,19 +20,6 @@ export const useAuthStore=create((set,get)=>({
             set({authUser:res.data})
         } catch (error) {
             set({authUser:null})
-             const token = localStorage.getItem("uid");
-               if (token) {
-        // attach token manually to axios header
-        axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-        try {
-          const res = await axiosInstance.get("/auth/check");
-          set({ authUser: res.data });
-        } catch {
-          set({ authUser: null });
-        }
-      } else {
-        set({ authUser: null });
-      }
         }
         finally{
             set({ isCheckingAuth: false })
@@ -54,10 +41,6 @@ handleGoogleLogin: async () => {
       );
 
       set({ authUser: res.data });
-          if (res.data.token) {
-        localStorage.setItem("uid", res.data.token);
-        axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${res.data.token}`;
-      }
       toast.success("Google login successful");
     } catch (error) {
       console.error("Google login error:", error);
@@ -73,11 +56,6 @@ handleGoogleLogin: async () => {
           const res = await axiosInstance.post("/auth/signup", data);
          
           set({ authUser: res.data });
-               if (res.data.token) {
-        localStorage.setItem("uid", res.data.token);
-        axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${res.data.token}`;
-      }
-
           toast.success("Account created successfully");
         } catch (error) {
             const message = error?.response?.data?.message || error?.message || "Something went wrong!";
@@ -92,10 +70,6 @@ handleGoogleLogin: async () => {
           const res = await axiosInstance.post("/auth/login", data);
           
           set({ authUser: res.data });
-           if (res.data.token) {
-        localStorage.setItem("uid", res.data.token);
-        axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${res.data.token}`;
-      }
           toast.success("Log IN successfully");
           
         } catch (error) {
@@ -111,8 +85,6 @@ handleGoogleLogin: async () => {
         try {
           await axiosInstance.post("/auth/logout");
           set({ authUser: null });
-             localStorage.removeItem("uid");
-      delete axiosInstance.defaults.headers.common["Authorization"];
           toast.success("Logged out successfully");
         } catch (error) {
           toast.error(error.response.data.message);

@@ -166,7 +166,6 @@ export const signup = async (req, res) => {
         referralCode: newUser.referralCode, // auto from model
         referredBy: newUser.referredBy,
         userId:newUser.userId,
-        token: token
       },
     });
   } catch (error) {
@@ -200,12 +199,9 @@ res.status(200).json({
   isAdmin: user.isAdmin,
   profilePic: user.profilePic,
    userId:user.userId,
-   token: token,
   message: "Login successful",
  
 });
-
-
    } catch (error) {
     console.log("Error in login controller", error.message);
     res.status(500).json({ message: error.message });

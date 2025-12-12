@@ -4,10 +4,3 @@ export const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
   withCredentials: true, // allows cookies (for JWT)
 });
-axiosInstance.interceptors.request.use((config) => {
-  const token = localStorage.getItem("uid");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
