@@ -1,6 +1,8 @@
 import { Link } from "react-scroll";
 import { LogOut } from "lucide-react";
 import { useAuthStore } from "../stores/useAuthStore";
+import CurrencyToggle from "./CurrencyToggle";
+
 
 export default function Navbar() {
       const {logout} = useAuthStore();

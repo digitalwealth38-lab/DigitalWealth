@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../lib/axios";
 import { motion } from "framer-motion";
+import Price from "./Price";
 import { Crown, Rocket, Star, Gem, Zap, Medal } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -113,7 +114,7 @@ const Packages = () => {
                   isActivated ? "text-green-700" : "text-sky-700"
                 }`}
               >
-                ${pkg.price}
+               <Price amount={pkg.price} />
               </p>
 
               <div className="mt-6 space-y-2 text-gray-600">
