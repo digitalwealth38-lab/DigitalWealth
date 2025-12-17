@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../lib/axios";
 import toast, { Toaster } from "react-hot-toast";
 import { useAuthStore } from "../stores/useAuthStore";
-
+import Price from "./Price"; // adjust path if needed
 const TransferHistory = () => {
   const { authUser } = useAuthStore();
   const [transfers, setTransfers] = useState([]);
@@ -79,7 +79,9 @@ const TransferHistory = () => {
                     <td className="px-2 sm:px-4 py-2">
                       {tx.toUserId ?? "N/A"} ({tx.toUsername ?? "N/A"})
                     </td>
-                    <td className="px-2 sm:px-4 py-2">${tx.amount ?? 0}</td>
+                    <td className="px-2 sm:px-4 py-2">
+  <Price amount={tx.amount ?? 0} />
+</td>
                     <td className="px-2 sm:px-4 py-2">
                       {tx.createdAt
                         ? new Date(tx.createdAt).toLocaleString()

@@ -93,7 +93,6 @@ const stats = [
     {value}
   </h3>
 </div>
-
             </motion.div>
           ))}
         </motion.div>

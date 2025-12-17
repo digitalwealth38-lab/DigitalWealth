@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../lib/axios";
 import { motion } from "framer-motion";
+import Price from "./Price"; // adjust path if needed
+
 import toast from "react-hot-toast";
 
 const Packagesadmin = () => {
@@ -105,19 +107,18 @@ const Packagesadmin = () => {
                 className="border-b hover:bg-sky-50 transition-colors"
               >
                 <td className="p-3">{pkg.name}</td>
-                <td className="p-3">
-                  {editingId === pkg._id ? (
-                    <input
-                      name="price"
-                      value={formData.price}
-                      onChange={handleChange}
-                      className="w-20 border rounded p-1 text-center"
-                    />
-                  ) : (
-                    `$${pkg.price}`
-                  )}
-                </td>
-
+           <td className="p-3">
+  {editingId === pkg._id ? (
+    <input
+      name="price"
+      value={formData.price}
+      onChange={handleChange}
+      className="w-20 border rounded p-1 text-center"
+    />
+  ) : (
+    <Price amount={pkg.price || 0} />
+  )}
+</td>
                 {["level1", "level2", "level3"].map((lvl, i) => (
                   <td key={i} className="p-3 text-center">
                     {editingId === pkg._id ? (

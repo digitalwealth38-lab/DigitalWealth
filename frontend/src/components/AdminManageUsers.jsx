@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../lib/axios";
 import { Loader } from "lucide-react";
 import toast from "react-hot-toast";
+import Price from "./Price"; // adjust path if needed
 import avatarpng from "../assets/avatar.png";
 const AdminManageUsers = () => {
   const [users, setUsers] = useState([]);
@@ -103,9 +104,16 @@ const AdminManageUsers = () => {
                     {user.referralCode}
                   </td>
                   <td className="p-2">{user.referredBy || "-"}</td>
-                  <td className="p-2 text-center">${ (user.balance || 0).toFixed(2) }</td>
-                  <td className="p-2 text-center"> ${ (user.investedBalance || 0).toFixed(2) }</td>
-                  <td className="p-2 text-center">${(user.totalEarnings || 0).toFixed(2)}</td>
+                 <td className="p-2 text-center">
+  <Price amount={user.balance || 0} />
+</td>
+<td className="p-2 text-center">
+  <Price amount={user.investedBalance || 0} />
+</td>
+<td className="p-2 text-center">
+  <Price amount={user.totalEarnings || 0} />
+</td>
+
                   <td className="p-2 text-center">{user.hasActivePackage ? "✅ Yes" : "❌ No"}</td>
                   <td className="p-2 text-center">{user.teamSize || 0}</td>
                   <td className="p-2 text-center">{user.directReferrals || 0}</td>

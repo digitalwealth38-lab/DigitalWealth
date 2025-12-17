@@ -109,18 +109,27 @@ const Packages = () => {
               <h3 className="text-2xl font-semibold mt-4 text-gray-800">
                 {pkg.name}
               </h3>
-              <p
-                className={`text-3xl font-bold mt-2 ${
-                  isActivated ? "text-green-700" : "text-sky-700"
-                }`}
-              >
-               <Price amount={pkg.price} />
-              </p>
+           <p
+  className={`text-3xl font-bold mt-2 ${
+    isActivated ? "text-green-700" : "text-sky-700"
+  }`}
+>
+  <Price amount={pkg.price} />
+</p>
 
-              <div className="mt-6 space-y-2 text-gray-600">
-                <p>⭐ Direct Referral Bonus: {pkg.commissions.level1}%</p>
-                <p>⚡ Second Referral Bonus: {pkg.commissions.level2}%</p>
-                <p>💠 Third Referral Bonus: {pkg.commissions.level3}%</p>
+<div className="mt-6 space-y-2 text-gray-600">
+  <p>
+    ⭐ Direct Referral Bonus: {pkg.commissions.level1}% –{" "}
+    <Price amount={(pkg.price * pkg.commissions.level1) / 100} />
+  </p>
+  <p>
+    ⚡ Second Referral Bonus: {pkg.commissions.level2}% –{" "}
+    <Price amount={(pkg.price * pkg.commissions.level2) / 100} />
+  </p>
+  <p>
+    💠 Third Referral Bonus: {pkg.commissions.level3}% –{" "}
+    <Price amount={(pkg.price * pkg.commissions.level3) / 100} />
+  </p>
               </div>
 
               <div className="mt-6 text-sky-600 font-semibold">
