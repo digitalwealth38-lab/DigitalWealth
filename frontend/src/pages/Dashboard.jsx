@@ -18,6 +18,10 @@ import LocalWithdrawal from "../components/LocalWithdrawal";
 import DepositSwitcher from "../components/DepositSwitcher";
 import WithdrawSwitcher from "../components/WithdrawSwitcher";
 import TransferSwitcher from "../components/TransferSwitcher";
+import InvestPackages from "../components/Investmentpkg";
+import MyInvestments from "../components/MyInvestments";
+import PackagesSwitcher from "../components/PackagesSwitcher";
+import UnactiveMembers from "../components/UnactiveMembers";
 export default function Dashboard() {
    useEffect(() => {
     scrollSpy.update();   // 🔑 tells react-scroll to mark current section
@@ -42,13 +46,14 @@ export default function Dashboard() {
 
   {/* Packages Section */}
   <div id="packages" className="min-h-screen">
-    <Packages/>
+    <PackagesSwitcher/>
+  </div>
+   <div id="investment" className="min-h-screen">
+    <MyInvestments/>
   </div>
 
   {/* Referrals Section */}
-  <div id="referrals" className="min-h-screen">
-   <Referral/>
-  </div>
+  
    <div id="transfer" className="min-h-screen">
    <TransferSwitcher/>
   </div>
@@ -68,9 +73,11 @@ export default function Dashboard() {
     <div id="contact" className="min-h-screen">
       <Contact/>
   </div>
-   <div id="team" className="min-h-screen">
-      <Tree/>
-  </div>
+  <div id="referrals" className="min-h-screen">
+   <Referral/>
+    <Tree/>
+      <UnactiveMembers/>
+  </div> 
 </div>
     </div>
   );

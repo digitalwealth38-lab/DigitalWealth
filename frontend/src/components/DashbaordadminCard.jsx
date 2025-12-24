@@ -12,6 +12,7 @@ import {
   ArrowDownCircle,
   ArrowUpCircle,
   Wallet,
+  TrendingUp 
 } from "lucide-react";
 import CurrencyToggle from "./CurrencyToggle";
 
@@ -81,6 +82,13 @@ console.log(stats)
     color: "text-rose-600",
     bg: "bg-rose-100",
   },
+   {
+    icon:   TrendingUp ,
+    title: "Trading Deposit",
+    value: <Price amount={stats.tradingDeposit || 0} />,
+     color: "text-green-600",
+    bg: "bg-green-100",
+  },
       {
     icon: Users,
     title: "Total Users",
@@ -89,6 +97,7 @@ console.log(stats)
     bg: "bg-indigo-100",
   },
 ];
+
 
   return (
     <div className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">

@@ -1,13 +1,29 @@
 import mongoose from "mongoose";
 import Withdrawal from "../models/Withdrawal.js";
 import User from "../models/user.model.js";
-
+import WithdrawLimit from "../models/WithdrawLimit.js";
 // 🟢 User makes a withdrawal request
 export const createWithdrawal = async (req, res) => {
   try {
     const { amount, currency, walletAddress } = req.body;
-    console.log(amount,currency,walletAddress)
+    console.log(amount, currency, walletAddress);
     const userId = req.user.id;
+
+    // 🔹 ADDED: Withdraw limit validation
+    const limit = await WithdrawLimit.findOne();
+
+    if (!limit || !limit.isActive) {
+      return res
+        .status(400)
+        .json({ msg: "Withdraw is currently disabled" });
+    }
+
+    if (amount < limit.minAmount || amount > limit.maxAmount) {
+      return res.status(400).json({
+        msg: `Withdraw amount must be between ${limit.minAmount} and ${limit.maxAmount}`,
+      });
+    }
+    // 🔹 END ADDED LOGIC
 
     if (!amount || !currency || !walletAddress) {
       return res.status(400).json({ msg: "All fields are required" });
@@ -16,20 +32,27 @@ export const createWithdrawal = async (req, res) => {
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ msg: "User not found" });
 
+    // 🔹 ADDED: teamSize must be 1
+    if (user.teamSize !== 1) {
+      return res
+        .status(400)
+        .json({ msg: "You must have exactly 1 active team member to withdraw" });
+    }
+    // 🔹 END ADDED LOGIC
+
     if (user.balance < amount) {
       return res.status(400).json({ msg: "Insufficient balance" });
     }
 
     user.balance = parseFloat((user.balance - amount).toFixed(2));
-await user.save();
-
+    await user.save();
 
     const withdrawal = new Withdrawal({
       user: new mongoose.Types.ObjectId(userId),
       amount,
       currency,
       walletAddress,
-      type: "withdrawal", 
+      type: "withdrawal",
       status: "pending",
     });
 

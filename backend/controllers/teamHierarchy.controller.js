@@ -1,6 +1,31 @@
 import TeamHierarchy from "../models/TeamHierarchy.js";
 import User from "../models/user.model.js";
 
+const getUnactiveReferredMembers = async (req, res) => {
+  try {
+    const userId = req.user._id; // logged-in user
+
+    // Step 1: Get your referral code
+    const user = await User.findById(userId).select("referralCode");
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const referralCode = user.referralCode;
+
+    // Step 2: Find all users referred by you with isActive = false
+    const unactiveMembers = await User.find({
+      referredBy: referralCode,
+      hasActivePackage: false
+    }).select("name email referralCode"); // select only the fields you want
+
+    res.json(unactiveMembers);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+export default getUnactiveReferredMembers;
+
 // 🔹 Get hierarchy of logged-in user with member details
 export const getTeamHierarchy = async (req, res) => {
   try {

@@ -12,6 +12,12 @@ export async function restrictToLoggedinUserOnly(req, res, next) {
     if (!user) {
       return res.status(401).json({ message: "Invalid token or session expired" });
     }
+if (user.isBlocked) {
+  return res.status(403).json({
+    code: "USER_BLOCKED",
+    message: "Your account has been blocked",
+  });
+}
 
     req.user = user;
     next();

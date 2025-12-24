@@ -10,6 +10,7 @@ import {
   PhoneCall,
   User2,
   Wallet,
+  CheckCircle,
 } from "lucide-react";
 import { axiosInstance } from "../lib/axios";
 
@@ -185,6 +186,40 @@ export default function UserDepositPage() {
             </div>
           </div>
 
+       <div className="bg-gradient-to-br from-sky-50 to-white border border-sky-200 p-5 rounded-2xl mb-5 shadow-sm">
+  <h3 className="text-sky-700 font-semibold mb-4 text-center text-lg">
+    Deposit Processing Time
+  </h3>
+
+  <div className="space-y-3 text-gray-700">
+    <div className="flex items-start gap-3">
+      <Clock size={20} className="text-sky-600 mt-0.5" />
+      <span className="font-medium">
+        Processing Hours:
+        <span className="block text-sm text-gray-600">
+          9:00 AM – 5:00 PM (Monday to Friday)
+        </span>
+      </span>
+    </div>
+
+    <div className="flex items-start gap-3">
+      <CheckCircle size={20} className="text-sky-600 mt-0.5" />
+      <span className="font-medium">
+        Deposit Approval:
+        <span className="block text-sm text-gray-600">
+          Deposits are approved during official bank working hours only.
+        </span>
+      </span>
+    </div>
+  </div>
+
+  <div className="mt-4 text-center text-xs text-gray-500">
+    Please allow some time for verification outside working hours.
+  </div>
+</div>
+
+          
+
           {/* Amount */}
           <div className="mb-5">
             <label className="text-gray-700 font-semibold mb-2 block">Amount (PKR)</label>
@@ -201,16 +236,34 @@ export default function UserDepositPage() {
           </div>
 
           {/* Screenshot Upload */}
-          <div className="mb-5">
-            <label className="text-gray-700 font-semibold mb-2 block">Upload Screenshot</label>
-            <div className="flex items-center gap-3 border border-sky-200 rounded-2xl p-3 bg-white/70 cursor-pointer">
-              <Upload size={24} className="text-sky-500" />
-              <input type="file" accept="image/*" onChange={uploadFile} />
-            </div>
-            {screenshot && (
-              <img src={screenshot} className="w-40 h-40 mt-3 rounded-xl object-cover shadow-md border mx-auto" alt="Preview" />
-            )}
-          </div>
+       <div className="mb-5">
+  <label className="text-gray-700 font-semibold mb-2 block">
+    Upload Screenshot
+  </label>
+
+  <div className="flex items-center gap-3 border border-sky-200 rounded-2xl p-3 bg-white/70 cursor-pointer overflow-hidden">
+    <Upload size={24} className="text-sky-500 shrink-0" />
+
+    <input
+      type="file"
+      accept="image/*"
+      onChange={uploadFile}
+      className="w-full text-sm file:mr-3 file:py-1.5 file:px-3
+                 file:rounded-lg file:border-0
+                 file:bg-sky-100 file:text-sky-700
+                 hover:file:bg-sky-200"
+    />
+  </div>
+
+  {screenshot && (
+    <img
+      src={screenshot}
+      className="w-40 h-40 mt-3 rounded-xl object-cover shadow-md border mx-auto"
+      alt="Preview"
+    />
+  )}
+</div>
+
 
           {/* Error */}
           {error && (

@@ -59,7 +59,7 @@ export default function Navbar() {
             Packages
           </Link>
           <Link
-            to="referrals"
+            to="investment"
             spy={true}
             smooth={true}
             offset={-40}
@@ -67,8 +67,9 @@ export default function Navbar() {
             className={linkClasses}
             activeClass="border-b-2 border-white"
           >
-            Referrals
+            My Investment
           </Link>
+      
                <Link
             to="transfer"
             spy={true}
@@ -126,7 +127,7 @@ export default function Navbar() {
             Contact
           </Link>
           <Link
-            to="team"
+            to="referrals"
             spy={true}
             smooth={true}
             offset={-40}
@@ -134,7 +135,7 @@ export default function Navbar() {
             className={linkClasses}
             activeClass="border-b-2 border-white"
           >
-            Team
+            Referrals
           </Link>
           
         </div>
@@ -142,9 +143,9 @@ export default function Navbar() {
         {/* Logout Button (Always Visible) */}
         <button
           onClick={logout}
-          className="flex items-center gap-2 bg-white text-sky-600 font-semibold px-4 py-2 rounded-lg shadow-md hover:bg-sky-100 transition cursor-pointer"
+          className="flex items-center gap-2 bg-white text-sky-600 font-semibold px-2 py-1 rounded-lg shadow-md hover:bg-sky-100 transition cursor-pointer"
         >
-          <LogOut size={10} />
+          <LogOut size={2} />
           Logout
         </button>
       </div>

@@ -64,6 +64,17 @@ export default function Navbaradmin() {
           >
            Payment
           </Link>
+                <Link
+            to="Deposit"
+            spy={true}
+            smooth={true}
+            offset={-40}
+            duration={500}
+            className={linkClasses}
+            activeClass="border-b-2 border-white"
+          >
+           Trading Deposit
+          </Link>
              <Link
             to="manageusers"
             spy={true}

@@ -10,6 +10,7 @@ import ForgotPassword from './pages/ForgotPassword.jsx'
 import ResetPassword from './pages/ResetPassword.jsx'
 import Home from"./pages/Home.jsx"
 import Dashboardadmin from './pages/Dashboardadmin.jsx'
+import BlockedUser from './components/BlockedUser.jsx'
 const App = () => {
 const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
   useEffect(() => {
@@ -90,7 +91,18 @@ const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
         path="/dashboard"
         element={authUser ? <Dashboard /> : <Navigate to="/" />}
       />
-      
+     <Route
+  path="/blocked"
+  element={
+    authUser && authUser.isBlocked ? (
+      <BlockedUser />
+    ) : (
+      <Navigate to="/" replace />
+    )
+  }
+/>
+
+
     </Routes>
          <Toaster/>
     </div>

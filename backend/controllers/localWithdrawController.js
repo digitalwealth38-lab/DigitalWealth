@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import LocalWithdraw from "../models/LocalWithdraw.js";
 import User from "../models/user.model.js";
+import WithdrawLimit from "../models/WithdrawLimit.js";
 
 // 🟢 User creates a local withdrawal request
 export const createLocalWithdraw = async (req, res) => {
@@ -8,22 +9,55 @@ export const createLocalWithdraw = async (req, res) => {
     const { amount, method, accountName, accountNumber } = req.body;
     const userId = req.user.id;
 
+    // 1️⃣ Basic validation
     if (!amount || !method || !accountName || !accountNumber) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    const user = await User.findById(userId);
-    if (!user) return res.status(404).json({ message: "User not found" });
+    if (amount <= 0) {
+      return res.status(400).json({ message: "Invalid withdraw amount" });
+    }
 
+    // 2️⃣ Fetch withdraw limit
+    const limit = await WithdrawLimit.findOne();
+
+    if (!limit || !limit.isActive) {
+      return res
+        .status(400)
+        .json({ message: "Withdraw is currently disabled" });
+    }
+
+    if (amount < limit.minAmount || amount > limit.maxAmount) {
+      return res.status(400).json({
+        message: `Withdraw amount must be between ${limit.minAmount + "$"} and ${limit.maxAmount + "$"}`,
+      });
+    }
+
+    // 3️⃣ Fetch user
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // 🔹 ADDED: teamSize must be exactly 1
+    if (user.teamSize !== 1) {
+      return res.status(400).json({
+        message: "You must have exactly 1 active team member to withdraw",
+      });
+    }
+    // 🔹 END ADDED LOGIC
+
+    // 4️⃣ Balance check
     if (user.balance < amount) {
       return res.status(400).json({ message: "Insufficient balance" });
     }
 
-    // Deduct immediately (optional, or keep only on admin approve)
+    // 5️⃣ Deduct balance immediately
     user.balance = Math.round((user.balance - amount) * 100) / 100;
     await user.save();
 
-    const withdraw = new LocalWithdraw({
+    // 6️⃣ Create withdraw request
+    const withdraw = await LocalWithdraw.create({
       user: new mongoose.Types.ObjectId(userId),
       amount,
       method,
@@ -31,11 +65,10 @@ export const createLocalWithdraw = async (req, res) => {
       accountNumber,
     });
 
-    await withdraw.save();
-
-    res.json({
+    res.status(201).json({
       success: true,
-      message: "Local withdrawal request submitted successfully! Admin will review it.",
+      message:
+        "Local withdrawal request submitted successfully! Admin will review it.",
       withdraw,
     });
   } catch (err) {
@@ -43,6 +76,7 @@ export const createLocalWithdraw = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 // 🟣 User fetches their local withdrawal history
 export const getUserLocalWithdrawals = async (req, res) => {

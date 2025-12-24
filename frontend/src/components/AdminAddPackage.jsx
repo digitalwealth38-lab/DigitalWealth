@@ -56,11 +56,11 @@ const AdminAddPackage = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-sky-50 via-white to-sky-100 px-4 py-12">
       
-      <h1 className="text-4xl font-extrabold text-sky-700 mb-6 text-center">
-        ⚙️ Admin – Add Packages
+       <h1 className="text-4xl font-extrabold text-sky-700 mb-6 text-center">
+        ⚙️ Admin – Add Networking Package
       </h1>
       <h2 className="text-2xl font-semibold text-gray-700 mb-10 text-center">
-        Add New Package
+        Add New Networking Package
       </h2>
 
       <div className="w-full max-w-lg bg-white rounded-3xl shadow-2xl p-8 sm:p-10">

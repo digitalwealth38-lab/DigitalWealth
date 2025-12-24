@@ -13,7 +13,7 @@ import paymentMethodRoutes from "./routes/paymentMethodRoutes.js"
 import localWithdrawRoutes from "./routes/localWithdrawRoutes.js"
 import {restrictToLoggedinUserOnly} from "./middleware/auth.middleware.js"
 import {connectDB} from "./lib/db.js"
-
+import "./cron/dailyROI.js";
 dotenv.config()
 const app= express()
 app.use(cookieParser());

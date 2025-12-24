@@ -53,6 +53,10 @@ const UserSchema = new mongoose.Schema(
 
     // Admin Access
     isAdmin: { type: Boolean, default: false },
+    isBlocked: {
+  type: Boolean,
+  default: false,
+},
 
     // Password Reset
     passwordResetToken: { type: String, default: null },

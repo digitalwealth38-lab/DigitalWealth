@@ -61,9 +61,15 @@ const Packages = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-sky-100 py-20 px-6">
-      <h2 className="text-4xl font-bold text-center text-sky-700 mb-10">
-        💎 Our Investment Packages
-      </h2>
+        <div className="text-center mb-12">
+  <h2 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-600 drop-shadow-lg">
+    Our Networking Packages
+  </h2>
+  <p className="mt-4 text-lg md:text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
+    Get started with a package, build your team, and earn daily from your network’s activity.
+  </p>
+</div>
+
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto">
         {packages.map((pkg, index) => {

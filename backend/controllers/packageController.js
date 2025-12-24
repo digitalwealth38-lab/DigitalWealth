@@ -1,6 +1,8 @@
 import User from "../models/user.model.js";
 import Package from "../models/Package.js";
 import TeamHierarchy from "../models/TeamHierarchy.js";
+import InvestmentPackage from "../models/InvestmentPackage.js";
+import UserInvestment from "../models/UserInvestment.js";
 
 // 🛒 BUY PACKAGE CONTROLLER
 export const buyPackage = async (req, res) => {
@@ -156,9 +158,44 @@ const addToTeam = async (uplineId, newMemberId, level) => {
   } else if (level === 3 && !hierarchy.level3Members.includes(newMemberId)) {
     hierarchy.level3Members.push(newMemberId);
   }
-
   await hierarchy.save();
 };
+export const getinvestPackages = async (req, res) => {
+  try {
+    const pkgs = await InvestmentPackage.find({ isActive: true });
+    res.status(200).json({
+      success: true,
+      packages: pkgs,
+    });
+  } catch (error) {
+    console.error("❌ Error fetching investment packages:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while fetching investment packages",
+    });
+  }
+};
+
+export const getMyInvestment = async (req, res) => {
+  try {
+    const investments = await UserInvestment.find({ userId: req.user._id }).sort({ createdAt: -1 });
+
+    const result = investments.map((inv) => {
+      const dailyProfit = inv.todayProfit || 0; // ⚡ only today’s profit
+      return {
+        ...inv._doc,
+        dailyProfit,
+      };
+    });
+
+    res.json(result);
+  } catch (error) {
+    console.error("Error fetching investments:", error);
+    res.status(500).json({ message: "Server error fetching investments" });
+  }
+};
+
+
 
 // 🟢 GET ALL PACKAGES
 export const getAllPackages = async (req, res) => {
@@ -170,6 +207,136 @@ export const getAllPackages = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
+
+// 🟢 Create a new investment package
+export const createinvestPackage = async (req, res) => {
+  try {
+    const {
+      name,
+      investmentAmount,
+      durationDays,
+      returnType,
+      return: pkgReturn,
+      packageExpiresAt,
+      tier, // optional
+    } = req.body;
+
+    // Calculate totalProfit
+    let totalProfit = 0;
+    if (returnType === "DAILY") {
+      totalProfit = durationDays * pkgReturn; // daily return multiplied by days
+    } else if (returnType === "WEEKLY") {
+      const weeks = Math.floor(durationDays / 7);
+      totalProfit = weeks * pkgReturn; // weekly return multiplied by weeks
+    }
+
+    // Capital = invested amount
+    const capital = investmentAmount;
+
+    // Total return = capital + totalProfit
+    const totalReturn = capital + totalProfit;
+
+    // Create the package in MongoDB
+    const pkg = await InvestmentPackage.create({
+      name,
+      investmentAmount,
+      durationDays,
+      returnType,
+      return: pkgReturn,
+      packageExpiresAt,
+      tier,
+      totalProfit,
+      capital,
+      totalReturn,
+      isActive: true,
+    });
+
+    console.log("Package Data:", req.body);
+
+    res.status(201).json({
+      success: true,
+      message: "Investment package created successfully",
+      package: pkg,
+    });
+  } catch (error) {
+    console.error("❌ Error creating investment package:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while creating investment package",
+    });
+  }
+};
+export const buyInvestpackage = async (req, res) => {
+  try {
+    const { packageId } = req.body;
+
+    const user = await User.findById(req.user._id);
+    const pkg = await InvestmentPackage.findById(packageId);
+
+    if (!pkg || !pkg.isActive) {
+      return res.status(400).json({ message: "Invalid or inactive package" });
+    }
+
+    if (user.balance < pkg.investmentAmount) {
+      return res.status(400).json({ message: "Insufficient balance" });
+    }
+
+    // 💰 Deduct wallet
+    user.balance -= pkg.investmentAmount;
+    user.investedBalance += pkg.investmentAmount;
+
+    // ⏳ Expiry per investment
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + pkg.durationDays);
+
+    // 📈 Profit calculation
+    let totalProfit = 0;
+
+    if (pkg.returnType === "DAILY") {
+      totalProfit = pkg.return * pkg.durationDays;
+    } else {
+      const weeks = Math.floor(pkg.durationDays / 7);
+      totalProfit = pkg.return * weeks;
+    }
+
+    const totalReturn = pkg.investmentAmount + totalProfit;
+
+    // 🧊 SNAPSHOT INVESTMENT (IMMUTABLE)
+    const investment = await UserInvestment.create({
+      userId: user._id,
+
+      // reference only
+      packageId: pkg._id,
+
+      // snapshot fields
+      packageName: pkg.name,
+      investedAmount: pkg.investmentAmount,
+      returnAmount: pkg.return, 
+      returnType: pkg.returnType,
+      durationDays: pkg.durationDays,
+
+      capital: pkg.investmentAmount,
+      totalProfit,
+      totalReturn,
+
+      expiresAt,
+      status: "ACTIVE",
+    });
+
+    await user.save();
+
+    res.status(201).json({
+      success: true,
+      message: "Investment successful",
+      investment,
+    });
+  } catch (error) {
+    console.error("❌ Investment error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
 // 🟢 Create a new package
 export const createPackage = async (req, res) => {
   try {
