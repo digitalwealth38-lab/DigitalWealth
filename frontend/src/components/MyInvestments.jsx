@@ -66,7 +66,7 @@ setTotalProfitSum(totalProfit);
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-sky-100 py-16 px-4">
    <div className="text-center mb-12">
-  <h2 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-600 drop-shadow-lg">
+  <h2 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-600 drop-shadow-md leading-tight md:leading-snug">
     My Investments
   </h2>
   <p className="mt-4 text-lg md:text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
