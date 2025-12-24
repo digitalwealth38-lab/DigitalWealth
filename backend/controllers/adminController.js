@@ -174,7 +174,7 @@ const finalDeposits=totalDeposits+manualTotal
 
 
 const activeInvestedAgg = await UserInvestment.aggregate([
-  { $match: { status: "active" } }, // only active investments
+  { $match: { status: "Active" } }, // only active investments
   { $group: { _id: null, total: { $sum: "$investedAmount" } } },
 ]);
 const totalActiveInvested = activeInvestedAgg[0]?.total || 0;
@@ -199,6 +199,7 @@ const finalWithdrawal=totalWithdrawals+totalManual
   { $group: { _id: null, total: { $sum: "$investedBalance" } } },
 ]);
     const totalInvestedBalance = totalInvestedAgg[0]?.total || 0;
+
       const adminTrading = await AdminTrading.findOne();
     const tradingDeposit = adminTrading?.amount || 0;
    // 🪙 5. Platform balance = sum of all user balances  
