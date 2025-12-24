@@ -61,12 +61,12 @@ const Packages = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-sky-100 py-20 px-6">
-        <div className="text-center mb-12">
+<div className="text-center mb-12">
   <h2 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-600 drop-shadow-lg">
     Our Networking Packages
   </h2>
-  <p className="mt-4 text-lg md:text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
-    Get started with a package, build your team, and earn daily from your network’s activity.
+  <p className="mt-4 text-lg md:text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed px-4">
+    Get started with a package, build your team, and earn daily from your network's activity.
   </p>
 </div>
 
