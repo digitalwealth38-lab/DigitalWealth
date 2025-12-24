@@ -61,6 +61,11 @@ export default function Dashboard() {
    <WithdrawSwitcher/>
     {/* Your referrals content here */}
   </div>
+   <div id="referrals" className="min-h-screen">
+   <Referral/>
+    <Tree/>
+      <UnactiveMembers/>
+  </div> 
     <div id="Rewards" className="min-h-screen">
       <ProgressRewards/>
     {/* Your referrals content here */}
@@ -73,11 +78,7 @@ export default function Dashboard() {
     <div id="contact" className="min-h-screen">
       <Contact/>
   </div>
-  <div id="referrals" className="min-h-screen">
-   <Referral/>
-    <Tree/>
-      <UnactiveMembers/>
-  </div> 
+ 
 </div>
     </div>
   );

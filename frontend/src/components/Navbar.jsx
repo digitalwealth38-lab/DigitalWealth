@@ -93,6 +93,17 @@ export default function Navbar() {
           >
             Withdrawal
           </Link>
+            <Link
+            to="referrals"
+            spy={true}
+            smooth={true}
+            offset={-40}
+            duration={500}
+            className={linkClasses}
+            activeClass="border-b-2 border-white"
+          >
+            Referrals
+          </Link>
                <Link
             to="Rewards"
             spy={true}
@@ -126,17 +137,7 @@ export default function Navbar() {
           >
             Contact
           </Link>
-          <Link
-            to="referrals"
-            spy={true}
-            smooth={true}
-            offset={-40}
-            duration={500}
-            className={linkClasses}
-            activeClass="border-b-2 border-white"
-          >
-            Referrals
-          </Link>
+        
           
         </div>
 
