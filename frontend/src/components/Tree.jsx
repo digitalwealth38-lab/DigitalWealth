@@ -23,11 +23,12 @@ const Tree = () => {
   if (loading) return <p>Loading referral tree...</p>;
 if (!hierarchy || hierarchy.length === 0) {
   return (
-    <div className="flex justify-center items-center h-64">
-      <h1 className="text-3xl font-bold text-gray-500">
-        You have no team yet 👥
-      </h1>
-    </div>
+   <div className="flex justify-center items-center min-h-[200px] md:h-64">
+  <h1 className="text-3xl font-bold text-gray-500 text-center">
+    You have no team yet 👥
+  </h1>
+</div>
+
   );
 }
 

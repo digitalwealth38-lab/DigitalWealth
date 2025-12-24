@@ -31,11 +31,12 @@ const UnactiveMembers = () => {
 
   if (members.length === 0) {
     return (
-         <div className="flex justify-center items-center h-64">
-      <h1 className="text-3xl font-bold text-gray-500">
-        No Unactive Referred Member Found.
-      </h1>
-    </div>
+    <div className="flex justify-center items-center min-h-[200px] md:h-64 px-4">
+  <h1 className="text-3xl font-bold text-gray-500 text-center">
+    No Unactive Referred Member Found.
+  </h1>
+</div>
+
     );
   }
 
