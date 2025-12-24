@@ -174,7 +174,7 @@ const finalDeposits=totalDeposits+manualTotal
 
 
 const activeInvestedAgg = await UserInvestment.aggregate([
-  { $match: { status: "Active" } }, // only active investments
+  { $match: { status: "ACTIVE" } }, // only active investments
   { $group: { _id: null, total: { $sum: "$investedAmount" } } },
 ]);
 const totalActiveInvested = activeInvestedAgg[0]?.total || 0;
