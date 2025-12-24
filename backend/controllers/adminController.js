@@ -215,6 +215,7 @@ const adminProfit = tradingDeposit + finalDeposits - finalWithdrawal - platformB
       finalDeposits,
       finalWithdrawal,
       totalInvestedBalance,
+      totalActiveInvested,
       platformBalance,
       adminProfit,
       tradingDeposit
