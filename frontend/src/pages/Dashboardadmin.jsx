@@ -32,10 +32,7 @@ const Dashboardadmin = () => {
   <EditPackage/>
    <CreatePackage/>
 </div>
-
-
 <div id="adminwithdrawals" className="">
-  <AdminTrading/>
   <AdminWithdrawLimit/>
   <AdminWithdrawals/>
   <AdminLocalWithdrawals/>

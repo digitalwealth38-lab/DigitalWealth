@@ -101,7 +101,7 @@ const InvestPackages = () => {
         </div>
 
         {/* Details Section */}
-        <div className="p-6 space-y-3 text-white">
+        <div className="p-6 space-y-3 text-black">
           <div className="flex justify-between items-center border-b border-black/20 pb-2">
             <span className="text-black">Duration:</span>
             <span className="font-semibold">{pkg.durationDays} days</span>
