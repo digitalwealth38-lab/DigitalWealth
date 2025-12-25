@@ -46,7 +46,7 @@ const EditPackage = () => {
       investmentAmount: pkg.investmentAmount || "",
       durationDays: pkg.durationDays || "",
       returnType: pkg.returnType || "DAILY",
-      return: pkg.return || "",
+     returnAmount: pkg.return || "",
       packageExpiresAt: pkg.packageExpiresAt
         ? pkg.packageExpiresAt.slice(0, 10)
         : "",
@@ -70,7 +70,7 @@ const EditPackage = () => {
           investmentAmount: Number(formData.investmentAmount),
           durationDays: Number(formData.durationDays),
           returnType: formData.returnType,
-          Return: Number(formData.return),
+        return: Number(formData.returnAmount),
           packageExpiresAt: formData.packageExpiresAt,
         },
         { withCredentials: true }
@@ -209,8 +209,8 @@ const EditPackage = () => {
                     {editingId === pkg._id ? (
                       <input
                         type="number"
-                        name="return"
-                        value={formData.return}
+                        name="returnAmount"
+                        value={formData.returnAmount}
                         onChange={handleChange}
                         className="border rounded p-1 w-20"
                       />

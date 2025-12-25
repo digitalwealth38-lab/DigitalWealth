@@ -16,7 +16,6 @@ const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
-
   // 🔹 Show loader during check or before user is set
   if (isCheckingAuth && !authUser) {
     return (
@@ -91,16 +90,12 @@ const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
         path="/dashboard"
         element={authUser ? <Dashboard /> : <Navigate to="/" />}
       />
-     <Route
+<Route
   path="/blocked"
-  element={
-    authUser && authUser.isBlocked ? (
-      <BlockedUser />
-    ) : (
-      <Navigate to="/" replace />
-    )
-  }
+  element={<BlockedUser />}
 />
+
+
 
 
     </Routes>

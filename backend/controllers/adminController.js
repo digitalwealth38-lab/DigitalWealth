@@ -77,6 +77,7 @@ console.log(userId)
   }
 };
 
+
 export const updateInvestPackage = async (req, res) => {
   try {
     const { id } = req.params;
@@ -86,7 +87,7 @@ export const updateInvestPackage = async (req, res) => {
       investmentAmount,
       durationDays,
       returnType,
-      Return,
+       return: pkgReturn,
       packageExpiresAt,
     } = req.body;
 
@@ -103,7 +104,7 @@ export const updateInvestPackage = async (req, res) => {
     pkg.investmentAmount = investmentAmount ?? pkg.investmentAmount;
     pkg.durationDays = durationDays ?? pkg.durationDays;
     pkg.returnType = returnType ?? pkg.returnType;
-    pkg.Return = Return ?? pkg.Return;
+   pkg.return = pkgReturn ?? pkg.return;
     pkg.packageExpiresAt = packageExpiresAt ?? pkg.packageExpiresAt;
 
     await pkg.save();
@@ -239,17 +240,27 @@ const adminProfit = tradingDeposit + finalDeposits - finalWithdrawal - platformB
 export const updatePackage = async (req, res) => {
   try {
     const { id } = req.params;
-    const updates = req.body;
+    const { name, investmentAmount, durationDays, returnType, return: returnAmount, packageExpiresAt } = req.body;
 
-    const updatedPackage = await Package.findByIdAndUpdate(id, updates, {
-      new: true,
-    });
+const updates = {
+  name,
+  investmentAmount,
+  durationDays,
+  returnType,
+  ['return']: Number(returnAmount), // <-- bracket notation ensures 'return' is set
+};
+
+if (packageExpiresAt) updates.packageExpiresAt = new Date(packageExpiresAt);
+ console.log("🚀 Updates object:", updates);
+
+const updatedPackage = await InvestmentPackage.findByIdAndUpdate(id, updates, { new: true });
 
     if (!updatedPackage) {
       return res.status(404).json({ message: "Package not found" });
     }
 
     res.json({
+      success: true,
       message: "✅ Package updated successfully!",
       package: updatedPackage,
     });
@@ -258,6 +269,8 @@ export const updatePackage = async (req, res) => {
     res.status(500).json({ message: "Failed to update package" });
   }
 };
+
+
 export const deletePackage = async (req, res) => {
   try {
     const { id } = req.params;
