@@ -112,7 +112,7 @@ const InvestPackages = () => {
               {pkg.returnType === "DAILY" ? "Daily Return:" : "Weekly Return:"}
             </span>
             <span className="text-green-400 font-bold">
-              <Price amount={pkg.return} />
+              <Price amount={pkg.pkgReturn} />
             </span>
           </div>
 

@@ -3,15 +3,14 @@ import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
 
 const AdminAddInvestPackage = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    investmentAmount: "",
-    durationDays: "",
-    returnType:"",
-    Return: "",
-    packageExpiresAt: "",
-
-  });
+const [formData, setFormData] = useState({
+  name: "",
+  investmentAmount: "",
+  durationDays: "",
+  returnType: "",
+  pkgReturn: "", // <-- renamed
+  packageExpiresAt: "",
+});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,7 +24,7 @@ const AdminAddInvestPackage = () => {
       name: formData.name,
       investmentAmount: Number(formData.investmentAmount),
       durationDays: Number(formData.durationDays),
-      return: Number(formData.Return),   // generic return
+      pkgReturn: Number(formData.pkgReturn),   // generic return
       returnType: formData.returnType,   // DAILY or WEEKLY
       packageExpiresAt: formData.packageExpiresAt,
     });
@@ -36,7 +35,7 @@ const AdminAddInvestPackage = () => {
       investmentAmount: "",
       durationDays: "",
       returnType: "",
-      Return: "",
+      pkgReturn: "", 
       packageExpiresAt: "",
     });
   } catch (error) {
@@ -124,11 +123,10 @@ const AdminAddInvestPackage = () => {
     Return ($)
   </label>
   <input
-    type="number"
-    name="Return"
-    placeholder="Enter return amount"
-    value={formData.Return}
-    onChange={handleChange}
+  type="number"
+  name="pkgReturn"
+  value={formData.pkgReturn}
+  onChange={handleChange}
     className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-sky-500 focus:outline-none placeholder-gray-400"
     required
   />

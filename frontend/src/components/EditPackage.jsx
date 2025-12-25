@@ -7,6 +7,8 @@ const EditPackage = () => {
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(true);
+  
+console.log("FORM DATA BEFORE UPDATE:", formData);
 
   // 🔄 Fetch packages (SAFE)
   const fetchPackages = async () => {
@@ -46,7 +48,7 @@ const EditPackage = () => {
       investmentAmount: pkg.investmentAmount || "",
       durationDays: pkg.durationDays || "",
       returnType: pkg.returnType || "DAILY",
-     returnAmount: pkg.return || "",
+    pkgReturn: pkg.pkgReturn || "", // <-- renamed
       packageExpiresAt: pkg.packageExpiresAt
         ? pkg.packageExpiresAt.slice(0, 10)
         : "",
@@ -70,7 +72,7 @@ const EditPackage = () => {
           investmentAmount: Number(formData.investmentAmount),
           durationDays: Number(formData.durationDays),
           returnType: formData.returnType,
-        return: Number(formData.returnAmount),
+         pkgReturn: Number(formData.pkgReturn), // <-- renamed
           packageExpiresAt: formData.packageExpiresAt,
         },
         { withCredentials: true }
@@ -208,14 +210,14 @@ const EditPackage = () => {
                   <td className="p-3">
                     {editingId === pkg._id ? (
                       <input
-                        type="number"
-                        name="returnAmount"
-                        value={formData.returnAmount}
+                           type="number"
+                        name="pkgReturn" // <-- renamed
+                        value={formData.pkgReturn}
                         onChange={handleChange}
                         className="border rounded p-1 w-20"
                       />
                     ) : (
-                      `$${pkg.return}`
+                      `$${pkg.pkgReturn}`
                     )}
                   </td>
 

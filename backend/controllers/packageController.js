@@ -207,7 +207,6 @@ export const getAllPackages = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
-
 // 🟢 Create a new investment package
 export const createinvestPackage = async (req, res) => {
   try {
@@ -216,33 +215,24 @@ export const createinvestPackage = async (req, res) => {
       investmentAmount,
       durationDays,
       returnType,
-      return: pkgReturn,
+      pkgReturn,       // renamed
       packageExpiresAt,
-      tier, // optional
+      tier,
     } = req.body;
 
-    // Calculate totalProfit
     let totalProfit = 0;
-    if (returnType === "DAILY") {
-      totalProfit = durationDays * pkgReturn; // daily return multiplied by days
-    } else if (returnType === "WEEKLY") {
-      const weeks = Math.floor(durationDays / 7);
-      totalProfit = weeks * pkgReturn; // weekly return multiplied by weeks
-    }
+    if (returnType === "DAILY") totalProfit = durationDays * pkgReturn;
+    else if (returnType === "WEEKLY") totalProfit = Math.floor(durationDays / 7) * pkgReturn;
 
-    // Capital = invested amount
     const capital = investmentAmount;
-
-    // Total return = capital + totalProfit
     const totalReturn = capital + totalProfit;
 
-    // Create the package in MongoDB
     const pkg = await InvestmentPackage.create({
       name,
       investmentAmount,
       durationDays,
       returnType,
-      return: pkgReturn,
+      pkgReturn,       // renamed
       packageExpiresAt,
       tier,
       totalProfit,
@@ -251,21 +241,13 @@ export const createinvestPackage = async (req, res) => {
       isActive: true,
     });
 
-    console.log("Package Data:", req.body);
-
-    res.status(201).json({
-      success: true,
-      message: "Investment package created successfully",
-      package: pkg,
-    });
+    res.status(201).json({ success: true, message: "Package created successfully", package: pkg });
   } catch (error) {
-    console.error("❌ Error creating investment package:", error);
-    res.status(500).json({
-      success: false,
-      message: "Server error while creating investment package",
-    });
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
   }
 };
+
 export const buyInvestpackage = async (req, res) => {
   try {
     const { packageId } = req.body;
@@ -293,10 +275,10 @@ export const buyInvestpackage = async (req, res) => {
     let totalProfit = 0;
 
     if (pkg.returnType === "DAILY") {
-      totalProfit = pkg.return * pkg.durationDays;
+      totalProfit = pkg.pkgReturn * pkg.durationDays;
     } else {
       const weeks = Math.floor(pkg.durationDays / 7);
-      totalProfit = pkg.return * weeks;
+      totalProfit = pkg.pkgReturn * weeks;
     }
 
     const totalReturn = pkg.investmentAmount + totalProfit;
@@ -311,10 +293,9 @@ export const buyInvestpackage = async (req, res) => {
       // snapshot fields
       packageName: pkg.name,
       investedAmount: pkg.investmentAmount,
-      returnAmount: pkg.return, 
+      returnAmount: pkg.pkgReturn, 
       returnType: pkg.returnType,
       durationDays: pkg.durationDays,
-
       capital: pkg.investmentAmount,
       totalProfit,
       totalReturn,

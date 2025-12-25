@@ -9,13 +9,14 @@ const InvestmentPackageSchema = new mongoose.Schema(
     durationDays: { type: Number, required: true },
 
     // 🔥 Generic return
-    return: { type: Number, required: true },
+     pkgReturn: { type: Number, required: true },
     returnType: { type: String, enum: ["DAILY", "WEEKLY"], required: true },
 
     // 🔥 Calculated fields
-    totalProfit: { type: Number, required: true },
-    capital: { type: Number, required: true },
-    totalReturn: { type: Number, required: true },
+  totalProfit: { type: Number, default: 0 },
+  capital: { type: Number, default: 0 },
+   totalReturn: { type: Number, default: 0 },
+
 
     // 🔥 PACKAGE AVAILABILITY EXPIRY
     packageExpiresAt: { type: Date, required: true },

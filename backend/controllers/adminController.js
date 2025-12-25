@@ -81,15 +81,7 @@ console.log(userId)
 export const updateInvestPackage = async (req, res) => {
   try {
     const { id } = req.params;
-
-    const {
-      name,
-      investmentAmount,
-      durationDays,
-      returnType,
-       return: pkgReturn,
-      packageExpiresAt,
-    } = req.body;
+    const { name, investmentAmount, durationDays, returnType, pkgReturn, packageExpiresAt } = req.body;
 
     const pkg = await InvestmentPackage.findById(id);
     if (!pkg) {
@@ -99,13 +91,25 @@ export const updateInvestPackage = async (req, res) => {
       });
     }
 
-    // update fields
-    pkg.name = name ?? pkg.name;
-    pkg.investmentAmount = investmentAmount ?? pkg.investmentAmount;
-    pkg.durationDays = durationDays ?? pkg.durationDays;
-    pkg.returnType = returnType ?? pkg.returnType;
-   pkg.return = pkgReturn ?? pkg.return;
-    pkg.packageExpiresAt = packageExpiresAt ?? pkg.packageExpiresAt;
+    // 🔹 Update package fields
+    if (name !== undefined) pkg.name = name;
+    if (investmentAmount !== undefined) pkg.investmentAmount = Number(investmentAmount);
+    if (durationDays !== undefined) pkg.durationDays = Number(durationDays);
+    if (returnType !== undefined) pkg.returnType = returnType;
+    if (pkgReturn !== undefined) pkg.pkgReturn = Number(pkgReturn);
+    if (packageExpiresAt !== undefined) pkg.packageExpiresAt = new Date(packageExpiresAt);
+
+    // 🔹 Recalculate package snapshot values
+    pkg.capital = pkg.investmentAmount;
+
+    if (pkg.returnType === "DAILY") {
+      pkg.totalProfit = pkg.pkgReturn * pkg.durationDays;
+    } else if (pkg.returnType === "WEEKLY") {
+      const weeks = Math.floor(pkg.durationDays / 7);
+      pkg.totalProfit = pkg.pkgReturn * weeks;
+    }
+
+    pkg.totalReturn = pkg.capital + pkg.totalProfit;
 
     await pkg.save();
 
@@ -122,6 +126,8 @@ export const updateInvestPackage = async (req, res) => {
     });
   }
 };
+
+
 
 /**
  * ✅ DELETE Investment Package
@@ -236,39 +242,42 @@ const adminProfit = tradingDeposit + finalDeposits - finalWithdrawal - platformB
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
 export const updatePackage = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, investmentAmount, durationDays, returnType, return: returnAmount, packageExpiresAt } = req.body;
+    const { name, price, commissions, levelRewardPercent } = req.body;
 
-const updates = {
-  name,
-  investmentAmount,
-  durationDays,
-  returnType,
-  ['return']: Number(returnAmount), // <-- bracket notation ensures 'return' is set
-};
-
-if (packageExpiresAt) updates.packageExpiresAt = new Date(packageExpiresAt);
- console.log("🚀 Updates object:", updates);
-
-const updatedPackage = await InvestmentPackage.findByIdAndUpdate(id, updates, { new: true });
-
-    if (!updatedPackage) {
-      return res.status(404).json({ message: "Package not found" });
+    const pkg = await Package.findById(id);
+    if (!pkg) {
+      return res.status(404).json({ success: false, message: "Package not found" });
     }
 
-    res.json({
+    // 🔹 Update fields
+    if (name !== undefined) pkg.name = name;
+    if (price !== undefined) pkg.price = Number(price);
+    if (commissions) {
+      pkg.commissions.level1 = commissions.level1 !== undefined ? Number(commissions.level1) : pkg.commissions.level1;
+      pkg.commissions.level2 = commissions.level2 !== undefined ? Number(commissions.level2) : pkg.commissions.level2;
+      pkg.commissions.level3 = commissions.level3 !== undefined ? Number(commissions.level3) : pkg.commissions.level3;
+    }
+    if (levelRewardPercent !== undefined) pkg.levelRewardPercent = Number(levelRewardPercent);
+
+    await pkg.save();
+
+    res.status(200).json({
       success: true,
-      message: "✅ Package updated successfully!",
-      package: updatedPackage,
+      message: "Networking package updated successfully",
+      package: pkg,
     });
   } catch (error) {
-    console.error("❌ Error updating package:", error);
-    res.status(500).json({ message: "Failed to update package" });
+    console.error("❌ Update Networking Package Error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to update package",
+    });
   }
 };
+
 
 
 export const deletePackage = async (req, res) => {
