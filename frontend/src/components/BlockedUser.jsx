@@ -21,13 +21,13 @@ const BlockedUser = () => {
         <div className="space-y-3 text-sm">
           <div className="flex items-center justify-center gap-2 text-gray-700">
             <Mail className="w-4 h-4" />
-            <span>support@yourcompany.com</span>
+            <span>DigitalWealth38@gmail.com</span>
           </div>
-
-          <div className="flex items-center justify-center gap-2 text-gray-700">
-            <Phone className="w-4 h-4" />
-            <span>+92 300 1234567</span>
+   <div className="flex items-center justify-center gap-2 text-gray-700">
+            <Mail className="w-4 h-4" />
+            <span>info.digitalwealthpk@gmail.com</span>
           </div>
+         
         </div>
 
         <div className="mt-8 text-xs text-gray-400">
