@@ -294,13 +294,31 @@ const handleBlockUser = async (userId) => {
                                 <tbody>
                                   {investments[user._id].map((inv) => (
                                     <tr key={inv._id} className="border-b">
-                                      <td>{inv.packageName}</td>
-                                      <td>${inv.investedAmount}</td>
-                                      <td>${inv.returnAmount}</td>
-                                      <td>${inv.totalProfit}</td>
-                                      <td>${inv.totalReturn}</td>
-                                      <td>${inv.roiCredited}</td>
-                                      <td>${inv.todayProfit}</td>
+                                     <td>{inv.packageName}</td>
+                                      <td>
+                                        <Price amount={inv.investedAmount|| 0} />
+      
+                                        </td>
+                                      <td>
+                                        <Price amount={inv.returnAmount || 0} />
+                                      
+                                        </td>
+                                      <td>
+                                        <Price amount={inv.totalProfit || 0} />
+                                        
+                                        </td>
+                                      <td>
+                                        <Price amount={inv.totalReturn || 0} />
+                                     
+                                        </td>
+                                      <td>
+                                        <Price amount={inv.roiCredited || 0} />
+                                       
+                                        </td>
+                                      <td>
+                                        <Price amount={inv.todayProfit || 0} />
+                                        
+                                        </td>
                                       <td
                                         className={`font-semibold ${
                                           inv.status === "ACTIVE"
