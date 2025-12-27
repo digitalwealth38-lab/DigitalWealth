@@ -129,22 +129,18 @@ body {
   }
 }
 @media print {
-  body * {
-    visibility: hidden !important;
-  }
-
-  .print-area,
-  .print-area * {
-    visibility: visible !important;
+  body {
+    overflow: visible !important;
   }
 
   .print-area {
-    position: static !important;
-    width: 100% !important;
     height: auto !important;
+    max-height: none !important;
     overflow: visible !important;
-    margin: 0 !important;
-    padding: 0 !important;
+  }
+
+  .print-area * {
+    overflow: visible !important;
   }
 
   table {
@@ -153,13 +149,13 @@ body {
 
   tr {
     page-break-inside: avoid;
-    page-break-after: auto;
   }
 
   thead {
     display: table-header-group;
   }
 }
+
 
 
 
