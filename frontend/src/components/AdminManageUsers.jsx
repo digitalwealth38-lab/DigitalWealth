@@ -116,7 +116,7 @@ const AdminManageUsers = () => {
         <table className="min-w-full">
           <thead className="bg-sky-600 text-white">
             <tr>
-              {["ID","Name","Email","Referral","Referred By","Balance","Invested","Earnings","Active","Team","Direct","Level","Action"].map(h=>(
+              {["ID","Name","Email","Referral","Referred By","Balance","Invested","Earnings","Action"].map(h=>(
                 <th key={h} className="p-3">{h}</th>
               ))}
             </tr>
@@ -132,10 +132,6 @@ const AdminManageUsers = () => {
                 <td className="p-2 text-center"><Price amount={user.balance||0}/></td>
                 <td className="p-2 text-center"><Price amount={user.investedBalance||0}/></td>
                 <td className="p-2 text-center"><Price amount={user.totalEarnings||0}/></td>
-                <td className="p-2 text-center">{user.hasActivePackage?"Yes":"No"}</td>
-                <td className="p-2">{user.teamSize}</td>
-                <td className="p-2">{user.directReferrals}</td>
-                <td className="p-2">{user.level}</td>
 
                 <td className="p-2">
                   <div className="flex gap-2 justify-center flex-wrap">
