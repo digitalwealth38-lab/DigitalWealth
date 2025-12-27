@@ -234,7 +234,7 @@ const AdminManageUsers = () => {
 /* ================= REUSABLE COMPONENTS ================= */
 
 const Modal = ({ title, children, onClose, printable }) => (
-  <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
+  <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center print:static print:bg-transparent">
     <div className="bg-white w-full max-w-6xl p-6 rounded-xl relative print-area overflow-visible">
       <button onClick={onClose} className="absolute top-4 right-4 no-print">✕</button>
 
