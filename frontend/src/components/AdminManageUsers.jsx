@@ -171,7 +171,7 @@ const AdminManageUsers = () => {
           ) : investments.length === 0 ? (
             <p className="text-center text-gray-500">No investments found</p>
           ) : (
-            <div className="overflow-auto">
+            <div className="overflow-x-auto print:overflow-visible">
               <table className="min-w-full border text-center">
                 <thead className="bg-gray-200">
                   <tr>
@@ -235,7 +235,7 @@ const AdminManageUsers = () => {
 
 const Modal = ({ title, children, onClose, printable }) => (
   <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
-    <div className="bg-white w-full max-w-6xl p-6 rounded-xl relative print-area">
+    <div className="bg-white w-full max-w-6xl p-6 rounded-xl relative print-area overflow-visible">
       <button onClick={onClose} className="absolute top-4 right-4 no-print">✕</button>
 
       {printable && (

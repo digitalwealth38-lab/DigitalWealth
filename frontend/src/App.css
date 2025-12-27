@@ -54,3 +54,30 @@ html, body, #root {
     background: white;
   }
 }
+@media print {
+  body {
+    overflow: visible !important;
+  }
+
+  .print-area {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .print-area * {
+    overflow: visible !important;
+  }
+
+  table {
+    page-break-inside: auto;
+  }
+
+  tr {
+    page-break-inside: avoid;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+}
