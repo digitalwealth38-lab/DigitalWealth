@@ -66,6 +66,25 @@ const AdminManageUsers = () => {
       toast.error("Failed");
     }
   };
+const handleToggleWithdraw = async (id) => {
+  try {
+    const { data } = await axiosInstance.patch(
+      `/admin/toggle-withdraw/${id}`,
+      {},
+      { withCredentials: true }
+    );
+
+    toast.success(data.message);
+
+    setUsers((prev) =>
+      prev.map((u) =>
+        u._id === id ? { ...u, canWithdraw: data.canWithdraw } : u
+      )
+    );
+  } catch {
+    toast.error("Failed to update withdraw permission");
+  }
+};
 
   const handleDeleteUser = async (id) => {
     if (!window.confirm("Delete user permanently?")) return;

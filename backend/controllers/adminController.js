@@ -52,6 +52,31 @@ export const toggleBlockUser = async (req, res) => {
   }
 };
 
+export const toggleWithdrawPermission = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // toggle withdraw permission
+    user.canWithdraw = !user.canWithdraw;
+    await user.save();
+
+    res.json({
+      message: user.canWithdraw
+        ? "Withdraw enabled successfully"
+        : "Withdraw disabled successfully",
+      canWithdraw: user.canWithdraw,
+    });
+  } catch (error) {
+    console.error("TOGGLE WITHDRAW ERROR:", error);
+    res.status(500).json({ message: "Failed to update withdraw permission" });
+  }
+};
+
 
 export const Userinvestment=async (req, res) => {
   try {
