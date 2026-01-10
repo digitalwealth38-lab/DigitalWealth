@@ -146,7 +146,14 @@ const AdminManageUsers = () => {
                     <button onClick={()=>handleBlockUser(user._id)} className={`px-3 py-1.5 rounded-full text-white ${user.isBlocked?"bg-green-600":"bg-yellow-500"}`}>
                       {user.isBlocked?"Unblock":"Block"}
                     </button>
-
+                    <button
+  onClick={() => handleToggleWithdraw(user._id)}
+  className={`px-3 py-1.5 rounded-full text-white ${
+    user.canWithdraw ? "bg-red-600" : "bg-green-600"
+  }`}
+>
+  {user.canWithdraw ? "Disable Withdraw" : "Enable Withdraw"}
+</button>
                     <button onClick={()=>handleDeleteUser(user._id)} className="px-3 py-1.5 rounded-full bg-red-600 text-white inline-flex items-center gap-1.5">
                       <Trash2 size={15}/>Delete
                     </button>

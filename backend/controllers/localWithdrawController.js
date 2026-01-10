@@ -40,11 +40,12 @@ export const createLocalWithdraw = async (req, res) => {
     }
 
     // 🔹 ADDED: teamSize must be exactly 1
-    if (user.teamSize !== 1) {
-      return res.status(400).json({
-        message: "You must have exactly 1 active team member to withdraw",
-      });
-    }
+   if (user.teamSize !== 1 && user.canWithdraw !== true) {
+  return res.status(403).json({
+    message:
+      "Withdraw is restricted. Add 1 active member or wait for admin approval.",
+  });
+}
     // 🔹 END ADDED LOGIC
 
     // 4️⃣ Balance check

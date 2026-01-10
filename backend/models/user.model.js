@@ -53,6 +53,12 @@ const UserSchema = new mongoose.Schema(
 
     // Admin Access
     isAdmin: { type: Boolean, default: false },
+    
+    canWithdraw: {
+  type: Boolean,
+  default: false, // false = cannot withdraw
+},
+
     isBlocked: {
   type: Boolean,
   default: false,
