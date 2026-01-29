@@ -8,13 +8,9 @@ const Price = ({ amount }) => {
   let displayValue;
 
   if (currency === "USD") {
-    displayValue = amount.toFixed(3); // 3 decimal places for USD
+    displayValue // ✅ 2 decimals for USD
   } else {
-    // For PKR: round to nearest integer, add commas, no decimals
-    displayValue = Math.round(amount * rate).toLocaleString('en-PK', {
-      maximumFractionDigits: 0,
-      minimumFractionDigits: 0
-    });
+    displayValue = Math.round(amount * rate).toLocaleString(); // ✅ no decimals for PKR
   }
 
   return (
