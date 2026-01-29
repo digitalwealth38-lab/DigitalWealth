@@ -3,7 +3,7 @@ import UserInvestment from "../models/UserInvestment.js";
 import InvestmentPackage from "../models/InvestmentPackage.js";
 
 import User from "../models/user.model.js";
-
+const round2 = (num) => Number(num.toFixed(2));
 // ✅ Production: runs every day at 12:00 AM Pakistan time
 cron.schedule("0 0 * * *", async () => {
   console.log("⏰ ROI cron running (production – 12:00 AM)...");
@@ -55,35 +55,38 @@ console.log("🗑️ Investment packages expired today have been deleted");
       }
 
       // DAILY packages will always credit
-      let creditAmount = roiAmount;
-      if (roiCredited + roiAmount > totalProfit) {
-        creditAmount = totalProfit - roiCredited;
-      }
+        let creditAmount = roiAmount;
 
-      // Credit user
-      user.balance += creditAmount;
-      user.totalEarnings += creditAmount;
-      await user.save();
-
-      // Update investment
-      inv.roiCredited += creditAmount;
-      inv.todayProfit = creditAmount;
-      inv.lastROIAt = now;
-
-      // COMPLETE PACKAGE
-      if (inv.roiCredited >= totalProfit) {
-        inv.roiCredited = totalProfit;
-        inv.status = "COMPLETED";
-
-        if (!inv.capitalReturned) {
-          user.investedBalance -= capital;
-          user.balance += capital;
-          await user.save();
-          inv.capitalReturned = true;
+        if (round2(roiCredited + roiAmount) > round2(totalProfit)) {
+          creditAmount = round2(totalProfit - roiCredited);
         }
-      }
 
-      await inv.save();
+        creditAmount = round2(creditAmount);
+
+        // ===== CREDIT USER =====
+        user.balance = round2(user.balance + creditAmount);
+        user.totalEarnings = round2(user.totalEarnings + creditAmount);
+        await user.save();
+
+        // ===== UPDATE INVESTMENT =====
+       inv.roiCredited = round2(inv.roiCredited + creditAmount);
+        inv.todayProfit = creditAmount;
+        inv.lastROIAt = now;
+
+        // ===== COMPLETE PACKAGE =====
+        if (round2(inv.roiCredited) >= round2(totalProfit)) {
+          inv.roiCredited = round2(totalProfit);
+          inv.status = "COMPLETED";
+
+          if (!inv.capitalReturned) {
+            user.investedBalance = round2(user.investedBalance - capital);
+            user.balance = round2(user.balance + capital);
+            inv.capitalReturned = true;
+            await user.save();
+          }
+        }
+
+        await inv.save();
     }
 
     console.log("✅ ROI cron completed (production)");
