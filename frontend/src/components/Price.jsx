@@ -8,7 +8,7 @@ const Price = ({ amount }) => {
   let displayValue;
 
   if (currency === "USD") {
-    displayValue // ✅ 2 decimals for USD
+    displayValue = amount.toFixed(2); // ✅ 2 decimals for USD
   } else {
     displayValue = Math.round(amount * rate).toLocaleString(); // ✅ no decimals for PKR
   }
