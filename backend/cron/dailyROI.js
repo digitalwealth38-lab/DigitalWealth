@@ -4,6 +4,7 @@ import InvestmentPackage from "../models/InvestmentPackage.js";
 
 import User from "../models/user.model.js";
 // ✅ Production: runs every day at 12:00 AM Pakistan time
+// ✅ Helper for comparison only
 const roundForCompare = (num) => Number(num.toFixed(2));
 
 
@@ -58,10 +59,9 @@ console.log("🗑️ Investment packages expired today have been deleted");
 
       // DAILY packages will always credit
       let creditAmount = roiAmount;
-      if (roiCredited + roiAmount > totalProfit) {
-        creditAmount = totalProfit - roiCredited;
+     if (roundForCompare(roiCredited + roiAmount) > roundForCompare(totalProfit)) {
+        creditAmount = roundForCompare(totalProfit - roiCredited);
       }
-
       // Credit user
       user.balance += creditAmount;
       user.totalEarnings += creditAmount;
@@ -73,7 +73,7 @@ console.log("🗑️ Investment packages expired today have been deleted");
       inv.lastROIAt = now;
 
       // COMPLETE PACKAGE
-      if (roundForCompare(inv.roiCredited) >= totalProfit) {
+      if (roundForCompare(inv.roiCredited) >= roundForCompare(totalProfit)) {
         inv.roiCredited = totalProfit;
         inv.status = "COMPLETED";
 
