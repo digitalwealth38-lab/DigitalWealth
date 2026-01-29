@@ -1,20 +1,16 @@
 import { useCurrency } from "./CurrencyContext";
 
-// normalize float noise → business value
-const normalizeMoney = (num) => Math.floor(num * 10) / 10;
-
 const Price = ({ amount }) => {
   const { currency, rate, loadingRate } = useCurrency();
 
   if (loadingRate) return "…";
 
-  const normalized = normalizeMoney(amount);
   let displayValue;
 
   if (currency === "USD") {
-    displayValue = normalized.toFixed(2); // 12.90
+    displayValue = amount.toFixed(2); // ✅ 2 decimals for USD
   } else {
-    displayValue = Math.floor(normalized * rate).toLocaleString();
+    displayValue = Math.round(amount * rate).toLocaleString(); // ✅ no decimals for PKR
   }
 
   return (
@@ -26,4 +22,3 @@ const Price = ({ amount }) => {
 };
 
 export default Price;
-
