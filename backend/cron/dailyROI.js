@@ -59,8 +59,8 @@ console.log("🗑️ Investment packages expired today have been deleted");
 
       // DAILY packages will always credit
       let creditAmount = roiAmount;
-     if (roundForCompare(roiCredited + roiAmount) > roundForCompare(totalProfit)) {
-        creditAmount = roundForCompare(totalProfit - roiCredited);
+     if (roiCredited + roiAmount > totalProfit) {
+        creditAmount = totalProfit - roiCredited;
       }
       // Credit user
       user.balance += creditAmount;
@@ -73,17 +73,25 @@ console.log("🗑️ Investment packages expired today have been deleted");
       inv.lastROIAt = now;
 
       // COMPLETE PACKAGE
-      if (roundForCompare(inv.roiCredited) >= roundForCompare(totalProfit)) {
-        inv.roiCredited = totalProfit;
-        inv.status = "COMPLETED";
+    const epsilon = 0.0001; // tiny number to avoid JS float glitches
 
-        if (!inv.capitalReturned) {
-          user.investedBalance -= capital;
-          user.balance += capital;
-          await user.save();
-          inv.capitalReturned = true;
-        }
-      }
+if (
+  roundForCompare(inv.roiCredited) >= roundForCompare(totalProfit) || // normal ROI completion
+  new Date() >= new Date(inv.expiresAt) ||                           // complete on expiry
+  inv.roiCredited + epsilon >= totalProfit                          // tiny epsilon buffer
+) {
+  // Complete the package
+  inv.roiCredited = totalProfit;
+  inv.status = "COMPLETED";
+
+  if (!inv.capitalReturned) {
+    user.investedBalance -= capital;
+    user.balance += capital;
+    await user.save();
+    inv.capitalReturned = true;
+  }
+}
+
 
       await inv.save();
     }
