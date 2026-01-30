@@ -74,7 +74,7 @@ const AdminLocalWithdrawals = () => {
                 <th className="p-3 text-left">Method</th>
                 <th className="p-3 text-left">Account Name</th>
                 <th className="p-3 text-left">Account Number</th>
-                <th className="p-3 text-left">Amount (USD)</th>
+                <th className="p-3 text-left">Amount</th>
                 <th className="p-3 text-left">Status</th>
                 <th className="p-3 text-left">Action</th>
               </tr>
@@ -128,7 +128,12 @@ const AdminLocalWithdrawals = () => {
               <p><b>Account Number:</b> {selected.accountNumber}</p>
               <p><b>Amount:</b> {selected.amount} USD</p>
               <p><b>Status:</b> {selected.status}</p>
-              <p><b>Date:</b> {selected.date}</p>
+              <p>
+  <b>Date:</b>{" "}
+  {selected.createdAt
+    ? new Date(selected.createdAt).toLocaleDateString("en-GB")
+    : "N/A"}
+</p>
             </div>
       
             {selected.status === "pending" && (
