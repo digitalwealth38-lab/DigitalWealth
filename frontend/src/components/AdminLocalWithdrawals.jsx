@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
-
+import Price from "./Price";
 const AdminLocalWithdrawals = () => {
   const [withdrawals, setWithdrawals] = useState([]);
   const [selected, setSelected] = useState(null);
@@ -89,7 +89,8 @@ const AdminLocalWithdrawals = () => {
                   <td className="p-3">{w.method}</td>
                   <td className="p-3">{w.accountName}</td>
                   <td className="p-3">{w.accountNumber}</td>
-                  <td className="p-3">{w.amount}</td>
+                  
+                  <td className="p-3"> <Price amount={w.amount} /></td>
                   <td className="p-3 capitalize">{w.status}</td>
                   <td className="p-3">
                     <button
