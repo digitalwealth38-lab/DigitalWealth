@@ -128,10 +128,9 @@ const AdminLocalWithdrawals = () => {
               <p><b>Account Number:</b> {selected.accountNumber}</p>
               <p><b>Amount:</b> {selected.amount} USD</p>
               <p><b>Status:</b> {selected.status}</p>
+              <p><b>Date:</b> {selected.date}</p>
             </div>
-
-       
-
+      
             {selected.status === "pending" && (
               <>
                    <textarea
