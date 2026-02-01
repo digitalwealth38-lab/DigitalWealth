@@ -4,6 +4,12 @@ import { Loader, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
 import Price from "./Price";
 
+const formatDate = (date) =>
+  new Date(date).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
 const AdminManageUsers = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -226,8 +232,8 @@ const handleToggleWithdraw = async (id) => {
                       <td className={`font-semibold ${inv.status==="ACTIVE"?"text-green-600":inv.status==="COMPLETED"?"text-blue-600":"text-red-600"}`}>
                         {inv.status}
                       </td>
-                      <td>{new Date(inv.startDate).toLocaleDateString()}</td>
-                      <td>{new Date(inv.expiresAt).toLocaleDateString()}</td>
+ <td>{formatDate(inv.startDate)}</td>
+<td>{formatDate(inv.expiresAt)}</td>
                     </tr>
                   ))}
                 </tbody>
