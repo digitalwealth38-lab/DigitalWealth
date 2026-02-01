@@ -4,17 +4,6 @@ import { Banknote,Timer,AlertTriangle,UserCheck, Clock, CheckCircle2, XCircle, W
 
 import { axiosInstance } from "../lib/axios";
 import { toast } from "react-hot-toast";
-const formatDateTime = (date) =>
-  date
-    ? new Date(date).toLocaleString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-      })
-    : "N/A";
 export default function LocalWithdrawal() {
   const [amount, setAmount] = useState("");
   const [method, setMethod] = useState("");
@@ -41,7 +30,16 @@ console.log(history)
       accountNumber: tx.accountNumber,
       adminNote: tx.adminNote,
       status: tx.status,
-      date: formatDateTime(tx.createdAt),
+      date: tx.createdAt
+        ? new Date(tx.createdAt).toLocaleDateString("en-GB")
+        : "N/A",
+      time: tx.createdAt
+        ? new Date(tx.createdAt).toLocaleTimeString("en-GB", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          })
+        : "N/A",
     }));
   };
 

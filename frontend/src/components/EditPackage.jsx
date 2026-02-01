@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
-
+const formatDate = (date) =>
+  date
+    ? new Date(date).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
+    : "—";
 const EditPackage = () => {
   const [packages, setPackages] = useState([]);
   const [editingId, setEditingId] = useState(null);
@@ -232,9 +239,7 @@ console.log("FORM DATA BEFORE UPDATE:", formData);
                         className="border rounded p-1"
                       />
                     ) : (
-                      pkg.packageExpiresAt
-                        ? new Date(pkg.packageExpiresAt).toLocaleDateString()
-                        : "—"
+                    formatDate(pkg.packageExpiresAt)
                     )}
                   </td>
 
