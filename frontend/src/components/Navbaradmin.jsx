@@ -19,52 +19,6 @@ export default function Navbaradmin() {
 
         {/* Desktop Menu Links */}
  <div className="hidden md:flex items-center gap-6">
-
-<Link
-  to="dashboardadmin"
-  spy={true}
-  smooth={true}
-  offset={-40} // adjust slightly if needed
-  duration={500}
-  className={linkClasses}
-  activeClass="border-b-2 border-white"
->
-  Dashboard
-</Link>
-             <Link
-            to="adminwithdrawals"
-            spy={true}
-            smooth={true}
-            offset={-40}
-            duration={500}
-            className={linkClasses}
-            activeClass="border-b-2 border-white"
-          >
-            Withdrawals
-          </Link>
-               <Link
-            to="payment"
-            spy={true}
-            smooth={true}
-            offset={-40}
-            duration={500}
-            className={linkClasses}
-            activeClass="border-b-2 border-white"
-          >
-           Payment
-          </Link>
-             <Link
-            to="manageusers"
-            spy={true}
-            smooth={true}
-            offset={-40}
-            duration={500}
-            className={linkClasses}
-            activeClass="border-b-2 border-white"
-          >
-          Users
-          </Link>
-
         </div>
 
         {/* Logout Button (Always Visible) */}
