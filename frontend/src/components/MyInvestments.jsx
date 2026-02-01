@@ -6,7 +6,12 @@ import { Crown, Rocket, Star, Gem, Zap, Medal } from "lucide-react";
 import { CurrencyDollarIcon,ArrowTrendingUpIcon  } from "@heroicons/react/24/outline";
 
 const icons = [Rocket, Star, Zap, Crown, Medal, Gem];
-
+const formatDate = (date) =>
+  new Date(date).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
 const MyInvestments = () => {
   const [investments, setInvestments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -211,14 +216,14 @@ setTotalProfitSum(totalProfit);
           <div className="flex justify-between">
             <span>Start:</span>
             <span className="font-semibold">
-              {new Date(inv.startDate).toLocaleDateString()}
+              {formatDate(inv.startDate)}
             </span>
           </div>
 
           <div className="flex justify-between">
             <span>Expires:</span>
             <span className="font-semibold">
-              {new Date(inv.expiresAt).toLocaleDateString()}
+               {formatDate(inv.expiresAt)}
             </span>
           </div>
 

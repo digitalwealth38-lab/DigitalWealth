@@ -1,6 +1,15 @@
 import { useEffect, useState } from "react";
 import { axiosInstance } from "../lib/axios";
 
+const formatDateTime = (date) =>
+  new Date(date).toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
 export default function RecentActivities() {
   const [data, setData] = useState([]);
 
@@ -46,7 +55,7 @@ export default function RecentActivities() {
               <li key={act._id} style={{ marginBottom: "0.5rem" }}>
                 <span style={{ color: "#444" }}>{act.description}</span>{" "}
                 <small style={{ color: "#999" }}>
-                  ({new Date(act.createdAt).toLocaleString()})
+                 ({formatDateTime(act.createdAt)})
                 </small>
               </li>
             ))}
