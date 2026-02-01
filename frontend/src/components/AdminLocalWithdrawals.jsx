@@ -2,6 +2,14 @@ import { useEffect, useState } from "react";
 import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
 import Price from "./Price";
+const formatDate = (date) =>
+  date
+    ? new Date(date).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
+    : "N/A";
 const AdminLocalWithdrawals = () => {
   const [withdrawals, setWithdrawals] = useState([]);
   const [selected, setSelected] = useState(null);
@@ -129,10 +137,7 @@ const AdminLocalWithdrawals = () => {
               <p><b>Amount:</b> {selected.amount} USD</p>
               <p><b>Status:</b> {selected.status}</p>
               <p>
-  <b>Date:</b>{" "}
-  {selected.createdAt
-    ? new Date(selected.createdAt).toLocaleDateString("en-GB")
-    : "N/A"}
+  <b>Date:</b>{formatDate(selected.createdAt)}
 </p>
             </div>
       
