@@ -4,8 +4,9 @@ import getUnactiveReferredMembers, {getTeamHierarchy} from "../controllers/teamH
 
 import { restrictToLoggedinUserOnly, verifyAdmin } from "../middleware/auth.middleware.js";
 import {  getUsertransfer, transferMoney } from "../controllers/transferController.js";
-
+import { submitContact } from "../controllers/contact.controller.js";
 const router = express.Router();
+router.post("/contact", submitContact);
 router.get("/me", getSingleUserData); // GET single user's financial data
 router.get("/deposit-history",deposithistory )
 router.get("/search", searchUsers);

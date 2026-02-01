@@ -1,5 +1,5 @@
 import express from "express";
-import { deleteInvestPackage, deletePackage, deleteUserByAdmin, getAdminStats, getAdminTrading, toggleBlockUser, toggleWithdrawPermission, updateAdminTrading, updateInvestPackage, updatePackage, Userinvestment } from "../controllers/adminController.js";
+import { deleteInvestPackage, deletePackage, deleteUserByAdmin, getAdminStats, getAdminTrading, getRecentActivities, toggleBlockUser, toggleWithdrawPermission, updateAdminTrading, updateInvestPackage, updatePackage, Userinvestment } from "../controllers/adminController.js";
 import { restrictToLoggedinUserOnly, verifyAdmin } from "../middleware/auth.middleware.js";
 import { getAllWithdrawals, updateWithdrawalStatus } from "../controllers/withdrawalController.js";
 import { createinvestPackage, createPackage } from "../controllers/packageController.js";
@@ -28,6 +28,7 @@ router.get("/admin-trading", restrictToLoggedinUserOnly,verifyAdmin, getAdminTra
 router.post("/admin-trading", restrictToLoggedinUserOnly,verifyAdmin, updateAdminTrading);
 router.post("/withdraw-limit", restrictToLoggedinUserOnly, verifyAdmin, updateWithdrawLimit);
 router.get("/withdraw-limit", restrictToLoggedinUserOnly, getWithdrawLimit);
+router.get("/recent-activities",restrictToLoggedinUserOnly,verifyAdmin, getRecentActivities);
 
 
 export default router;

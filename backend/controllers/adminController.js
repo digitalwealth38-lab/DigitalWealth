@@ -7,6 +7,38 @@ import LocalWithdraw from "../models/LocalWithdraw.js";
 import InvestmentPackage from "../models/InvestmentPackage.js";
 import UserInvestment from "../models/UserInvestment.js";
 import AdminTrading from "../models/AdminTrading.js";
+import ActivityLog from "../models/ActivityLog.js";
+
+export const getRecentActivities = async (req, res) => {
+  try {
+    const recentUsers = await ActivityLog.aggregate([
+      { $sort: { createdAt: -1 } },
+      { $group: { _id: "$userId", lastActivity: { $first: "$$ROOT" } } },
+      { $sort: { "lastActivity.createdAt": -1 } },
+      { $limit: 10 } // Fetch extra to account for admins, we will filter later
+    ]);
+
+    const result = [];
+
+    for (const u of recentUsers) {
+      const user = await User.findById(u._id);
+      if (!user || user.isAdmin) continue; // Skip if admin
+
+      const activities = await ActivityLog.find({ userId: u._id })
+        .sort({ createdAt: -1 })
+        .limit(2);
+
+      result.push({ user, activities });
+
+      if (result.length >= 5) break; // Stop when we have 5 non-admin users
+    }
+
+    res.json(result);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
 
 export const deleteUserByAdmin = async (req, res) => {
   try {

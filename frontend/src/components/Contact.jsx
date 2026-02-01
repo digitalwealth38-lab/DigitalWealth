@@ -1,34 +1,44 @@
 import React, { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
-import {
-  FaEnvelope,
-} from "react-icons/fa";
+import { FaEnvelope } from "react-icons/fa";
 import emailjs from "@emailjs/browser";
+import { axiosInstance } from "../lib/axios";
 
 export default function Contact() {
   const form = useRef();
   const [loading, setLoading] = useState(false);
 
-  const sendEmail = (e) => {
+  const sendEmail = async (e) => {
     e.preventDefault();
     setLoading(true);
+
+    const formData = {
+      name: e.target.user_name.value,
+      email: e.target.user_email.value,
+      phone: e.target.user_phone.value,
+      message: e.target.message.value,
+    };
 
     const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
     const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
     const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
-    emailjs
-      .sendForm(serviceId, templateId, e.target, publicKey)
-      .then(() => {
-        toast.success("Message sent successfully 🚀");
-        setLoading(false);
-        e.target.reset();
-      })
-      .catch(() => {
-        toast.error("Something went wrong ❌");
-        setLoading(false);
-      });
+    try {
+      // 1️⃣ Send email via EmailJS
+      await emailjs.sendForm(serviceId, templateId, e.target, publicKey);
+
+      // 2️⃣ Save message to backend (MongoDB)
+      await axiosInstance.post("/users/contact", formData);
+
+      toast.success("Message sent successfully 🚀");
+      e.target.reset();
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong ❌");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -37,14 +47,14 @@ export default function Contact() {
       className="min-h-screen bg-white flex flex-col overflow-hidden items-center justify-center py-20 px-6"
     >
       {/* Heading */}
-     <motion.h1
-            initial={{ opacity: 0, y: -40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-            className="text-5xl font-extrabold text-sky-800 mb-12 tracking-tight text-center"
-          >
-            Contact <span className="text-sky-500">Us</span>
-          </motion.h1>
+      <motion.h1
+        initial={{ opacity: 0, y: -40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7 }}
+        className="text-5xl font-extrabold text-sky-800 mb-12 tracking-tight text-center"
+      >
+        Contact <span className="text-sky-500">Us</span>
+      </motion.h1>
 
       <motion.p
         className="text-gray-600 max-w-xl text-center mb-12"
@@ -52,8 +62,9 @@ export default function Contact() {
         whileInView={{ opacity: 1 }}
         transition={{ delay: 0.3, duration: 0.8 }}
       >
-       Need help with our networking investment platform? 
-  I’m here to provide support and answer your questions. 🚀
+        Need help with our networking investment platform?
+        <br />
+        I’m here to support you 🚀
       </motion.p>
 
       {/* Contact Form */}
@@ -72,11 +83,12 @@ export default function Contact() {
           <input
             type="text"
             name="user_name"
-            placeholder="Your name"
             required
-            className="w-full mt-2 px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Your name"
+            className="w-full mt-2 px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500"
           />
         </div>
+
         <div>
           <label className="block text-sm font-semibold text-gray-700">
             Email
@@ -84,35 +96,38 @@ export default function Contact() {
           <input
             type="email"
             name="user_email"
-            placeholder="Your email"
             required
+            placeholder="Your email"
             className="w-full mt-2 px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500"
           />
         </div>
-          <div className="mb-4">
-    <label className="block text-sm font-semibold text-gray-700">
-      Phone
-    </label>
-    <input
-      type="tel"
-      name="user_phone"
-      placeholder="Your phone number"
-      required
-      className="w-full mt-2 px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500"
-    />
-  </div>
+
+        <div>
+          <label className="block text-sm font-semibold text-gray-700">
+            Phone
+          </label>
+          <input
+            type="tel"
+            name="user_phone"
+            required
+            placeholder="Your phone number"
+            className="w-full mt-2 px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500"
+          />
+        </div>
+
         <div>
           <label className="block text-sm font-semibold text-gray-700">
             Message
           </label>
           <textarea
             name="message"
-            placeholder="Write your message..."
             rows="4"
             required
-            className="w-full mt-2 px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Write your message..."
+            className="w-full mt-2 px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500"
           ></textarea>
         </div>
+
         <button
           type="submit"
           disabled={loading}
@@ -121,7 +136,7 @@ export default function Contact() {
           {loading ? (
             <span className="flex items-center gap-2">
               <svg
-                className="w-5 h-5 animate-spin text-white"
+                className="w-5 h-5 animate-spin"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -133,12 +148,12 @@ export default function Contact() {
                   r="10"
                   stroke="currentColor"
                   strokeWidth="4"
-                ></circle>
+                />
                 <path
                   className="opacity-75"
                   fill="currentColor"
                   d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-                ></path>
+                />
               </svg>
               Sending...
             </span>
@@ -149,16 +164,10 @@ export default function Contact() {
       </motion.form>
 
       {/* Contact Info */}
-      <div className="flex flex-col items-center mt-12 space-y-4 text-gray-700">
-        <div className="flex items-center gap-3">
-          <FaEnvelope className="text-blue-600" />
-          <span>digitalwealth38@gmail.com</span>
-        </div>
-      
+      <div className="flex items-center gap-3 mt-12 text-gray-700">
+        <FaEnvelope className="text-blue-600" />
+        <span>digitalwealth38@gmail.com</span>
       </div>
-
-      {/* Social Links */}
     </section>
   );
 }
-

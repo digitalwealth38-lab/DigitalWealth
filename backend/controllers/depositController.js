@@ -1,6 +1,7 @@
 import axios from "axios";
 import User from "../models/user.model.js";
 import Transaction from "../models/Transaction.js";
+import { logActivity } from "../lib/logActivity.js";
 import dotenv from "dotenv"
 dotenv.config()
 // Start deposit
@@ -157,6 +158,11 @@ export const paymentWebhook = async (req, res) => {
             transaction.creditedAmount = creditedAmount;
             console.log(
               `✅ User ${user.name} credited $${creditedAmount} after 0.5% fee ($${fee} deducted)`
+            );
+               await logActivity(
+              user._id,
+              "DEPOSIT_CONFIRMED",
+              `Deposit of $${creditedAmount} confirmed (Fee: $${fee})`
             );
           }
         }

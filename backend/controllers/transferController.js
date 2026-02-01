@@ -1,6 +1,6 @@
 import User from "../models/user.model.js";
 import Transfer from "../models/transfer.js";
-
+import { logActivity } from "../lib/logActivity.js";
 // Transfer money from one user to another
 export const transferMoney = async (req, res) => {
   try {
@@ -45,6 +45,17 @@ const transaction = await Transfer.create({
   amount,
 });
 
+   await logActivity(
+      sender._id,
+      "TRANSFER_SENT",
+      `You sent $${amount} to ${receiver.name} (${receiver.userId})`
+    );
+
+    await logActivity(
+      receiver._id,
+      "TRANSFER_RECEIVED",
+      `You received $${amount} from ${sender.name} (${sender.userId})`
+    );
 
     res.status(200).json({ 
       success: true, 

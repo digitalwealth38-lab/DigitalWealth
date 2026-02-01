@@ -6,6 +6,8 @@ import admin from "../firebase.js";
 import { setUser } from "../services/auth.service.js";
 import dotenv from "dotenv";
 import cloudinary from "../lib/cloudinary.js";
+import { logActivity } from "../lib/logActivity.js";
+
 dotenv.config();
 export const generateUserId = async () => {
   let id;
@@ -71,11 +73,12 @@ console.log(decoded)
           await referrer.save();
         }
       }
+       await logActivity(user._id, "SIGNUP", "User registered successfully via Google");
     }
 
     // 🔐 Generate your own JWT
     const appToken = setUser(user);
-
+await logActivity(user._id, "LOGIN", "User logged in via Google");
     // 🍪 Set cookie
     res.cookie("uid", appToken, {
       httpOnly: true,
@@ -155,7 +158,7 @@ export const signup = async (req, res) => {
       sameSite: "None",
       secure: process.env.NODE_ENV !== "development",
     });
-
+await logActivity(newUser._id, "SIGNUP", "User registered successfully");
     // ✅ 5️⃣ Success Response
     res.status(201).json({
       message: "User registered successfully",
@@ -192,6 +195,7 @@ if(!iscorrectPassword){
     sameSite: "None", // CSRF attacks cross-site request forgery attacks
     secure: process.env.NODE_ENV !== "development",
    });
+  await logActivity(user._id, "LOGIN", "User logged in");
 res.status(200).json({
   _id: user._id,
   fullName: user.fullName,
@@ -202,22 +206,34 @@ res.status(200).json({
   message: "Login successful",
  
 });
+
    } catch (error) {
     console.log("Error in login controller", error.message);
     res.status(500).json({ message: error.message });
   }
 }
-export const logout = (req, res) => {
+export const logout = async (req, res) => {
   try {
+    const userId = req.user?._id;
+    console.log(userId)
+     // Assuming req.user is set by your auth middleware
+
+    // Log the logout activity if user is available
+    if (userId) {
+      await logActivity(userId, "LOGOUT", "User logged out");
+    }
+
+    // Clear the cookie
     res.clearCookie("uid", {
       httpOnly: true,
       sameSite: "None",
       secure: process.env.NODE_ENV !== "development",
     });
-   return res.status(200).json({ message: "Logged out successfully" });
+
+    return res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
     console.log("Error in logout controller", error.message);
-    res.status(500).json({ message: "Internal Server Error" });
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 

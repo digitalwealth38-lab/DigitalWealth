@@ -3,6 +3,7 @@ import Package from "../models/Package.js";
 import TeamHierarchy from "../models/TeamHierarchy.js";
 import InvestmentPackage from "../models/InvestmentPackage.js";
 import UserInvestment from "../models/UserInvestment.js";
+import { logActivity } from "../lib/logActivity.js";
 
 // 🛒 BUY PACKAGE CONTROLLER
 export const buyPackage = async (req, res) => {
@@ -35,6 +36,11 @@ export const buyPackage = async (req, res) => {
     user.currentPackage = selectedPackage._id;
     user.hasActivePackage = true;
     await user.save();
+       await logActivity(
+      user._id,
+      "PACKAGE_PURCHASE",
+      `Networking package purchased  package "${selectedPackage.name}" for $${selectedPackage.price}`
+    );
 
     // 5️⃣ TEAM HIERARCHY HANDLING
     let userTeam = await TeamHierarchy.findOne({ userId });
@@ -305,6 +311,12 @@ export const buyInvestpackage = async (req, res) => {
     });
 
     await user.save();
+        await logActivity(
+      user._id,
+      "INVESTMENT_PURCHASE",
+      `Invested $${pkg.investmentAmount} in "${pkg.name}" investment package`
+    );
+
 
     res.status(201).json({
       success: true,

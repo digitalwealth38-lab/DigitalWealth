@@ -14,6 +14,7 @@ import CreatePackage from '../components/CreatePackage';
 import EditPackage from '../components/EditPackage';
 import AdminWithdrawLimit from '../components/AdminWithdrawLimit';
 import AdminTrading from '../components/AdminTrading';
+import RecentActivities from '../components/RecentActivities';
 
 const Dashboardadmin = () => {
       useEffect(() => {
@@ -26,6 +27,10 @@ const Dashboardadmin = () => {
 <div id="dashboardadmin" className="">
   <DashbaordadminCard/>
 </div>
+<div id="recentactivities" className="">
+  <RecentActivities/>
+</div>
+
 <div id="packagesadmin" className="">
   <Packagesadmin/>
   <AdminAddPackage/>
@@ -46,6 +51,7 @@ const Dashboardadmin = () => {
 </div>
 <div id="manageusers" className="">
   <AdminManageUsers/>
+  
 </div>
     </div>
   )

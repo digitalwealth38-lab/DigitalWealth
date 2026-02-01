@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import Withdrawal from "../models/Withdrawal.js";
 import User from "../models/user.model.js";
 import WithdrawLimit from "../models/WithdrawLimit.js";
+import { logActivity } from "../lib/logActivity.js";
 // 🟢 User makes a withdrawal request
 export const createWithdrawal = async (req, res) => {
   try {
@@ -57,6 +58,13 @@ export const createWithdrawal = async (req, res) => {
     });
 
     await withdrawal.save();
+       await logActivity(
+      user._id,
+      "WITHDRAW_REQUEST",
+      `Crypto Withdrawal requested:
+Amount: ${amount} ${currency}
+Wallet: ${walletAddress}`
+    );
 
     return res.json({
       success: true,

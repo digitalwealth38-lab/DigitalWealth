@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import LocalWithdraw from "../models/LocalWithdraw.js";
 import User from "../models/user.model.js";
 import WithdrawLimit from "../models/WithdrawLimit.js";
+import { logActivity } from "../lib/logActivity.js";
 
 // 🟢 User creates a local withdrawal request
 export const createLocalWithdraw = async (req, res) => {
@@ -65,7 +66,15 @@ export const createLocalWithdraw = async (req, res) => {
       accountName,
       accountNumber,
     });
-
+   await logActivity(
+      user._id,
+      "LOCAL_WITHDRAW_REQUEST",
+      `Local withdrawal requested:
+Amount: $${amount}
+Method: ${method}
+Account Name: ${accountName}
+Account Number: ${accountNumber}`
+    );
     res.status(201).json({
       success: true,
       message:

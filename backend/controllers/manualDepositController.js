@@ -1,5 +1,6 @@
 import ManualDeposit from "../models/ManualDeposit.js";
 import User from "../models/user.model.js"
+import { logActivity } from "../lib/logActivity.js";
 // Create Deposit Request (USER)
 export const createDeposit = async (req, res) => {
   try {
@@ -15,6 +16,11 @@ export const createDeposit = async (req, res) => {
       amount,
       screenshot,
     });
+        await logActivity(
+      req.user._id,
+      "MANUAL_DEPOSIT",
+      `Requested a manual deposit of $${amount} via ${method}`
+    );
 
     res.status(201).json(deposit);
   } catch (err) {
