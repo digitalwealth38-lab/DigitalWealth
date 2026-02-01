@@ -31,29 +31,6 @@ export default function Navbaradmin() {
 >
   Dashboard
 </Link>
-<Link
-  to="recentactivities"
-  spy={true}
-  smooth={true}
-  offset={-40} // adjust slightly if needed
-  duration={500}
-  className={linkClasses}
-  activeClass="border-b-2 border-white"
->
-  RecentActivities
-</Link>
-
-          <Link
-            to="packagesadmin"
-            spy={true}
-            smooth={true}
-            offset={-40}
-            duration={500}
-            className={linkClasses}
-            activeClass="border-b-2 border-white"
-          >
-           Packages
-          </Link>
              <Link
             to="adminwithdrawals"
             spy={true}
@@ -75,17 +52,6 @@ export default function Navbaradmin() {
             activeClass="border-b-2 border-white"
           >
            Payment
-          </Link>
-                <Link
-            to="Deposit"
-            spy={true}
-            smooth={true}
-            offset={-40}
-            duration={500}
-            className={linkClasses}
-            activeClass="border-b-2 border-white"
-          >
-           Trading Deposit
           </Link>
              <Link
             to="manageusers"

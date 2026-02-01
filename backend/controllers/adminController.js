@@ -15,7 +15,7 @@ export const getRecentActivities = async (req, res) => {
       { $sort: { createdAt: -1 } },
       { $group: { _id: "$userId", lastActivity: { $first: "$$ROOT" } } },
       { $sort: { "lastActivity.createdAt": -1 } },
-      { $limit: 10 } // Fetch extra to account for admins, we will filter later
+      { $limit: 20 } // Fetch extra to account for admins, we will filter later
     ]);
 
     const result = [];
@@ -26,7 +26,7 @@ export const getRecentActivities = async (req, res) => {
 
       const activities = await ActivityLog.find({ userId: u._id })
         .sort({ createdAt: -1 })
-        .limit(2);
+        .limit(3);
 
       result.push({ user, activities });
 

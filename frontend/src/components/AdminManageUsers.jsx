@@ -15,7 +15,7 @@ const AdminManageUsers = () => {
   const [loading, setLoading] = useState(true);
 
   const [searchId, setSearchId] = useState("");
-  const [searchName, setSearchName] = useState("");
+  const [searchReferredBy, setSearchReferredBy] = useState("");
   const [searchEmail, setSearchEmail] = useState("");
 
   const [investments, setInvestments] = useState([]);
@@ -31,6 +31,7 @@ const AdminManageUsers = () => {
       const { data } = await axiosInstance.get("/users/all", {
         withCredentials: true,
       });
+      console.log(data.users)
       setUsers(data.users);
     } catch {
       toast.error("Failed to load users");
@@ -109,12 +110,12 @@ const handleToggleWithdraw = async (id) => {
     fetchUsers();
   }, []);
 
-  const filteredUsers = users.filter(
-    (u) =>
-      u.userId.toLowerCase().includes(searchId.toLowerCase()) &&
-      u.name.toLowerCase().includes(searchName.toLowerCase()) &&
-      u.email.toLowerCase().includes(searchEmail.toLowerCase())
-  );
+const filteredUsers = users.filter(
+  (u) =>
+    u.userId.toLowerCase().includes(searchId.toLowerCase()) &&
+    (u.referredBy || "").toLowerCase().includes(searchReferredBy.toLowerCase()) &&
+    u.email.toLowerCase().includes(searchEmail.toLowerCase())
+);
 
   if (loading)
     return (
@@ -125,25 +126,44 @@ const handleToggleWithdraw = async (id) => {
 
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4">
-      <h2 className="text-3xl font-bold text-center text-sky-700 mb-8">
-        Admin – Manage Users
-      </h2>
+     <div className="text-center mb-12">
+  <h2 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-700 drop-shadow-lg leading-tight md:leading-snug">
+    Admin – Manage Users
+  </h2>
+  <p className="mt-4 text-lg md:text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed px-4">
+    View and manage all your platform users in one place.
+  </p>
+</div>
+
 
       {/* SEARCH */}
-      <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-4 mb-6">
-        <input placeholder="Search ID" onChange={(e)=>setSearchId(e.target.value)} className="p-3 border rounded-lg"/>
-        <input placeholder="Search Name" onChange={(e)=>setSearchName(e.target.value)} className="p-3 border rounded-lg"/>
-        <input placeholder="Search Email" onChange={(e)=>setSearchEmail(e.target.value)} className="p-3 border rounded-lg"/>
-      </div>
+     <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-4 mb-6">
+  <input
+    placeholder="Search ID"
+    onChange={(e) => setSearchId(e.target.value)}
+    className="p-3 border rounded-lg"
+  />
+  <input
+    placeholder="Search Referred By"
+    onChange={(e) => setSearchReferredBy(e.target.value)}
+    className="p-3 border rounded-lg"
+  />
+  <input
+    placeholder="Search Email"
+    onChange={(e) => setSearchEmail(e.target.value)}
+    className="p-3 border rounded-lg"
+  />
+</div>
 
       {/* TABLE */}
       <div className="max-w-7xl mx-auto bg-white rounded-xl shadow overflow-auto">
         <table className="min-w-full">
           <thead className="bg-sky-600 text-white">
             <tr>
-              {["ID","Name","Email","Referral","Referred By","Balance","Invested","Earnings","Action"].map(h=>(
-                <th key={h} className="p-3">{h}</th>
-              ))}
+             {["ID","Name","Email","Referral","Referred By","Balance","Invested","Earnings","Action"].map(h => (
+  <th key={h} className="p-3">{h}</th>
+))}
+
             </tr>
           </thead>
           <tbody>
@@ -153,7 +173,7 @@ const handleToggleWithdraw = async (id) => {
                 <td className="p-2">{user.name}</td>
                 <td className="p-2">{user.email}</td>
                 <td className="p-2">{user.referralCode}</td>
-                <td className="p-2">{user.referredBy}</td>
+                <td className="p-2">{user.referredBy || "-"}</td>
                 <td className="p-2 text-center"><Price amount={user.balance||0}/></td>
                 <td className="p-2 text-center"><Price amount={user.investedBalance||0}/></td>
                 <td className="p-2 text-center"><Price amount={user.totalEarnings||0}/></td>
