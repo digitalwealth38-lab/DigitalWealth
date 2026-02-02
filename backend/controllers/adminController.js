@@ -63,7 +63,7 @@ export const getRecentActivities = async (req, res) => {
 
       result.push({ user, activities });
 
-      if (result.length >= 5) break; // Stop when we have 5 non-admin users
+      if (result.length >= 10) break; // Stop when we have 5 non-admin users
     }
 
     res.json(result);
