@@ -1,5 +1,5 @@
 import express from "express";
-import { deleteInvestPackage, deletePackage, deleteUserByAdmin, getAdminStats, getAdminTrading, getRecentActivities, toggleBlockUser, toggleWithdrawPermission, updateAdminTrading, updateInvestPackage, updatePackage, Userinvestment } from "../controllers/adminController.js";
+import { Adminreward, deleteInvestPackage, deletePackage, deleteUserByAdmin, getAdminStats, getAdminTrading, getRecentActivities, toggleBlockUser, toggleWithdrawPermission, updateAdminTrading, updateInvestPackage, updatePackage, Userinvestment } from "../controllers/adminController.js";
 import { restrictToLoggedinUserOnly, verifyAdmin } from "../middleware/auth.middleware.js";
 import { getAllWithdrawals, updateWithdrawalStatus } from "../controllers/withdrawalController.js";
 import { createinvestPackage, createPackage } from "../controllers/packageController.js";
@@ -21,6 +21,9 @@ router.put("/investpackage/:id",restrictToLoggedinUserOnly, verifyAdmin, updateI
 router.delete("/investpackage/:id",restrictToLoggedinUserOnly, verifyAdmin, deleteInvestPackage);
 router.get("/user-investments/:userId",restrictToLoggedinUserOnly,verifyAdmin,Userinvestment)
 router.delete("/delete-user/:userId",restrictToLoggedinUserOnly,verifyAdmin,deleteUserByAdmin)
+
+router.post("/give-reward/:userId",restrictToLoggedinUserOnly,verifyAdmin,Adminreward)
+
 router.patch("/block-user/:userId",restrictToLoggedinUserOnly,verifyAdmin,toggleBlockUser)
 router.patch("/toggle-withdraw/:userId",restrictToLoggedinUserOnly,verifyAdmin,toggleWithdrawPermission)
 router.put("/withdrawals/:id",restrictToLoggedinUserOnly, verifyAdmin, updateWithdrawalStatus);

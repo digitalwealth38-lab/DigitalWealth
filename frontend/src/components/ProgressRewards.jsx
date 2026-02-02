@@ -3,6 +3,16 @@ import { motion } from "framer-motion";
 import { axiosInstance } from "../lib/axios";
 import { Trophy, Gift, Info, Star } from "lucide-react";
 
+const formatDateTime = (date) =>
+  new Date(date).toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
+
 const ProgressRewards = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -70,27 +80,35 @@ const ProgressRewards = () => {
 
             <div className="max-h-96 overflow-y-auto bg-sky-50 border border-sky-100 rounded-xl p-3">
               {rewards && rewards.length > 0 ? (
-                <ul className="space-y-2">
-                  {rewards
-                    .slice()
-                    .reverse()
-                    .map((reward, index) => (
-                      <li
-                        key={index}
-                        className="p-3 bg-white border border-sky-100 rounded-xl flex justify-between shadow-sm"
-                      >
-                        <span className="font-medium text-sky-700">
-                          Reward #{rewards.length - index}
-                        </span>
-                        <span className="text-gray-600">
-                          +${reward.amount.toFixed(2)}
-                        </span>
-                        <span className="text-xs text-gray-400">
-                          {new Date(reward.date).toLocaleDateString()}
-                        </span>
-                      </li>
-                    ))}
-                </ul>
+              <ul className="space-y-3">
+  {rewards
+    .slice()
+    .reverse()
+    .map((reward, index) => (
+      <li
+        key={reward._id || index}
+        className="p-4 bg-white border border-sky-100 rounded-xl shadow-sm flex items-center justify-between gap-4"
+      >
+        {/* LEFT: TYPE */}
+        <div className="flex items-center gap-2">
+          <Star className="text-yellow-500" size={18} />
+          <div>
+            <p className="font-semibold text-sky-700">
+              {reward.type}
+            </p>
+            <p className="text-xs text-gray-400">
+              {formatDateTime(reward.date)}
+            </p>
+          </div>
+        </div>
+
+        {/* RIGHT: AMOUNT */}
+        <div className="text-emerald-600 font-bold text-lg">
+          +${reward.amount.toFixed(2)}
+        </div>
+      </li>
+    ))}
+</ul>
               ) : (
                 <p className="text-gray-500 text-center">No rewards earned yet.</p>
               )}

@@ -9,6 +9,39 @@ import UserInvestment from "../models/UserInvestment.js";
 import AdminTrading from "../models/AdminTrading.js";
 import ActivityLog from "../models/ActivityLog.js";
 
+export const Adminreward = async (req, res) => {
+  try {
+    const { amount } = req.body;
+    console.log(amount)
+
+    if (!amount || amount <= 0) {
+      return res.status(400).json({ message: "Invalid reward amount" });
+    }
+
+    const user = await User.findById(req.params.userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    user.rewards.push({
+      type: "Admin Reward",
+      amount,
+    });
+
+    // Optional: also credit balance
+    user.balance += amount;
+
+    await user.save();
+
+    res.json({
+      message: "Reward sent successfully",
+      reward: user.rewards[user.rewards.length - 1],
+      balance: user.balance,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to send reward" });
+  }
+};
+
+
 export const getRecentActivities = async (req, res) => {
   try {
     const recentUsers = await ActivityLog.aggregate([

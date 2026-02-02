@@ -24,6 +24,8 @@ const AdminManageUsers = () => {
 
   const [showNetworking, setShowNetworking] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [showRewardModal, setShowRewardModal] = useState(false);
+const [rewardAmount, setRewardAmount] = useState("");
 
   /* ================= FETCH USERS ================= */
   const fetchUsers = async () => {
@@ -90,6 +92,36 @@ const handleToggleWithdraw = async (id) => {
     );
   } catch {
     toast.error("Failed to update withdraw permission");
+  }
+};
+const handleSendReward = async () => {
+  if (!rewardAmount || rewardAmount <= 0) {
+    toast.error("Enter valid reward amount");
+    return;
+  }
+
+  try {
+    const { data } = await axiosInstance.post(
+      `/admin/give-reward/${selectedUser._id}`,
+      { amount: Number(rewardAmount) },
+      { withCredentials: true }
+    );
+
+    toast.success(data.message);
+
+    // update balance instantly
+    setUsers(prev =>
+      prev.map(u =>
+        u._id === selectedUser._id
+          ? { ...u, balance: data.balance }
+          : u
+      )
+    );
+
+    setRewardAmount("");
+    setShowRewardModal(false);
+  } catch {
+    toast.error("Failed to send reward");
   }
 };
 
@@ -199,6 +231,16 @@ const filteredUsers = users.filter(
 >
   {user.canWithdraw ? "Disable Withdraw" : "Enable Withdraw"}
 </button>
+<button
+  onClick={() => {
+    setSelectedUser(user);
+    setShowRewardModal(true);
+  }}
+  className="px-3 py-1.5 rounded-full bg-emerald-600 text-white"
+>
+  🎁 Give Reward
+</button>
+
                     <button onClick={()=>handleDeleteUser(user._id)} className="px-3 py-1.5 rounded-full bg-red-600 text-white inline-flex items-center gap-1.5">
                       <Trash2 size={15}/>Delete
                     </button>
@@ -279,9 +321,35 @@ const filteredUsers = users.filter(
           </div>
         </Modal>
       )}
+      {showRewardModal && selectedUser && (
+  <Modal title="Give Admin Reward" onClose={() => setShowRewardModal(false)}>
+    <div className="max-w-md mx-auto space-y-4">
+      <div className="text-sm text-gray-600">
+        <p><b>User ID:</b> {selectedUser.userId}</p>
+        <p><b>Name:</b> {selectedUser.name}</p>
+      </div>
+
+      <input
+        type="number"
+        placeholder="Enter reward amount ($)"
+        value={rewardAmount}
+        onChange={(e) => setRewardAmount(e.target.value)}
+        className="w-full p-3 border rounded-lg"
+      />
+
+      <button
+        onClick={handleSendReward}
+        className="w-full bg-emerald-600 text-white py-2 rounded-lg"
+      >
+        ✅ Send Reward
+      </button>
+    </div>
+  </Modal>
+)}
     </div>
   );
 };
+
 
 /* ================= REUSABLE COMPONENTS ================= */
 
