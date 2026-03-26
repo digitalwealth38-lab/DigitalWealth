@@ -12,8 +12,8 @@ import ActivityLog from "../models/ActivityLog.js";
 export const Adminreward = async (req, res) => {
   try {
     const { amount } = req.body;
+    
     console.log(amount)
-
     if (!amount || amount <= 0) {
       return res.status(400).json({ message: "Invalid reward amount" });
     }
