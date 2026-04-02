@@ -16,7 +16,8 @@ Share2,
   Activity,
   CreditCard ,
   Bitcoin, 
-  Edit
+  Edit,
+  Bell
 } from "lucide-react";
 import CurrencyToggle from "./CurrencyToggle";
 import Modal from "./Modal"; // New
@@ -31,6 +32,7 @@ import Packagesadmin from "./Packagesadmin";
 import AdminWithdrawals from "./AdminWithdrawals";
 import AdminLocalWithdrawals from "./AdminLocalWithdrawals";
 import AdminManualDeposits from "./Adminmanualdeposite";
+import AdminNotifications from "./AdminNotifications";
 
 export default function DashboardAdminCard() {
   const [stats, setStats] = useState(null);
@@ -48,6 +50,7 @@ const [openEditInvestment, setOpenEditInvestment] = useState(false);
 const [openCryptoWithdraw, setOpenCryptoWithdraw] = useState(false);
 const [openLocalWithdraw, setOpenLocalWithdraw] = useState(false);
 const [openLocalDeposit, setOpenLocalDeposit] = useState(false);
+const [openNotification, setopenNotification] = useState(false);
   useEffect(() => {
     const fetchStats = async () => {
       try {
@@ -206,6 +209,14 @@ const [openLocalDeposit, setOpenLocalDeposit] = useState(false);
   bg: "bg-emerald-100",
   clickable: true,
 },
+{
+  icon: Bell,             // lucide-react
+  title: "Notifications",
+  value: "Manage",
+  color: "text-amber-600",
+  bg: "bg-amber-100",
+  clickable: true,
+},
   ];
 
   return (
@@ -267,6 +278,7 @@ const [openLocalDeposit, setOpenLocalDeposit] = useState(false);
     if (title === "Crypto Withdraw") setOpenCryptoWithdraw(true);
   if (title === "Local Withdraw") setOpenLocalWithdraw(true);
   if (title === "Local Deposit") setOpenLocalDeposit(true);
+    if (title === "Notifications") setopenNotification(true);
  // ✅ new // ✅ new// ✅ open trading modal
   }}
   whileHover={{
@@ -312,6 +324,13 @@ const [openLocalDeposit, setOpenLocalDeposit] = useState(false);
   title="Local Withdraw"
 >
   <AdminLocalWithdrawals/>
+</Modal>
+<Modal
+  isOpen={openNotification}
+  onClose={() => setopenNotification(false)}
+  title="Notification"
+>
+  <AdminNotifications/>
 </Modal>
 
 {/* 🔹 Local Deposit Modal */}
