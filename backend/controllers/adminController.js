@@ -59,7 +59,7 @@ export const getRecentActivities = async (req, res) => {
 
       const activities = await ActivityLog.find({ userId: u._id })
         .sort({ createdAt: -1 })
-        .limit(3);
+        .limit(5);
 
       result.push({ user, activities });
 
