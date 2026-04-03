@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
 import Price from "./Price";
+
+import { Upload } from "lucide-react";
 const formatDate = (date) =>
   date
     ? new Date(date).toLocaleDateString("en-US", {
@@ -15,6 +17,18 @@ const AdminLocalWithdrawals = () => {
   const [selected, setSelected] = useState(null);
   const [adminNote, setAdminNote] = useState("");
   const [txHash, setTxHash] = useState("");
+  const [screenshot, setScreenshot] = useState("");
+   const [showFullImage, setShowFullImage] = useState(false);
+
+
+  const uploadFile = (e) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onloadend = () => setScreenshot(reader.result);
+  reader.readAsDataURL(file);
+};
 
   // Fetch all withdrawals
   const fetchWithdrawals = async () => {
@@ -32,6 +46,7 @@ const AdminLocalWithdrawals = () => {
     fetchWithdrawals();
   }, []);
 
+
   // Approve withdrawal
   const approveWithdrawal = async () => {
     try {
@@ -39,6 +54,7 @@ const AdminLocalWithdrawals = () => {
         status: "approved",
         adminNote,
         txHash,
+        screenshot,
       });
       toast.success("Withdrawal approved");
       setSelected(null);
@@ -134,8 +150,31 @@ const AdminLocalWithdrawals = () => {
               <p><b>Method:</b> {selected.method}</p>
               <p><b>Account Name:</b> {selected.accountName}</p>
               <p><b>Account Number:</b> {selected.accountNumber}</p>
-              <p><b>Amount:</b> {selected.amount} USD</p>
+              <p><b>Transaction Id:</b> {selected.txHash}</p>
+              <p><b>Amount:</b> <Price amount={selected.amount} /></p>
+                <div className="mt-4">
+              <p className="font-medium mb-1">Screenshot:</p>
+              <img
+                src={selected.screenshot}
+                alt="Deposit Proof"
+                className="w-40 h-40 object-cover rounded-lg border cursor-pointer hover:opacity-80"
+                onClick={() => setShowFullImage(true)}
+              />
+            </div>
+            {/* Enlarged Image */}
+            {showFullImage && (
+              <div
+                className="fixed inset-0 bg-black/60 flex items-center justify-center z-50"
+                onClick={() => setShowFullImage(false)}
+              >
+                <img
+                  src={selected.screenshot}
+                  className="max-w-[90%] max-h-[90%] rounded-lg shadow-2xl"
+                />
+              </div>
+            )}
               <p><b>Status:</b> {selected.status}</p>
+
               <p>
   <b>Date:</b>{formatDate(selected.createdAt)}
 </p>
@@ -156,7 +195,33 @@ const AdminLocalWithdrawals = () => {
                   value={txHash}
                   onChange={(e) => setTxHash(e.target.value)}
                 />
+       <div className="mb-5">
+  <label className="text-gray-700 font-semibold mb-2 block">
+    Upload Screenshot
+  </label>
 
+  <div className="flex items-center gap-3 border border-sky-200 rounded-2xl p-3 bg-white/70 cursor-pointer overflow-hidden">
+    <Upload size={24} className="text-sky-500 shrink-0" />
+
+    <input
+      type="file"
+      accept="image/*"
+      onChange={uploadFile}
+      className="w-full text-sm file:mr-3 file:py-1.5 file:px-3
+                 file:rounded-lg file:border-0
+                 file:bg-sky-100 file:text-sky-700
+                 hover:file:bg-sky-200"
+    />
+  </div>
+
+  {screenshot && (
+    <img
+      src={screenshot}
+      className="w-40 h-40 mt-3 rounded-xl object-cover shadow-md border mx-auto"
+      alt="Preview"
+    />
+  )}
+</div>
                 <div className="flex gap-3 mt-4">
                   <button
                     className="flex-1 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700"

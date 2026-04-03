@@ -19,7 +19,7 @@ export const createDeposit = async (req, res) => {
         await logActivity(
       req.user._id,
       "MANUAL_DEPOSIT",
-      `Requested a manual deposit of $${amount} via ${method}`
+      `Requested a manual deposit of PKR${amount} via ${method}`
     );
 
     res.status(201).json(deposit);
@@ -31,8 +31,7 @@ export const createDeposit = async (req, res) => {
 // Fetch User Deposit History
 export const getUserDeposits = async (req, res) => {
   try {
-    const deposits = await ManualDeposit.find({ user: req.user._id })
-      .select("-screenshot")          // REMOVE screenshot from response
+    const deposits = await ManualDeposit.find({ user: req.user._id })        // REMOVE screenshot from response
       .sort({ createdAt: -1 });
 
     res.json({ deposits });

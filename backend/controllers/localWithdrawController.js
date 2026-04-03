@@ -121,26 +121,45 @@ export const getAllLocalWithdrawals = async (req, res) => {
 export const updateLocalWithdrawStatus = async (req, res) => {
   try {
     const { id } = req.params;
-    const { status, adminNote } = req.body;
+    const { status, adminNote, txHash, screenshot } = req.body;
+    console.log(txHash)
 
     const withdraw = await LocalWithdraw.findById(id);
-    if (!withdraw) return res.status(404).json({ msg: "Withdrawal not found" });
+    if (!withdraw) {
+      return res.status(404).json({ msg: "Withdrawal not found" });
+    }
 
+    // Update basic fields
     withdraw.status = status;
     withdraw.adminNote = adminNote || "";
 
-    // Refund user if rejected
+    // ✅ Save txHash (for approved)
+    if (txHash) {
+      withdraw.txHash = txHash;
+    }
+
+    // ✅ Save screenshot (admin proof)
+    if (screenshot) {
+      withdraw.screenshot = screenshot;
+    }
+
+    // 🔁 Refund user if rejected
     if (status === "rejected") {
       const user = await User.findById(withdraw.user);
       if (user) {
-        user.balance = Math.round((user.balance + withdraw.amount) * 100) / 100;
+        user.balance =
+          Math.round((user.balance + withdraw.amount) * 100) / 100;
         await user.save();
       }
     }
 
     await withdraw.save();
 
-    res.json({ success: true, message: `Withdrawal ${status} successfully.`, withdraw });
+    res.json({
+      success: true,
+      message: `Withdrawal ${status} successfully.`,
+      withdraw,
+    });
   } catch (err) {
     console.error("Error updating local withdrawal:", err);
     res.status(500).json({ message: "Server error" });

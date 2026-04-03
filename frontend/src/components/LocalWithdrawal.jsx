@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Banknote,Timer,AlertTriangle,UserCheck, Clock, CheckCircle2, XCircle, Wallet } from "lucide-react";
+import { Banknote,Timer,AlertTriangle,UserCheck, Clock, CheckCircle2, XCircle, Wallet,Eye, X } from "lucide-react";
 
 import { axiosInstance } from "../lib/axios";
 import { toast } from "react-hot-toast";
@@ -13,6 +13,8 @@ export default function LocalWithdrawal() {
   const [error, setError] = useState("");
   const [history, setHistory] = useState([]);
   const [methods, setMethods] = useState([]);
+  const [selectedTx, setSelectedTx] = useState(null);
+const [showFullImage, setShowFullImage] = useState(false);
     const [limit, setLimit] = useState({
       minAmount: "",
       maxAmount: "",
@@ -28,8 +30,10 @@ console.log(history)
       method: tx.method,
       accountName: tx.accountName,
       accountNumber: tx.accountNumber,
+      Transaction: tx.txHash,
       adminNote: tx.adminNote,
       status: tx.status,
+      screenshot: tx.screenshot || "",
       date: tx.createdAt
         ? new Date(tx.createdAt).toLocaleDateString("en-GB")
         : "N/A",
@@ -162,56 +166,134 @@ console.log(history)
             Withdrawal History
           </h2>
 
-          {history.length > 0 ? (
-            <div className="flex flex-col gap-4 max-h-[18rem] overflow-y-auto pr-2">
-              {history.map((item) => (
-                <motion.div
-                  key={item.id}
-                  whileHover={{ scale: 1.02 }}
-                  className="flex justify-between items-center bg-white/70 border border-sky-100 rounded-2xl p-4 shadow-sm"
-                >
-                  <div>
-                    <p className="text-gray-800 font-semibold">
-                      {item.amount} USD - {item.method}
-                    </p>
-                    <p className="text-gray-500 text-sm">
-                      Account Name: {item.accountName}
-                    </p>
-                    <p className="text-gray-500 text-sm">
-                      Account Number: {item.accountNumber}
-                    </p>
-                    <p className="text-gray-500 text-sm">Admin Note: {item.adminNote}</p>
-                    <p className="text-gray-500 text-sm">Date: {item.date}</p>
-                    <p className="text-gray-500 text-sm">Time: {item.time}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {item.status === "approved" && (
-                      <CheckCircle2 className="text-green-500" size={22} />
-                    )}
-                    {item.status === "pending" && (
-                      <Clock className="text-yellow-500" size={22} />
-                    )}
-                    {item.status === "rejected" && (
-                      <XCircle className="text-red-500" size={22} />
-                    )}
-                    <span
-                      className={`font-medium ${
-                        item.status === "approved"
-                          ? "text-green-600"
-                          : item.status === "pending"
-                          ? "text-yellow-600"
-                          : "text-red-600"
-                      }`}
-                    >
-                      {item.status}
-                    </span>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-center text-gray-500">No withdrawals yet.</p>
-          )}
+        {history.length > 0 ? (
+  <div className="flex flex-col gap-4 max-h-[30rem] overflow-y-auto pr-2">
+    {history.map((item) => (
+      <motion.div
+        key={item.id}
+        whileHover={{ scale: 1.02 }}
+        className="flex justify-between items-center bg-white/70 border border-sky-100 rounded-2xl p-4 shadow-sm"
+      >
+        <div>
+          <p className="text-gray-800 font-semibold">
+            {item.amount} USD - {item.method}
+          </p>
+          <p className="text-gray-500 text-sm">Account: {item.accountName}</p>
+          <p className="text-gray-500 text-sm">Date: {item.date}</p>
+        </div>
+     <div className="flex flex-col items-end gap-2">
+  {/* Status icon + text */}
+  <div className="flex items-center gap-2">
+    {item.status === "approved" && <CheckCircle2 className="text-green-500" size={22} />}
+    {item.status === "pending"  && <Clock className="text-yellow-500" size={22} />}
+    {item.status === "rejected" && <XCircle className="text-red-500" size={22} />}
+    <span className={`font-medium text-sm ${
+      item.status === "approved" ? "text-green-600" :
+      item.status === "pending"  ? "text-yellow-600" : "text-red-600"
+    }`}>
+      {item.status}
+    </span>
+  </div>
+
+  {/* View Button — below status */}
+  <button
+    onClick={() => setSelectedTx(item)}
+    className="flex items-center gap-1 bg-sky-100 text-sky-700 px-3 py-1.5 rounded-xl text-sm font-semibold hover:bg-sky-200 transition"
+  >
+    <Eye size={15} /> View
+  </button>
+</div>
+      </motion.div>
+    ))}
+  </div>
+) : (
+  <p className="text-center text-gray-500">No withdrawals yet.</p>
+)}
+
+{/* Detail Modal */}
+{selectedTx && (
+  <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50"
+  >
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto p-6"
+        style={{
+        zIndex: 10000,
+        maxWidth: '420px',
+        maxHeight: '85vh',        // ✅ slightly less on all screens
+        margin: '0 16px',         // ✅ side padding on mobile
+      }}
+    >
+      {/* Header */}
+      <div className="flex justify-between items-center mb-5">
+        <h2 className="text-xl font-bold text-sky-800">Withdrawal Details</h2>
+        <button onClick={() => setSelectedTx(null)} className="text-gray-400 hover:text-gray-700">
+          <X size={22} />
+        </button>
+      </div>
+
+      {/* Info */}
+      <div className="space-y-3 text-sm text-gray-700">
+        <div className="flex justify-between border-b pb-2">
+          <span className="font-semibold">Amount</span>
+          <span>{selectedTx.amount} USD</span>
+        </div>
+        <div className="flex justify-between border-b pb-2">
+          <span className="font-semibold">Method</span>
+          <span>{selectedTx.method}</span>
+        </div>
+        <div className="flex justify-between border-b pb-2">
+          <span className="font-semibold">Account Name</span>
+          <span>{selectedTx.accountName}</span>
+        </div>
+        <div className="flex justify-between border-b pb-2">
+          <span className="font-semibold">Account Number</span>
+          <span>{selectedTx.accountNumber}</span>
+        </div>
+        <div className="flex justify-between border-b pb-2">
+          <span className="font-semibold">Transaction Id</span>
+          <span>{selectedTx.Transaction}</span>
+        </div>
+        {selectedTx.adminNote && (
+          <div className="flex justify-between border-b pb-2">
+            <span className="font-semibold">Admin Note</span>
+            <span className="text-right max-w-[60%]">{selectedTx.adminNote}</span>
+          </div>
+        )}
+      </div>
+
+      {/* Screenshot */}
+      {selectedTx.screenshot && (
+        <div className="mt-5">
+          <p className="font-semibold text-sm text-gray-700 mb-2">Screenshot</p>
+          <img
+            src={selectedTx.screenshot}
+            alt="Withdrawal proof"
+            className="w-40 h-40 object-cover rounded-xl border cursor-pointer hover:opacity-80 transition"
+            onClick={() => setShowFullImage(true)}
+          />
+        </div>
+      )}
+
+   
+    </motion.div>
+  </div>
+)}
+
+{/* Enlarged Screenshot */}
+{showFullImage && selectedTx?.screenshot && (
+  <div
+    className="fixed inset-0 bg-black/70 flex items-center justify-center z-[60] cursor-zoom-out"
+    onClick={() => setShowFullImage(false)}
+  >
+    <img
+      src={selectedTx.screenshot}
+      className="max-w-[90%] max-h-[90%] rounded-xl shadow-2xl"
+      alt="Full screenshot"
+    />
+  </div>
+)}
         </motion.div>
 
         {/* Withdrawal Form */}

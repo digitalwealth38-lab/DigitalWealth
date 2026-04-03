@@ -7,12 +7,17 @@ const localWithdrawSchema = new mongoose.Schema(
     method: { type: String, required: true }, // JazzCash / EasyPaisa / Bank
     accountName: { type: String, required: true },
     accountNumber: { type: String, required: true },
+      txHash: {
+    type: String,
+    default: "", // Admin enters this when approving manually
+  },
     status: {
       type: String,
       enum: ["pending", "approved", "rejected"],
       default: "pending",
     },
     adminNote: { type: String, default: "" },
+    screenshot: String,
   },
   { timestamps: true }
 );
