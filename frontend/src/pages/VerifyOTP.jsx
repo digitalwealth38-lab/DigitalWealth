@@ -170,7 +170,7 @@ const VerifyOTP = () => {
         }
 
         .otp-input {
-          width: 52px; height: 60px;
+          width: 42px; height: 60px;
           text-align: center;
           font-size: 22px;
           font-weight: 700;

@@ -271,7 +271,7 @@ const handleImageUpload = (e) => {
     }
   }}
   disabled={authUser?.hasActivePackage} // 🚀 disable when user already has a package
-  className={`p-3 border rounded-lg w-full focus:ring-2 ${
+  className={`mt-4 p-3 border rounded-lg w-full focus:ring-2 ${
     authUser?.hasActivePackage
       ? "bg-gray-100 text-gray-500 cursor-not-allowed"
       : "focus:ring-sky-400"

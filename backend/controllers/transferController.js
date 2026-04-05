@@ -19,6 +19,12 @@ export const transferMoney = async (req, res) => {
     const sender = await User.findById(fromUserId);
     const receiver = await User.findById(toUserId);
 
+    if (!sender.directReferrals || sender.directReferrals.length < 1) {
+  return res.status(403).json({
+    error: "You need at least 1 direct referral to transfer money"
+  });
+}
+
     if (!sender || !receiver) {
       return res.status(404).json({ error: "Sender or receiver not found" });
     }
