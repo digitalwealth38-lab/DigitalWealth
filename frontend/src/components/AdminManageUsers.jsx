@@ -15,7 +15,7 @@ const AdminManageUsers = () => {
   const [loading, setLoading] = useState(true);
 
   const [searchId, setSearchId] = useState("");
-  const [searchReferredBy, setSearchReferredBy] = useState("");
+  const [searchreferralCode, setreferralCode] = useState("");
   const [searchEmail, setSearchEmail] = useState("");
 
   const [investments, setInvestments] = useState([]);
@@ -140,14 +140,34 @@ const handleSendReward = async () => {
 
   useEffect(() => {
     fetchUsers();
+    console.log(fetchUsers)
   }, []);
+const groupedUsers = () => {
+  if (!searchreferralCode) return [];
 
-const filteredUsers = users.filter(
-  (u) =>
-    u.userId.toLowerCase().includes(searchId.toLowerCase()) &&
-    (u.referredBy || "").toLowerCase().includes(searchReferredBy.toLowerCase()) &&
-    u.email.toLowerCase().includes(searchEmail.toLowerCase())
-);
+  const code = searchreferralCode.toLowerCase();
+
+  // 1. Find owner
+  const owner = users.find(
+    (u) => u.referralCode?.toLowerCase() === code
+  );
+
+  if (!owner) return [];
+
+  // 2. Find all referred users
+  const referredUsers = users.filter(
+    (u) => u.referredBy?.toLowerCase() === code
+  );
+
+  return [owner, ...referredUsers];
+};
+const filteredUsers = searchreferralCode
+  ? groupedUsers()
+  : users.filter(
+      (u) =>
+        u.userId.toLowerCase().includes(searchId.toLowerCase()) &&
+        u.email.toLowerCase().includes(searchEmail.toLowerCase())
+    );
 
   if (loading)
     return (
@@ -176,8 +196,8 @@ const filteredUsers = users.filter(
     className="p-3 border rounded-lg"
   />
   <input
-    placeholder="Search Referred By"
-    onChange={(e) => setSearchReferredBy(e.target.value)}
+    placeholder="Search Referral Code "
+    onChange={(e) => setreferralCode(e.target.value)}
     className="p-3 border rounded-lg"
   />
   <input
@@ -200,7 +220,22 @@ const filteredUsers = users.filter(
           </thead>
           <tbody>
             {filteredUsers.map(user=>(
-              <tr key={user._id} className="border-b hover:bg-sky-50">
+   <tr
+  key={user._id}
+  className={`border-b hover:bg-sky-50 transition-all duration-200 ${
+    // 🟢 OWNER (top user)
+    searchreferralCode &&
+    user.referralCode?.toLowerCase() === searchreferralCode.toLowerCase()
+      ? "bg-green-200 border-2 border-green-500 shadow-md"
+
+      // 🟡 REFERRED USERS (below)
+      : searchreferralCode &&
+        user.referredBy?.toLowerCase() === searchreferralCode.toLowerCase()
+      ? "bg-yellow-100"
+
+      : ""
+  }`}
+>
                 <td className="p-2">{user.userId}</td>
                 <td className="p-2">{user.name}</td>
                 <td className="p-2">{user.email}</td>

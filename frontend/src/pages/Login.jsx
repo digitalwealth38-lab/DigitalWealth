@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuthStore } from "../stores/useAuthStore";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
@@ -6,6 +6,7 @@ import { Eye, EyeOff, Loader2 } from "lucide-react";
 export default function Login() {
   const { login, isLoggingIn, handleGoogleLogin } = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -25,11 +26,18 @@ export default function Login() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e) => {
+   e.preventDefault();
+    const valid = validateForm();
+    if (valid !== true) return;
 
-    const success = validateForm();
-    if (success === true) login(formData);
+    const result = await login(formData);
+    console.log(result)
+
+    // ✅ redirect to OTP page if email not verified
+    if (result?.requiresVerification) {
+      navigate("/verify-otp", { state: { email: result.email } });
+    }
   };
 
   return (

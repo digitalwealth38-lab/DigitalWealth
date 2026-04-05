@@ -252,14 +252,14 @@ const handleImageUpload = (e) => {
              
               </div>
            
-              <input
+              {/* <input
                 type="email"
                 name="email"
                 placeholder="Email"
                 value={form.email}
                 onChange={handleChange}
                 className="p-3 border rounded-lg w-full mt-4 mb-4 focus:ring-2 focus:ring-sky-400"
-              />
+              /> */}
                <input
   type="text"
   name="referredBy"

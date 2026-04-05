@@ -8,6 +8,11 @@ import dotenv from "dotenv";
 import cloudinary from "../lib/cloudinary.js";
 
 dotenv.config();
+const OTP_EXPIRY_MS  = 10 * 60 * 1000;
+const RESEND_LIMIT   = 5;
+const RESEND_LOCK_MS = 30 * 60 * 1000;
+const generateOTP    = () => Math.floor(100000 + Math.random() * 900000).toString();
+const hashOTP        = (otp) => crypto.createHash("sha256").update(otp).digest("hex");
 export const generateUserId = async () => {
   let id;
 
@@ -23,13 +28,46 @@ export const generateUserId = async () => {
   return id;
 };
 
+export async function sendEmail({ to, subject, html }) {
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT,
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+  });
+  await transporter.sendMail({
+    from: `"Digital Wealth" <no-reply@digitalwealthpk.com>`,
+    to,
+    subject,
+    html,
+  });
+}
+
+// ── OTP email template ─────────────────────────────────────
+async function sendOTPEmail(user, otp) {
+  const html = `
+    <div style="font-family:sans-serif;max-width:480px;margin:auto;padding:32px;border:1px solid #eee;border-radius:12px">
+      <h2 style="color:#1a1a1a">Verify your email</h2>
+      <p style="color:#555">Hello ${user.name || ""},</p>
+      <p style="color:#555">Your one-time verification code is:</p>
+      <div style="font-size:36px;font-weight:700;letter-spacing:12px;text-align:center;padding:24px;background:#f5f5f5;border-radius:8px;margin:24px 0">
+        ${otp}
+      </div>
+      <p style="color:#888;font-size:13px">Expires in <strong>10 minutes</strong>. Do not share this code.</p>
+    </div>`;
+  await sendEmail({ to: user.email, subject: "Your verification code — Digital Wealth", html });
+}
+
 export const googleLogin = async (req, res) => {
-  const { token, referredBy } = req.body; // frontend should send optional referredBy
+  const { token, referredBy } = req.body;
 
   try {
     // 🔍 Verify Google token
     const decoded = await admin.auth().verifyIdToken(token);
-console.log(decoded)
+    console.log(decoded);
+
     // 🧠 Find existing user
     let user = await User.findOne({ email: decoded.email });
 
@@ -44,11 +82,12 @@ console.log(decoded)
         name: decoded.name || decoded.email.split("@")[0],
         email: decoded.email,
         password: crypto.randomBytes(16).toString("hex"),
-        profilePic:decoded.picture, // dummy password since Google user
+        profilePic: decoded.picture,
         referralCode,
         referredBy: referredBy || null,
         googleId: decoded.uid,
         userId: await generateUserId(),
+        isEmailVerified: true,
       });
 
       await user.save();
@@ -58,7 +97,7 @@ console.log(decoded)
         const referrer = await User.findOne({ referralCode: referredBy });
 
         if (referrer) {
-          const rewardAmount = 5; // customize reward logic
+          const rewardAmount = 5;
           referrer.directReferrals += 1;
           referrer.teamSize += 1;
           referrer.balance += rewardAmount;
@@ -72,11 +111,29 @@ console.log(decoded)
           await referrer.save();
         }
       }
-       
+    } else {
+      // ✅ Sync Google data for existing users
+      let needsSave = false;
+
+      if (!user.isEmailVerified) {
+        user.isEmailVerified = true;
+        needsSave = true;
+      }
+      if (!user.googleId) {
+        user.googleId = decoded.uid;
+        needsSave = true;
+      }
+      if (!user.profilePic) {
+        user.profilePic = decoded.picture;
+        needsSave = true;
+      }
+
+      if (needsSave) await user.save();
     }
 
     // 🔐 Generate your own JWT
     const appToken = setUser(user);
+
     // 🍪 Set cookie
     res.cookie("uid", appToken, {
       httpOnly: true,
@@ -95,7 +152,7 @@ console.log(decoded)
         isAdmin: user.isAdmin,
         referralCode: user.referralCode,
         referredBy: user.referredBy,
-        userId:user.userId,
+        userId: user.userId,
       },
       token: appToken,
     });
@@ -110,105 +167,245 @@ console.log(decoded)
 };
 export const signup = async (req, res) => {
   const { name, email, password, referredBy } = req.body;
-
   try {
-    // 1️⃣ Validate fields
-    if (!name || !email || !password) {
+    if (!name || !email || !password)
       return res.status(400).json({ message: "All fields are required" });
-    }
 
     const existingUser = await User.findOne({ email });
-    if (existingUser) {
+    if (existingUser)
       return res.status(400).json({ message: "Email already in use" });
-    }
 
-    if (password.length < 6) {
-      return res
-        .status(400)
-        .json({ message: "Password must be at least 6 characters long" });
-    }
+    if (password.length < 6)
+      return res.status(400).json({ message: "Password must be at least 6 characters" });
 
-    // 2️⃣ Verify referral code (if provided)
     let validReferral = null;
     if (referredBy) {
       const refUser = await User.findOne({ referralCode: referredBy });
-      if (!refUser) {
+      if (!refUser)
         return res.status(400).json({ message: "Invalid referral code" });
-      }
       validReferral = refUser.referralCode;
     }
-    // 3️⃣ Create user (referralCode auto-generated in MongoDB)
+
+    const otp = generateOTP();
+
     const newUser = new User({
       name,
       email,
       password,
       referredBy: validReferral || null,
       userId: await generateUserId(),
+      otpCode: hashOTP(otp),
+      otpExpires: new Date(Date.now() + OTP_EXPIRY_MS),
+      isEmailVerified: false,
     });
 
     await newUser.save();
 
-    // 4️⃣ Generate JWT token
-    const token = setUser(newUser);
-    res.cookie("uid", token, {
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-      httpOnly: true,
-      sameSite: "None",
-      secure: process.env.NODE_ENV !== "development",
-    });
-    // ✅ 5️⃣ Success Response
-    res.status(201).json({
-      message: "User registered successfully",
+    // Send OTP — don't block signup if email fails
+    try {
+      await sendOTPEmail(newUser, otp);
+    } catch (emailErr) {
+      console.error("OTP email failed:", emailErr);
+    }
+
+    // Don't set cookie yet — wait for OTP verification
+    return res.status(201).json({
+      message: "Account created. Please verify your email.",
+      requiresVerification: true,
+      email: newUser.email,
       user: {
         _id: newUser._id,
         name: newUser.name,
         email: newUser.email,
-        referralCode: newUser.referralCode, // auto from model
+        referralCode: newUser.referralCode,
         referredBy: newUser.referredBy,
-        userId:newUser.userId,
+        userId: newUser.userId,
+        isEmailVerified: false,
       },
     });
   } catch (error) {
-    console.error("❌ Error in signup controller:", error);
+    console.error("Signup error:", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
-export const login=async(req,res)=>{
-  const {email,password}=req.body
-   try {
- const user= await User.findOne({email})
- if(!user){
-  return res.status(400).json({ message: "Invalid Credentials" });
-}
-const iscorrectPassword= await bcrypt.compare(password,user.password)
-if(!iscorrectPassword){
-  return res.status(400).json({ message: "Invalid Credentials" });
-}
-  const token = setUser(user);
-  res.cookie("uid", token, { 
-    maxAge: 7 * 24 * 60 * 60 * 1000, // MS
-    httpOnly: true, // prevent XSS attacks cross-site scripting attacks
-    sameSite: "None", // CSRF attacks cross-site request forgery attacks
-    secure: process.env.NODE_ENV !== "development",
-   });
- 
-res.status(200).json({
-  _id: user._id,
-  fullName: user.fullName,
-  email: user.email,
-  isAdmin: user.isAdmin,
-  profilePic: user.profilePic,
-   userId:user.userId,
-  message: "Login successful",
- 
-});
 
-   } catch (error) {
-    console.log("Error in login controller", error.message);
-    res.status(500).json({ message: error.message });
+export const sendOTP = async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ message: "Email is required" });
+
+  try {
+    const user = await User.findOne({ email: email.toLowerCase() });
+    if (!user) return res.status(404).json({ message: "User not found" });
+    if (user.isEmailVerified)
+      return res.status(400).json({ message: "Email already verified" });
+
+    const otp = generateOTP();
+    user.otpCode    = hashOTP(otp);
+    user.otpExpires = new Date(Date.now() + OTP_EXPIRY_MS);
+    await user.save();
+
+    await sendOTPEmail(user, otp);
+    return res.status(200).json({ message: "OTP sent to your email" });
+  } catch (err) {
+    console.error("sendOTP error:", err);
+    return res.status(500).json({ message: "Failed to send OTP" });
   }
 }
+
+export const verifyOTP = async (req, res) => {
+  const { email, otp } = req.body;
+  console.log(email,otp)
+  if (!email || !otp)
+    return res.status(400).json({ message: "Email and OTP are required" });
+
+  try {
+    const user = await User.findOne({ email: email });
+    if (!user) return res.status(404).json({ message: "User not found" });
+    if (user.isEmailVerified)
+      return res.status(400).json({ message: "Email already verified" });
+
+    if (!user.otpExpires || user.otpExpires < Date.now()) {
+      user.otpCode = null;
+      user.otpExpires = null;
+      await user.save();
+      return res.status(400).json({ message: "OTP expired. Please request a new one." });
+    }
+
+    if (hashOTP(otp.toString().trim()) !== user.otpCode)
+      return res.status(400).json({ message: "Invalid OTP" });
+
+    // ✅ Verified — clear OTP, set cookie, log user in
+    user.isEmailVerified      = true;
+    user.otpCode              = null;
+    user.otpExpires           = null;
+    user.otpResendCount       = 0;
+    user.otpResendLockedUntil = null;
+    await user.save();
+
+    const token = setUser(user);
+    res.cookie("uid", token, {
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+      sameSite: "None",
+      secure: process.env.NODE_ENV !== "development",
+    });
+
+    return res.status(200).json({
+      message: "Email verified successfully",
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin,
+        referralCode: user.referralCode,
+        referredBy: user.referredBy,
+        userId: user.userId,
+        isEmailVerified: true,
+      },
+    });
+  } catch (err) {
+    console.error("verifyOTP error:", err);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+// ── RESEND OTP ─────────────────────────────────────────────
+export const resendOTP = async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ message: "Email is required" });
+
+  try {
+    const user = await User.findOne({ email: email });
+    if (!user) return res.status(404).json({ message: "User not found" });
+    if (user.isEmailVerified)
+      return res.status(400).json({ message: "Email already verified" });
+
+    // Check lockout
+    if (user.otpResendLockedUntil && user.otpResendLockedUntil > Date.now()) {
+      const mins = Math.ceil((user.otpResendLockedUntil - Date.now()) / 60000);
+      return res.status(429).json({ message: `Too many attempts. Try again in ${mins} min.` });
+    }
+
+    // Reset counter if lock expired
+    if (user.otpResendLockedUntil && user.otpResendLockedUntil <= Date.now()) {
+      user.otpResendCount       = 0;
+      user.otpResendLockedUntil = null;
+    }
+
+    if (user.otpResendCount >= RESEND_LIMIT) {
+      user.otpResendLockedUntil = new Date(Date.now() + RESEND_LOCK_MS);
+      await user.save();
+      return res.status(429).json({ message: "Too many attempts. Locked for 30 minutes." });
+    }
+
+    const otp = generateOTP();
+    user.otpCode        = hashOTP(otp);
+    user.otpExpires     = new Date(Date.now() + OTP_EXPIRY_MS);
+    user.otpResendCount += 1;
+    await user.save();
+
+    await sendOTPEmail(user, otp);
+    return res.status(200).json({
+      message: "New OTP sent",
+      attemptsLeft: RESEND_LIMIT - user.otpResendCount,
+    });
+  } catch (err) {
+    console.error("resendOTP error:", err);
+    return res.status(500).json({ message: "Failed to resend OTP" });
+  }
+};
+
+export const login = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user)
+      return res.status(400).json({ message: "Invalid Credentials" });
+
+    const isCorrect = await bcrypt.compare(password, user.password);
+    if (!isCorrect)
+      return res.status(400).json({ message: "Invalid Credentials" });
+
+    // Block unverified users from logging in
+    if (!user.isEmailVerified) {
+      // Resend OTP automatically
+      const otp = generateOTP();
+      user.otpCode    = hashOTP(otp);
+      user.otpExpires = new Date(Date.now() + OTP_EXPIRY_MS);
+      await user.save();
+      try { await sendOTPEmail(user, otp); } catch (e) {}
+
+      return res.status(403).json({
+        message: "Please verify your email first.",
+        requiresVerification: true,
+        email: user.email,
+      });
+    }
+
+    const token = setUser(user);
+    res.cookie("uid", token, {
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+      sameSite: "None",
+      secure: process.env.NODE_ENV !== "development",
+    });
+
+    res.status(200).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+      profilePic: user.profilePic,
+      userId: user.userId,
+      isEmailVerified: user.isEmailVerified,
+      message: "Login successful",
+    });
+  } catch (error) {
+    console.error("Login error:", error.message);
+    res.status(500).json({ message: error.message });
+  }
+};
 export const logout = async (req, res) => {
   try {
     const userId = req.user?._id;
@@ -239,31 +436,7 @@ export const checkAuth = (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
-export async function sendEmail({ to, subject, html }) {
-  const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: process.env.SMTP_PORT,
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
-    },
-  });
 
-  const mailOptions = {
-    from: `"Digital Wealth" <no-reply@digitalwealthpk.com>`, // Must match verified domain
-    to,
-    subject,
-    html,
-  };
-
-  try {
-    await transporter.sendMail(mailOptions);
-    console.log("Email sent to:", to);
-  } catch (err) {
-    console.error("Email send failed:", err);
-    throw err;
-  }
-}
 export async function forgotPassword(req, res) {
   const { email } = req.body;
   if (!email) return res.status(400).json({ message: "Email required" });

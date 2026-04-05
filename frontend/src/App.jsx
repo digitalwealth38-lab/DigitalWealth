@@ -11,6 +11,7 @@ import ResetPassword from './pages/ResetPassword.jsx'
 import Home from"./pages/Home.jsx"
 import Dashboardadmin from './pages/Dashboardadmin.jsx'
 import BlockedUser from './components/BlockedUser.jsx'
+import VerifyOTP from './pages/VerifyOTP.jsx'
 const App = () => {
 const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
   useEffect(() => {
@@ -95,7 +96,12 @@ const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
   element={<BlockedUser />}
 />
 
-
+<Route
+  path="/verify-otp"
+  element={
+    !authUser ? <VerifyOTP /> : authUser?.isAdmin ? <Navigate to="/admin" /> : <Navigate to="/dashboard" />
+  }
+/>
 
 
     </Routes>

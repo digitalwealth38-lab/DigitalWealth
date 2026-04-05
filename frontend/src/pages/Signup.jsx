@@ -1,4 +1,4 @@
-import { Link,useSearchParams  } from "react-router-dom";
+import { Link,useSearchParams,useNavigate  } from "react-router-dom";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
@@ -7,6 +7,7 @@ import { useAuthStore } from "../stores/useAuthStore";
 export default function Signup() {
   const { signup, isSigningUp, handleGoogleLogin } = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
+    const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -28,13 +29,17 @@ const [searchParams] = useSearchParams();
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+  
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  const valid = validateForm();
+  if (valid !== true) return; // ✅ stop if validation fails
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const success = validateForm();
-
-    if (success === true) console.log(formData), signup(formData);
-  };
+  const result = await signup(formData); // ✅ single call
+  if (result?.requiresVerification) {
+    navigate("/verify-otp", { state: { email: result.email } }); // ✅ redirect to OTP
+  }
+};
   useEffect(() => {
   const referral = searchParams.get("ref"); // 👈 get ?ref= from URL
   if (referral) {

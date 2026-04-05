@@ -23,8 +23,13 @@ const UserSchema = new mongoose.Schema(
     profilePic: { type: String },
 
     // Email Verification
-    emailVerifiedToken: String,
-    emailVerified: { type: Boolean, default: false },
+   
+// OTP Verification
+otpCode:              { type: String,  default: null },
+otpExpires:           { type: Date,    default: null },
+isEmailVerified:      { type: Boolean, default: false },
+otpResendCount:       { type: Number,  default: 0 },
+otpResendLockedUntil: { type: Date,    default: null },
 
     // Referral System
     referralCode: { type: String, unique: true }, // Auto-generated
