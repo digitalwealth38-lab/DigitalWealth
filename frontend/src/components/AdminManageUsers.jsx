@@ -3,6 +3,7 @@ import { axiosInstance } from "../lib/axios";
 import { Loader, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
 import Price from "./Price";
+import { BadgeCheck } from "lucide-react";
 
 const formatDate = (date) =>
   new Date(date).toLocaleDateString("en-US", {
@@ -236,14 +237,30 @@ const filteredUsers = searchreferralCode
       : ""
   }`}
 >
-                <td className="p-2">{user.userId}</td>
+
+              <td className="p-2">{user.userId}</td>
                 <td className="p-2">{user.name}</td>
-                <td className="p-2">{user.email}</td>
+               <td className="p-2">
+  <div className="flex items-center gap-2">
+    <span className="truncate max-w-[150px]">
+      {user.email}
+    </span>
+
+    {user.isEmailVerified && (
+      <span className="flex items-center gap-1 bg-green-50 text-green-600 px-2 py-0.5 rounded-full text-xs font-medium whitespace-nowrap">
+        <BadgeCheck size={14} />
+        Verified
+      </span>
+    )}
+  </div>
+</td>
                 <td className="p-2">{user.referralCode}</td>
                 <td className="p-2">{user.referredBy || "-"}</td>
                 <td className="p-2 text-center"><Price amount={user.balance||0}/></td>
                 <td className="p-2 text-center"><Price amount={user.investedBalance||0}/></td>
                 <td className="p-2 text-center"><Price amount={user.totalEarnings||0}/></td>
+                
+
 
                 <td className="p-2">
                   <div className="flex gap-2 justify-center flex-wrap">
