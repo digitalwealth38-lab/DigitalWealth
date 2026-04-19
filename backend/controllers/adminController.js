@@ -335,7 +335,7 @@ const adminProfit = tradingDeposit + finalDeposits - finalWithdrawal - platformB
 export const updatePackage = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, price, commissions, levelRewardPercent } = req.body;
+    const { name, price, commissions, levelRewardPercent,isExpired  } = req.body;
 
     const pkg = await Package.findById(id);
     if (!pkg) {
@@ -351,7 +351,9 @@ export const updatePackage = async (req, res) => {
       pkg.commissions.level3 = commissions.level3 !== undefined ? Number(commissions.level3) : pkg.commissions.level3;
     }
     if (levelRewardPercent !== undefined) pkg.levelRewardPercent = Number(levelRewardPercent);
-
+ if (isExpired !== undefined) {
+      pkg.isExpired = isExpired;
+    }
     await pkg.save();
 
     res.status(200).json({

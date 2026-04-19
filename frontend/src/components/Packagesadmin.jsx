@@ -80,7 +80,26 @@ const Packagesadmin = () => {
       toast.error(error.response?.data?.message || "Failed to delete package");
     }
   };
+const handleToggleExpire = async (id, currentStatus) => {
+  try {
+    const { data } = await axiosInstance.put(
+      `/admin/${id}`,
+      {
+        isExpired: !currentStatus, // 🔥 toggle value
+      },
+      { withCredentials: true }
+    );
 
+    toast.success(
+      !currentStatus ? "Package expired" : "Package activated"
+    );
+
+    fetchPackages();
+  } catch (error) {
+    console.error(error);
+    toast.error("Failed to update status");
+  }
+};
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-6">
        <h2 className="text-3xl font-bold text-center text-sky-700 mb-10">
@@ -169,6 +188,16 @@ const Packagesadmin = () => {
       >
         Delete
       </button>
+        <button
+    onClick={() => handleToggleExpire(pkg._id, pkg.isExpired)}
+    className={`py-1 px-3 rounded-md text-white ${
+      pkg.isExpired
+        ? "bg-green-600 hover:bg-green-700"
+        : "bg-yellow-500 hover:bg-yellow-600"
+    }`}
+  >
+    {pkg.isExpired ? "Activate" : "Expire"}
+  </button>
     </div>
   )}
 </td>

@@ -9,6 +9,10 @@ const packageSchema = new mongoose.Schema({
     level3: { type: Number, required: true },
   },
   levelRewardPercent: { type: Number, required: true },
+  isExpired: {
+  type: Boolean,
+  default: false
+}
 });
 
 const Package = mongoose.model("Package", packageSchema);

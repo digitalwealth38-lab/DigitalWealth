@@ -75,9 +75,11 @@ const Packages = () => {
         {packages.map((pkg, index) => {
           const Icon = icons[index % icons.length];
           const isActivated = pkg._id === activatedId;
+          const isExpired = pkg.isExpired;
 
           return (
             <motion.div
+            
               key={pkg._id}
               initial={{ opacity: 0, y: 40 }}
               animate={{
@@ -86,24 +88,35 @@ const Packages = () => {
                 scale: isActivated ? 1.1 : 1,
               }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
-              className={`relative bg-white border border-sky-100 shadow-lg rounded-2xl p-8 text-center transition-all duration-300 
-              ${
-                activatedId && !isActivated
-                  ? "blur-[0.6px] brightness-90 scale-[0.97]"
-    : "hover:shadow-[0_0_25px_3px_rgba(255,0,0,0.6)] hover:scale-[1.03]"
-              } 
-              ${
-                isActivated
-                  ? "ring-4 ring-green-400 shadow-green-200 z-10"
-                  : ""
-              }`}
+            className={`relative bg-white border border-sky-100 shadow-lg rounded-2xl p-8 text-center transition-all duration-300 
+  ${
+    isExpired && !isActivated
+      ? "opacity-60 grayscale cursor-not-allowed"
+      : ""
+  }
+  ${
+    activatedId && !isActivated
+      ? "blur-[0.6px] brightness-90 scale-[0.97]"
+      : "hover:shadow-[0_0_25px_3px_rgba(255,0,0,0.6)] hover:scale-[1.03]"
+  } 
+  ${
+    isActivated
+      ? "ring-4 ring-green-400 shadow-green-200 z-10"
+      : ""
+  }`}
             >
+              {isExpired && !isActivated && (
+  <div className="absolute top-3 right-3 bg-red-600 text-white text-xs px-3 py-1 rounded-full">
+    Expired
+  </div>
+)}
               {/* Icon */}
               <div
                 className={`absolute -top-6 left-1/2 -translate-x-1/2 rounded-full p-4 shadow-md transition-all ${
                   isActivated ? "bg-green-100" : "bg-sky-100"
                 }`}
               >
+
                 <Icon
                   className={`w-6 h-6 ${
                     isActivated ? "text-green-600" : "text-sky-600"
@@ -143,35 +156,40 @@ const Packages = () => {
               </div>
 
               {/* Button or Activated State */}
-              {isActivated ? (
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{
-                    scale: [0, 1.2, 1],
-                    rotate: [0, 10, -10, 0],
-                  }}
-                  transition={{ duration: 0.6 }}
-                  className="mt-8 text-green-600 font-bold text-lg"
-                >
-                  ✅ Activated
-                </motion.div>
-              ) : (
-                <motion.button
-                  whileTap={{ scale: 0.95 }}
-                  disabled={buying === pkg._id}
-                  onClick={() => handleBuy(pkg._id)}
-                  className="mt-6 bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-6 rounded-xl shadow-md transition-all disabled:opacity-70"
-                >
-                  {buying === pkg._id ? (
-                    <div className="flex justify-center items-center gap-2">
-                      <span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span>
-                      Processing...
-                    </div>
-                  ) : (
-                    "Buy Now"
-                  )}
-                </motion.button>
-              )}
+          {isActivated ? (
+  <motion.div
+    initial={{ scale: 0 }}
+    animate={{
+      scale: [0, 1.2, 1],
+      rotate: [0, 10, -10, 0],
+    }}
+    transition={{ duration: 0.6 }}
+    className="mt-8 text-green-600 font-bold text-lg"
+  >
+    ✅ Activated
+  </motion.div>
+) : isExpired ? (
+  <div className="mt-6 text-red-600 font-semibold">
+    ❌ Cannot purchase (Expired)
+  </div>
+) : (
+  <motion.button
+    whileTap={{ scale: 0.95 }}
+    disabled={buying === pkg._id}
+    onClick={() => handleBuy(pkg._id)}
+    className="mt-6 bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-6 rounded-xl shadow-md transition-all disabled:opacity-70"
+  >
+    {buying === pkg._id ? (
+      <div className="flex justify-center items-center gap-2">
+        <span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span>
+        Processing...
+      </div>
+    ) : (
+      "Buy Now"
+    )}
+  </motion.button>
+)}
+           
             </motion.div>
           );
         })}
