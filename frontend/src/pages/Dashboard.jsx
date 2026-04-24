@@ -39,7 +39,7 @@ export default function Dashboard() {
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-sky-50 to-white">
 
       {/* Sticky Navbar */}
-      <Navbar />
+     
 
       {/* Notification Banners — rendered right after navbar in normal flow */}
       <div style={{ position: 'sticky', top: 64, zIndex: 49 }}>
@@ -79,47 +79,6 @@ export default function Dashboard() {
       <div id="dashboard">
         <DashboardCard />
       </div>
-
-      {/* Deposit Section */}
-      <div id="deposit" className="min-h-screen">
-        <DepositSwitcher />
-      </div>
-
-      {/* Packages Section */}
-      <div id="packages" className="min-h-screen">
-        <PackagesSwitcher />
-      </div>
-
-      <div id="investment" className="min-h-screen">
-        <MyInvestments />
-      </div>
-
-      <div id="transfer" className="min-h-screen">
-        <TransferSwitcher />
-      </div>
-
-      <div id="withdrawal" className="min-h-screen">
-        <WithdrawSwitcher />
-      </div>
-
-      <div id="referrals" className="min-h-screen">
-        <Referral />
-        <Tree />
-        <UnactiveMembers />
-      </div>
-
-      <div id="Rewards" className="min-h-screen">
-        <ProgressRewards />
-      </div>
-
-      <div id="profile" className="min-h-screen">
-        <Profile />
-      </div>
-
-      <div id="contact" className="min-h-screen">
-        <Contact />
-      </div>
-
     </div>
   );
 }

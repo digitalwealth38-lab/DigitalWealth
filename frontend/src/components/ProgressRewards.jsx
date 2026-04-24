@@ -39,7 +39,7 @@ const ProgressRewards = () => {
   const nextLevel = level + 1;
 
   return (
-    <div className="max-w-6xl mx-auto mt-10 p-6">
+    <div className="max-w-6xl mx-auto pt-20">
       {/* ✨ Beautiful Heading */}
       <h1 className="text-4xl md:text-5xl font-extrabold text-center text-sky-600 mb-10 drop-shadow-lg">
         🚀  Reward Dashboard

@@ -44,7 +44,7 @@ export default function Contact() {
   return (
     <section
       id="contact"
-      className="min-h-screen bg-white flex flex-col overflow-hidden items-center justify-center py-20 px-6"
+      className="min-h-screen bg-white flex flex-col overflow-hidden items-center justify-center pt-20 py-20 px-6"
     >
       {/* Heading */}
       <motion.h1

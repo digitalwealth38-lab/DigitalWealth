@@ -12,7 +12,21 @@ import Home from"./pages/Home.jsx"
 import Dashboardadmin from './pages/Dashboardadmin.jsx'
 import BlockedUser from './components/BlockedUser.jsx'
 import VerifyOTP from './pages/VerifyOTP.jsx'
+import DepositSwitcher from './components/DepositSwitcher.jsx'
+import Navbar from './components/Navbar.jsx'
+import PackagesSwitcher from './components/PackagesSwitcher.jsx'
+import MyInvestments from './components/MyInvestments.jsx'
+import TransferSwitcher from './components/TransferSwitcher.jsx'
+import WithdrawSwitcher from './components/WithdrawSwitcher.jsx'
+import Referral from './components/Referral.jsx'
+import ProgressRewards from './components/ProgressRewards.jsx'
+import Profile from "./components/Profile";
+import Contact from './components/Contact.jsx'
+import AuthLayout from './layouts/AuthLayout.jsx'
+import MainLayout from './layouts/MainLayout.jsx'
+
 const App = () => {
+
 const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
   useEffect(() => {
     checkAuth();
@@ -27,9 +41,10 @@ const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
   }
   return (
     <div>
-
        <Routes>
+        
       {/* Public Routes */}
+        <Route element={<AuthLayout />}>
       <Route
         path="/"
         element={
@@ -85,12 +100,6 @@ const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
           )
         }
       />
-
-      {/* User Dashboard */}
-      <Route
-        path="/dashboard"
-        element={authUser ? <Dashboard /> : <Navigate to="/" />}
-      />
 <Route
   path="/blocked"
   element={<BlockedUser />}
@@ -102,8 +111,50 @@ const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
     !authUser ? <VerifyOTP /> : authUser?.isAdmin ? <Navigate to="/admin" /> : <Navigate to="/dashboard" />
   }
 />
-
-
+</Route>
+ <Route element={<MainLayout />}>
+      {/* User Dashboard */}
+      <Route
+        path="/dashboard"
+        element={authUser ? <Dashboard /> : <Navigate to="/" />}
+      />
+        <Route
+        path="/deposit"
+        element={authUser ? <DepositSwitcher /> : <Navigate to="/" />}
+      />
+       <Route
+        path="/packages"
+        element={authUser ? <PackagesSwitcher/> : <Navigate to="/" />}
+      />
+       <Route
+        path="/investment"
+        element={authUser ? <MyInvestments />: <Navigate to="/" />}
+      />
+      <Route
+        path="/transfer"
+        element={authUser ? <TransferSwitcher />: <Navigate to="/" />}
+      />
+      <Route
+        path="/withdrawal"
+        element={authUser ? <WithdrawSwitcher />: <Navigate to="/" />}
+      />
+         <Route
+        path="/referrals"
+        element={authUser ? <Referral /> : <Navigate to="/" />}
+      />
+       <Route
+        path="/rewards"
+        element={authUser ? <ProgressRewards />: <Navigate to="/" />}
+      />
+       <Route
+        path="/profile"
+        element={authUser ? <Profile/> : <Navigate to="/" />}
+      />
+        <Route
+        path="/contact"
+        element={authUser ?   <Contact />: <Navigate to="/" />}
+      />
+  </Route>
     </Routes>
          <Toaster/>
     </div>

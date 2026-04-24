@@ -7,7 +7,7 @@ export default function WithdrawSwitcher() {
   const [activeTab, setActiveTab] = useState("crypto");
 
   return (
-     <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-sky-100 flex flex-col items-center justify-center px-6 py-16">
+     <div className="min-h-screen pt-20 bg-gradient-to-br from-sky-50 via-white to-sky-100 flex flex-col items-center justify-center px-6 py-16">
       <motion.h1
         initial={{ opacity: 0, y: -40 }}
         animate={{ opacity: 1, y: 0 }}

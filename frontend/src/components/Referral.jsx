@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Copy, Users, Rocket, Crown } from "lucide-react";
 import { useAuthStore } from "../stores/useAuthStore";
+import Tree from "./Tree";
+import UnactiveMembers from "./UnactiveMembers";
 
 const Referral = () => {
   const { authUser } = useAuthStore();
@@ -39,7 +41,7 @@ Use my referral code: *${referralCode}* to get started.
     setTimeout(() => setCopied(false), 2000);}
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-sky-100 py-16 px-6 flex flex-col items-center">
+    <div className="min-h-screen pt-20 bg-gradient-to-br from-sky-50 via-white to-sky-100 py-16 px-6 flex flex-col items-center">
       {/* Hero Section */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -179,6 +181,8 @@ Use my referral code: *${referralCode}* to get started.
           Copy & Share My Code
         </motion.button>
       </motion.div>
+        <Tree />
+        <UnactiveMembers />
     </div>
   );
 };

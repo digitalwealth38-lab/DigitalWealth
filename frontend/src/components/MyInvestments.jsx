@@ -49,7 +49,7 @@ setTotalProfitSum(totalProfit);
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen text-sky-600 text-xl font-semibold">
+      <div className="flex  justify-center items-center h-screen text-sky-600 text-xl font-semibold">
         Loading Investments...
       </div>
     );
@@ -58,7 +58,7 @@ setTotalProfitSum(totalProfit);
   if (!investments.length) {
     return (
       
-      <div className="text-center mt-20 text-gray-500">
+      <div className="text-center pt-20  text-gray-500 ">
          <h2 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-600 drop-shadow-lg">
     My Investments
   </h2>
@@ -67,7 +67,7 @@ setTotalProfitSum(totalProfit);
       </div>
     );
   }
-
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-sky-100 py-16 px-4">
  <div className="text-center mb-12 overflow-visible">
