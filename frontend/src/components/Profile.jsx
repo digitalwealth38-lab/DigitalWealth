@@ -47,7 +47,6 @@ export default function ProfilePage() {
 
     }
   }, [authUser]);
-console.log(authUser)
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
