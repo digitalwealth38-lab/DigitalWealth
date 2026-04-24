@@ -398,6 +398,7 @@ export const login = async (req, res) => {
       isAdmin: user.isAdmin,
       profilePic: user.profilePic,
       userId: user.userId,
+      referralCode: user.referralCode,
       isEmailVerified: user.isEmailVerified,
       message: "Login successful",
     });
