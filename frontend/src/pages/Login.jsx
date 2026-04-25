@@ -44,17 +44,17 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-100 via-white to-sky-50 text-gray-800 px-4">
       <div className="w-full max-w-md bg-white/90 backdrop-blur-md p-8 rounded-2xl shadow-2xl border border-sky-100">
         {/* Logo + App Name */}
-        <div className="flex flex-col items-center mb-6">
+        <div className="flex flex-col items-center ">
           <img
             src="/logo.png"
             alt="Digital Wealth Logo"
-            className="w-50 h-50 mb-2"
+            className="w-50 h-50 "
           />
         
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-5 mt-4">
+        <form onSubmit={handleSubmit} className="space-y-5 ">
           {/* Email */}
           <div>
             <label className="block text-sm text-gray-600 mb-1">Email</label>

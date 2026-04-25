@@ -52,11 +52,11 @@ const handleSubmit = async (e) => {
       <div className="w-full max-w-md bg-white/90 backdrop-blur-md p-8 rounded-2xl shadow-2xl border border-sky-100">
 
         {/* Logo + App Name */}
-        <div className="flex flex-col items-center mb-6">
+        <div className="flex flex-col items-center ">
           <img
             src="/logo.png"
             alt="Digital Wealth Logo"
-            className="w-50 h-50 mb-2 "
+            className="w-50 h-50 "
           />
         </div>
 
