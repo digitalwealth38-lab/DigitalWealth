@@ -259,8 +259,8 @@ const Home = () => {
       <Section className="py-32 bg-white">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h2 className="text-5xl md:text-7xl font-black text-gray-900 tracking-tighter mb-10 leading-none">Ready to Build Your <span className="text-sky-600">Future?</span></h2>
-        
-           <a href="/signup"className="px-12 py-6 text-2xl font-black bg-sky-600 text-white rounded-[2rem] shadow-2xl shadow-sky-200 hover:scale-105 transition-all"> Start Earning Today</a>
+               <a href="/signup"className="px-12 py-6 text-2xl font-black bg-sky-600 text-white rounded-[2rem] shadow-2xl shadow-sky-200 hover:scale-105 transition-all">
+           Start Earning Today</a>
         </div>
       </Section>
 
