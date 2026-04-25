@@ -48,11 +48,9 @@ export default function Login() {
           <img
             src="/logo.png"
             alt="Digital Wealth Logo"
-            className="w-40 h-40 mb-2"
+            className="w-50 h-50 mb-2"
           />
-          <p className="text-sm text-gray-500 mt-1">
-            Invest smart. Grow with confidence.
-          </p>
+        
         </div>
 
         {/* Form */}
