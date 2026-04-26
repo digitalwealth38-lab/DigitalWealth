@@ -10,6 +10,7 @@ const AdminManualDeposits = () => {
   const [amount, setAmount] = useState("");
 
   const [showFullImage, setShowFullImage] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const fetchDeposits = async () => {
     try {
@@ -29,6 +30,7 @@ const AdminManualDeposits = () => {
     if (!priceAmount) return toast.error("Enter price amount (USD)");
 
     try {
+      setLoading(true);
       await axiosInstance.put(`/admin/deposits/${selected._id}`, {
         status: "approved",
         adminNote,
@@ -45,10 +47,14 @@ const AdminManualDeposits = () => {
       toast.error("Approval failed");
       console.error(err);
     }
+     finally {
+    setLoading(false);
+  }
   };
 
   const rejectDeposit = async () => {
     try {
+      setLoading(true);
       await axiosInstance.put(`/admin/deposits/${selected._id}`, {
         status: "rejected",
         adminNote,
@@ -62,6 +68,9 @@ const AdminManualDeposits = () => {
       toast.error("Failed");
       console.error(err);
     }
+     finally {
+    setLoading(false);
+  }
   };
 
   return (
@@ -189,15 +198,17 @@ const AdminManualDeposits = () => {
                   <button
                     className="flex-1 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700"
                     onClick={approveDeposit}
+                    disabled={loading}
                   >
-                    Approve
+                    {loading ? "Processing..." : "Approve"}
                   </button>
 
                   <button
                     className="flex-1 bg-red-600 text-white py-2 rounded-lg hover:bg-red-700"
                     onClick={rejectDeposit}
+                    disabled={loading}
                   >
-                    Reject
+                   {loading ? "Processing..." : "Reject"}
                   </button>
                 </div>
               </>
