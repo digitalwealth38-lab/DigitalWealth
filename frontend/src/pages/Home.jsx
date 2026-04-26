@@ -84,14 +84,14 @@ const Home = () => {
          <div className="flex items-center space-x-3">
   <a
     href="/login"
-    className="flex items-center justify-center h-6 px-3 text-sm font-bold text-sky-600 rounded-lg hover:bg-sky-50 transition"
+    className="flex items-center justify-center h-6 px-4 text-sm font-bold text-sky-600 rounded-lg hover:bg-sky-50 transition"
   >
     Login
   </a>
 
   <a
     href="/signup"
-    className="flex items-center justify-center h-10 px-6 text-sm font-bold bg-sky-600 text-white rounded-full shadow-xl shadow-sky-200 hover:bg-sky-700 hover:-translate-y-0.5 transition-all"
+    className="flex items-center justify-center h-6 px-3 text-sm font-bold bg-sky-600 text-white rounded-full shadow-xl shadow-sky-200 hover:bg-sky-700 hover:-translate-y-0.5 transition-all"
   >
     Sign Up
   </a>
