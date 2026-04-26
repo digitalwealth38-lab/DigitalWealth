@@ -84,7 +84,7 @@ const Home = () => {
          <div className="flex items-center space-x-3">
   <a
     href="/login"
-    className="flex items-center justify-center h-10 px-5 text-sm font-bold text-sky-600 rounded-lg hover:bg-sky-50 transition"
+    className="flex items-center justify-center h-6 px-3 text-sm font-bold text-sky-600 rounded-lg hover:bg-sky-50 transition"
   >
     Login
   </a>
