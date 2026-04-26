@@ -10,7 +10,7 @@ const AdminManualDeposits = () => {
   const [amount, setAmount] = useState("");
 
   const [showFullImage, setShowFullImage] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [actionType, setActionType] = useState("");
 
   const fetchDeposits = async () => {
     try {
@@ -30,7 +30,7 @@ const AdminManualDeposits = () => {
     if (!priceAmount) return toast.error("Enter price amount (USD)");
 
     try {
-      setLoading(true);
+      setActionType("approve");
       await axiosInstance.put(`/admin/deposits/${selected._id}`, {
         status: "approved",
         adminNote,
@@ -48,13 +48,13 @@ const AdminManualDeposits = () => {
       console.error(err);
     }
      finally {
-    setLoading(false);
+    setActionType("");
   }
   };
 
   const rejectDeposit = async () => {
     try {
-      setLoading(true);
+      setActionType("reject");
       await axiosInstance.put(`/admin/deposits/${selected._id}`, {
         status: "rejected",
         adminNote,
@@ -69,7 +69,7 @@ const AdminManualDeposits = () => {
       console.error(err);
     }
      finally {
-    setLoading(false);
+    setActionType("");
   }
   };
 
@@ -195,21 +195,33 @@ const AdminManualDeposits = () => {
                 />
 
                 <div className="flex gap-3 mt-4">
-                  <button
-                    className="flex-1 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700"
-                    onClick={approveDeposit}
-                    disabled={loading}
-                  >
-                    {loading ? "Processing..." : "Approve"}
-                  </button>
+                   <button
+    onClick={approveDeposit}
+    disabled={actionType !== ""}
+    className={`flex-1 py-2 rounded-lg text-white transition
+      ${actionType === "approve"
+        ? "bg-green-600"
+        : actionType === "reject"
+        ? "bg-green-300 cursor-not-allowed"
+        : "bg-green-600 hover:bg-green-700"}
+    `}
+  >
+    {actionType === "approve" ? "Processing..." : "Approve"}
+  </button>
 
-                  <button
-                    className="flex-1 bg-red-600 text-white py-2 rounded-lg hover:bg-red-700"
-                    onClick={rejectDeposit}
-                    disabled={loading}
-                  >
-                   {loading ? "Processing..." : "Reject"}
-                  </button>
+                <button
+    onClick={rejectDeposit}
+    disabled={actionType !== ""}
+    className={`flex-1 py-2 rounded-lg text-white transition
+      ${actionType === "reject"
+        ? "bg-red-600"
+        : actionType === "approve"
+        ? "bg-red-300 cursor-not-allowed"
+        : "bg-red-600 hover:bg-red-700"}
+    `}
+  >
+    {actionType === "reject" ? "Processing..." : "Reject"}
+  </button>
                 </div>
               </>
             )}
