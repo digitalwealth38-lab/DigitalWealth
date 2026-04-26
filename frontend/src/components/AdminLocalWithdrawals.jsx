@@ -19,6 +19,7 @@ const AdminLocalWithdrawals = () => {
   const [txHash, setTxHash] = useState("");
   const [screenshot, setScreenshot] = useState("");
    const [showFullImage, setShowFullImage] = useState(false);
+   const [actionType, setActionType] = useState(""); 
 
 
   const uploadFile = (e) => {
@@ -50,6 +51,7 @@ const AdminLocalWithdrawals = () => {
   // Approve withdrawal
   const approveWithdrawal = async () => {
     try {
+      setActionType("approve");
       await axiosInstance.put(`/${selected._id}`, {
         status: "approved",
         adminNote,
@@ -65,11 +67,16 @@ const AdminLocalWithdrawals = () => {
       console.error(err);
       toast.error(err?.response?.data?.message || "Failed to approve");
     }
+    finally {
+    setActionType("");
+  }
+
   };
 
   // Reject withdrawal
   const rejectWithdrawal = async () => {
     try {
+      setActionType("reject");
       await axiosInstance.put(`/${selected._id}`, {
         status: "rejected",
         adminNote,
@@ -82,6 +89,9 @@ const AdminLocalWithdrawals = () => {
       console.error(err);
       toast.error(err?.response?.data?.message || "Failed to reject");
     }
+    finally {
+    setActionType("");
+  }
   };
 
   return (
@@ -223,19 +233,33 @@ const AdminLocalWithdrawals = () => {
   )}
 </div>
                 <div className="flex gap-3 mt-4">
-                  <button
-                    className="flex-1 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700"
-                    onClick={approveWithdrawal}
-                  >
-                    Approve
-                  </button>
+                 <button
+    onClick={approveWithdrawal}
+    disabled={actionType !== ""}
+    className={`flex-1 py-2 rounded-lg text-white transition
+      ${actionType === "approve"
+        ? "bg-green-600"
+        : actionType === "reject"
+        ? "bg-green-300 cursor-not-allowed"
+        : "bg-green-600 hover:bg-green-700"}
+    `}
+  >
+    {actionType === "approve" ? "Processing..." : "Approve"}
+  </button>
 
-                  <button
-                    className="flex-1 bg-red-600 text-white py-2 rounded-lg hover:bg-red-700"
-                    onClick={rejectWithdrawal}
-                  >
-                    Reject
-                  </button>
+                 <button
+    onClick={rejectWithdrawal}
+    disabled={actionType !== ""}
+    className={`flex-1 py-2 rounded-lg text-white transition
+      ${actionType === "reject"
+        ? "bg-red-600"
+        : actionType === "approve"
+        ? "bg-red-300 cursor-not-allowed"
+        : "bg-red-600 hover:bg-red-700"}
+    `}
+  >
+    {actionType === "reject" ? "Processing..." : "Reject"}
+  </button>
                 </div>
               </>
             )}
