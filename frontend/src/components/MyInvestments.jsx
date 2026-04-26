@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Price from "./Price";
 import { Crown, Rocket, Star, Gem, Zap, Medal } from "lucide-react";
 import { CurrencyDollarIcon,ArrowTrendingUpIcon  } from "@heroicons/react/24/outline";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const icons = [Rocket, Star, Zap, Crown, Medal, Gem];
 const formatDate = (date) =>
@@ -49,8 +50,8 @@ setTotalProfitSum(totalProfit);
 
   if (loading) {
     return (
-      <div className="flex  justify-center items-center h-screen text-sky-600 text-xl font-semibold">
-        Loading Investments...
+        <div className="flex justify-center items-center h-screen">
+        <LoadingSpinner />
       </div>
     );
   }

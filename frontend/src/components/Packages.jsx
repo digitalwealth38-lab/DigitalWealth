@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Price from "./Price";
 import { Crown, Rocket, Star, Gem, Zap, Medal } from "lucide-react";
 import toast from "react-hot-toast";
+import LoadingSpinner from "./LoadingSpinner";
 
 const icons = [Rocket, Star, Zap, Crown, Medal, Gem];
 
@@ -53,8 +54,8 @@ const Packages = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen text-sky-600 text-xl font-semibold">
-        Loading Packages...
+      <div className="flex justify-center items-center h-screen">
+        <LoadingSpinner />
       </div>
     );
   }

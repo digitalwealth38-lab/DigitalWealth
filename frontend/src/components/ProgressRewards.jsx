@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { axiosInstance } from "../lib/axios";
 import { Trophy, Gift, Info, Star } from "lucide-react";
+import LoadingSpinner from "./LoadingSpinner";
 
 const formatDateTime = (date) =>
   new Date(date).toLocaleString("en-US", {
@@ -31,7 +32,9 @@ const ProgressRewards = () => {
     fetchUserData();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <div className="flex justify-center items-center h-screen">
+        <LoadingSpinner />
+      </div>;
   if (!userData) return <p>User not found</p>;
 
   const { level, directReferrals, rewards } = userData;

@@ -31,8 +31,11 @@ export default function Navbar() {
     <>
       <nav className="bg-gradient-to-r from-sky-400 to-blue-600 text-white py-3 shadow-md fixed w-full z-50">
         <div className="container mx-auto flex items-center justify-between px-6">
+        
+          
           <h1
-            className="text-2xl font-extrabold tracking-wide drop-shadow-md cursor-pointer"
+          
+            className="text-2xl flex font-extrabold tracking-wide drop-shadow-md cursor-pointer"
             onClick={() => handleNav("/dashboard")}
           >
             Digital Wealth
