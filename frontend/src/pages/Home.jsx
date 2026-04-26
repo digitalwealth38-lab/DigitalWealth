@@ -61,14 +61,12 @@ const Home = () => {
       
       {/* Premium Header */}
       <header className="py-4 bg-white/80 backdrop-blur-md sticky top-0 z-[100] border-b border-sky-50 shadow-sm">
-        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+        <div className="max-w-7xl mx-auto px-3 flex justify-between items-center">
           <div className="flex items-center gap-2 group cursor-pointer" onClick={() => handleScroll('home')}>
-            <div className="w-10 h-10 bg-sky-600 rounded-xl flex items-center justify-center shadow-lg shadow-sky-200">
-              <span className="text-white font-black italic text-xl">D</span>
-            </div>
-            <div className="text-2xl font-black text-gray-800 tracking-tighter">
-              DIGITAL <span className="text-sky-600">WEALTH</span>
-            </div>
+            
+            <div className="text-1xl md:text-2xl font-black text-gray-800 tracking-tighter">
+    DIGITAL <span className="text-sky-600">WEALTH</span>
+  </div>
           </div>
 
           <nav className="hidden lg:flex items-center space-x-8">
@@ -83,10 +81,21 @@ const Home = () => {
             ))}
           </nav>
 
-          <div className="flex items-center space-x-4">
-            <a href="/login" className="text-sm font-bold text-sky-600 px-4 py-2 hover:bg-sky-50 rounded-lg transition">Login</a>
-            <a href="/signup" className="px-6 py-3 text-sm font-bold bg-sky-600 text-white rounded-full shadow-xl shadow-sky-200 hover:bg-sky-700 hover:-translate-y-0.5 transition-all">Sign Up</a>
-          </div>
+         <div className="flex items-center space-x-3">
+  <a
+    href="/login"
+    className="flex items-center justify-center h-10 px-5 text-sm font-bold text-sky-600 rounded-lg hover:bg-sky-50 transition"
+  >
+    Login
+  </a>
+
+  <a
+    href="/signup"
+    className="flex items-center justify-center h-10 px-6 text-sm font-bold bg-sky-600 text-white rounded-full shadow-xl shadow-sky-200 hover:bg-sky-700 hover:-translate-y-0.5 transition-all"
+  >
+    Sign Up
+  </a>
+</div>
         </div>
       </header>
 
@@ -206,7 +215,7 @@ const Home = () => {
           <div className="grid md:grid-cols-3 gap-8">
             {[
               { title: 'Earn Profit with Plans', desc: 'Invest in our carefully designed investment plans and earn consistent daily profits.', icon: '💹', color: 'bg-white', text: 'text-gray-900' },
-              { title: 'Earn Profit with Network', desc: 'Refer others to join Digital Wealth and earn commissions from your network growth.', icon: '🌐', color: 'bg-sky-600', text: 'text-white' },
+              { title: 'Earn Profit with Network', desc: 'Refer others to join Digital Wealth and earn commissions from your network growth.', icon: '🌐', color: 'bg-white', text: 'text-gray-900' },
               { title: 'Earn Profit with Crypto', desc: 'Invest in select cryptocurrencies and enjoy potential high-yield crypto profits safely.', icon: '🪙', color: 'bg-white', text: 'text-gray-900' },
             ].map((item, i) => (
               <motion.div 
@@ -258,7 +267,7 @@ const Home = () => {
       {/* CTA Footer Section */}
       <Section className="py-32 bg-white">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="text-5xl md:text-7xl font-black text-gray-900 tracking-tighter mb-10 leading-none">Ready to Build Your <span className="text-sky-600">Future?</span></h2>
+       <h2 className="text-5xl md:text-7xl font-black text-gray-900 tracking-tighter mb-10 leading-none">Ready to Build Your <span className="text-sky-600">Future?</span></h2>
                <a href="/signup"className="px-12 py-6 text-2xl font-black bg-sky-600 text-white rounded-[2rem] shadow-2xl shadow-sky-200 hover:scale-105 transition-all">
            Start Earning Today</a>
         </div>
@@ -284,7 +293,7 @@ const Home = () => {
             </div>
             <div>
               <h5 className="font-black text-gray-900 uppercase text-xs tracking-widest mb-6">Legal</h5>
-              <ul className="space-y-4 text-xs font-bold uppercase tracking-widest">
+              <ul className="space-y-4 text-xs font-bold  tracking-widest">
                 <li className="hover:text-sky-600 transition cursor-pointer">Terms of Service</li>
                 <li className="hover:text-sky-600 transition cursor-pointer">Privacy Policy</li>
                 <li className="hover:text-sky-600 transition cursor-pointer">Risk Disclosure</li>
@@ -293,7 +302,7 @@ const Home = () => {
           </div>
           <div className="pt-10 border-t border-sky-50 flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="text-[10px] font-black uppercase tracking-[0.2em]">
-              Digital Wealth © 2026. Investment involves risk.
+              Digital Wealth © 2025. Investment involves risk.
             </div>
             <div className="flex gap-6 items-center">
               <div className="w-8 h-8 bg-sky-50 rounded-lg"></div>
