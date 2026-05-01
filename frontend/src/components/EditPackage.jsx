@@ -55,7 +55,8 @@ console.log("FORM DATA BEFORE UPDATE:", formData);
       investmentAmount: pkg.investmentAmount || "",
       durationDays: pkg.durationDays || "",
       returnType: pkg.returnType || "DAILY",
-    pkgReturn: pkg.pkgReturn || "", // <-- renamed
+    pkgReturn: pkg.pkgReturn || "",
+    commissionPercent: pkg.commissionPercent || "", // <-- renamed
       packageExpiresAt: pkg.packageExpiresAt
         ? pkg.packageExpiresAt.slice(0, 10)
         : "",
@@ -79,7 +80,8 @@ console.log("FORM DATA BEFORE UPDATE:", formData);
           investmentAmount: Number(formData.investmentAmount),
           durationDays: Number(formData.durationDays),
           returnType: formData.returnType,
-         pkgReturn: Number(formData.pkgReturn), // <-- renamed
+         pkgReturn: Number(formData.pkgReturn),
+         commissionPercent:Number(formData.commissionPercent), // <-- renamed
           packageExpiresAt: formData.packageExpiresAt,
         },
         { withCredentials: true }
@@ -134,6 +136,7 @@ console.log("FORM DATA BEFORE UPDATE:", formData);
               <th className="p-3">Duration</th>
               <th className="p-3">Return Type</th>
               <th className="p-3">Return</th>
+               <th className="p-3">Commission(%)</th>   
               <th className="p-3">Expiry</th>
               <th className="p-3">Action</th>
             </tr>
@@ -227,6 +230,20 @@ console.log("FORM DATA BEFORE UPDATE:", formData);
                       `$${pkg.pkgReturn}`
                     )}
                   </td>
+                      <td className="p-3">
+                    {editingId === pkg._id ? (
+                      <input
+                           type="number"
+                        name="commissionPercent" // <-- renamed
+                        value={formData.commissionPercent}
+                        onChange={handleChange}
+                        className="border rounded p-1 w-20"
+                      />
+                    ) : (
+                      `$${pkg.commissionPercent}`
+                    )}
+                  </td>
+                  
 
                   {/* EXPIRY */}
                   <td className="p-3">

@@ -149,6 +149,19 @@ const InvestPackages = () => {
             </span>
           </div>
 
+<div className="mt-4 p-4 rounded-xl bg-gradient-to-r from-sky-500/10 to-blue-600/10 border border-sky-400 shadow-inner relative overflow-hidden">
+  
+  {/* Glow Effect */}
+  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-pulse"></div>
+
+  <p className="text-black text-sm font-medium relative z-10">
+    <span className="font-extrabold text-lg text-sky-600">
+      {pkg.commissionPercent}% Commission
+    </span>{" "}
+    — Earn when your direct member invests in this package 💰
+  </p>
+</div>
+
           {/* Invest Button */}
    <motion.button
   whileTap={{ scale: 0.95 }}

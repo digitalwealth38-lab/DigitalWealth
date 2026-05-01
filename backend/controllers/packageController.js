@@ -224,6 +224,7 @@ export const createinvestPackage = async (req, res) => {
       pkgReturn,       // renamed
       packageExpiresAt,
       tier,
+      commissionPercent,
     } = req.body;
 
     let totalProfit = 0;
@@ -241,6 +242,7 @@ export const createinvestPackage = async (req, res) => {
       pkgReturn,       // renamed
       packageExpiresAt,
       tier,
+      commissionPercent,
       totalProfit,
       capital,
       totalReturn,
@@ -316,7 +318,30 @@ export const buyInvestpackage = async (req, res) => {
       "INVESTMENT_PURCHASE",
       `Invested $${pkg.investmentAmount} in "${pkg.name}" investment package`
     );
+// ================== 💰 COMMISSION LOGIC ==================
+if (user.hasActivePackage && user.referredBy) {
+  const referrer = await User.findOne({
+    referralCode: user.referredBy,
+  });
 
+  if (referrer && referrer.hasActivePackage) {
+    const percent = pkg.commissionPercent / 100;
+    const commission = pkg.investmentAmount * percent;
+
+    console.log("Investment Commission:", commission);
+
+    referrer.balance += commission;
+    referrer.totalEarnings += commission;
+
+ referrer.rewards.push({
+  type: `Investment Commission from ${user.name} (${user.userId})`,
+  amount: commission,
+  date: new Date(),
+});
+
+    await referrer.save();
+  }
+}
 
     res.status(201).json({
       success: true,

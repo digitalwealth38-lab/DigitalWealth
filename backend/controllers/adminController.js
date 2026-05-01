@@ -171,7 +171,7 @@ console.log(userId)
 export const updateInvestPackage = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, investmentAmount, durationDays, returnType, pkgReturn, packageExpiresAt } = req.body;
+    const { name, investmentAmount, durationDays, returnType, pkgReturn, packageExpiresAt,commissionPercent, } = req.body;
 
     const pkg = await InvestmentPackage.findById(id);
     if (!pkg) {
@@ -187,6 +187,7 @@ export const updateInvestPackage = async (req, res) => {
     if (durationDays !== undefined) pkg.durationDays = Number(durationDays);
     if (returnType !== undefined) pkg.returnType = returnType;
     if (pkgReturn !== undefined) pkg.pkgReturn = Number(pkgReturn);
+    if (pkgReturn !== undefined) pkg.commissionPercent = Number(commissionPercent);
     if (packageExpiresAt !== undefined) pkg.packageExpiresAt = new Date(packageExpiresAt);
 
     // 🔹 Recalculate package snapshot values

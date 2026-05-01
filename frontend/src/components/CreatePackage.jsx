@@ -10,6 +10,7 @@ const [formData, setFormData] = useState({
   returnType: "",
   pkgReturn: "", // <-- renamed
   packageExpiresAt: "",
+  commissionPercent:""
 });
 
   const handleChange = (e) => {
@@ -24,7 +25,8 @@ const [formData, setFormData] = useState({
       name: formData.name,
       investmentAmount: Number(formData.investmentAmount),
       durationDays: Number(formData.durationDays),
-      pkgReturn: Number(formData.pkgReturn),   // generic return
+      pkgReturn: Number(formData.pkgReturn),
+      commissionPercent:Number(formData.commissionPercent),  // generic return
       returnType: formData.returnType,   // DAILY or WEEKLY
       packageExpiresAt: formData.packageExpiresAt,
     });
@@ -37,6 +39,7 @@ const [formData, setFormData] = useState({
       returnType: "",
       pkgReturn: "", 
       packageExpiresAt: "",
+      commissionPercent:""
     });
   } catch (error) {
     console.error(error);
@@ -126,6 +129,19 @@ const [formData, setFormData] = useState({
   type="number"
   name="pkgReturn"
   value={formData.pkgReturn}
+  onChange={handleChange}
+    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-sky-500 focus:outline-none placeholder-gray-400"
+    required
+  />
+</div>
+   <div>
+  <label className="block text-gray-600 font-medium mb-2">
+    Commission(%)
+  </label>
+  <input
+  type="number"
+  name="commissionPercent"
+  value={formData.commissionPercent}
   onChange={handleChange}
     className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-sky-500 focus:outline-none placeholder-gray-400"
     required

@@ -11,6 +11,7 @@ const InvestmentPackageSchema = new mongoose.Schema(
     // 🔥 Generic return
      pkgReturn: { type: Number, required: true },
     returnType: { type: String, enum: ["DAILY", "WEEKLY"], required: true },
+    commissionPercent: { type: Number, default: 0 },
 
     // 🔥 Calculated fields
   totalProfit: { type: Number, default: 0 },
