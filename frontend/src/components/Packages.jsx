@@ -73,7 +73,7 @@ const Packages = () => {
 
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto">
-        {packages.map((pkg, index) => {
+       {packages.filter((pkg) => !pkg.isExpired || pkg._id === activatedId).map((pkg, index) => {
           const Icon = icons[index % icons.length];
           const isActivated = pkg._id === activatedId;
           const isExpired = pkg.isExpired;
