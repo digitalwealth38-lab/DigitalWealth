@@ -64,6 +64,8 @@ const InvestPackages = () => {
      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
   {packages.map((pkg, index) => {
     const Icon = icons[index % icons.length];
+    const commissionAmount =
+    (pkg.investmentAmount * pkg.commissionPercent) / 100;
 
     return (
       <motion.div
@@ -151,26 +153,18 @@ const InvestPackages = () => {
 
 <div className="mt-4 p-4 rounded-xl bg-gradient-to-r from-sky-500/10 to-blue-600/10 border border-sky-400 shadow-inner relative overflow-hidden">
   
-  {/* Glow Effect */}
   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-pulse"></div>
 
-  {(() => {
-    const commissionAmount =
-      (pkg.investmentAmount * pkg.commissionPercent) / 100;
-
-    return (
-      <p className="text-black text-sm font-medium relative z-10">
-        <span className="font-extrabold text-lg text-sky-600">
-          {pkg.commissionPercent}% Commission
-        </span>{" "}
-        — Earn{" "}
-        <span className="font-bold text-green-600">
-          <Price amount={commissionAmount} />
-        </span>{" "}
-        when your direct member invests in this package 💰
-      </p>
-    );
-  })()}
+  <p className="text-black text-sm font-medium relative z-10">
+    <span className="font-extrabold text-lg text-sky-600">
+      {pkg.commissionPercent}% Commission
+    </span>{" "}
+    — Earn{" "}
+    <span className="font-bold text-green-600">
+      <Price amount={commissionAmount} />
+    </span>{" "}
+    when your direct member invests in this package 💰
+  </p>
 
 </div>
 
