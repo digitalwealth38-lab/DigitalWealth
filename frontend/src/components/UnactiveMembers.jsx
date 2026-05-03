@@ -33,7 +33,7 @@ const UnactiveMembers = () => {
     return (
     <div className="flex justify-center items-center min-h-[200px] md:h-64 px-4">
   <h1 className="text-3xl font-bold text-gray-500 text-center">
-    No Unactive Referred Member Found.
+    No Inactive Referred Member Found.
   </h1>
 </div>
 
@@ -44,7 +44,7 @@ const UnactiveMembers = () => {
     <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-xl">
     <h2 className="text-3xl sm:text-4xl font-extrabold text-center bg-clip-text text-transparent 
                bg-gradient-to-r from-sky-500 via-indigo-500 to-purple-500 drop-shadow-md mb-8">
-  Unactive Referred Members
+  Inactive Referred Members
 </h2>
 
 
