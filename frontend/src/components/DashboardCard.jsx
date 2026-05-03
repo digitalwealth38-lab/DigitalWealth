@@ -1,7 +1,7 @@
 import WelcomeHeader from "./WelcomeHeader";
 import { motion } from "framer-motion";
 import Price from "./Price";
-import { Wallet, DollarSign, Users, Gift, Trophy, Briefcase } from "lucide-react";
+import { Wallet, DollarSign, Users, Gift, Trophy, Briefcase,ArrowDownCircle  } from "lucide-react";
 import { useUserStore } from "../stores/userStore";
 import LoadingSpinner from "./LoadingSpinner";
 import { useEffect } from "react";
@@ -37,6 +37,12 @@ const stats = [
     value: <Price amount={user?.totalEarnings || 0} />,
     color: "text-green-600",
   },
+    {
+    icon: ArrowDownCircle,
+    title: "Total Withdrawals",
+    value: <Price amount={user?.totalWithdrawals || 0} />,
+    color: "text-red-600",
+  },
   {
     icon: Users,
     title: "Team Size",
@@ -55,6 +61,7 @@ const stats = [
     value: user?.level || "0",
     color: "text-yellow-600",
   },
+  
 ];
 
   return (

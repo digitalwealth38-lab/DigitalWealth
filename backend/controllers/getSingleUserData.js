@@ -1,11 +1,49 @@
 import mongoose from "mongoose";
 import Transaction from "../models/Transaction.js";
 import User from "../models/user.model.js";
+import LocalWithdraw from "../models/LocalWithdraw.js";
+import Withdrawal from "../models/Withdrawal.js";
 export const getSingleUserData = async (req, res) => {
   try {
     if (!req.user) return res.status(404).json({ message: "User not found" });
-    const { name, investedBalance, totalEarnings, balance ,teamSize,directReferrals,level,rewards,currentPackage,referralCode  } = req.user;
-    res.json({ name, balance, totalEarnings, investedBalance,teamSize,directReferrals,level,rewards,currentPackage,referralCode });
+    const { name, investedBalance, totalEarnings, balance ,teamSize,directReferrals,level,rewards,currentPackage,referralCode,_id  } = req.user;
+        const cryptoWithdrawals = await Withdrawal.aggregate([
+      {
+        $match: {
+          user: new mongoose.Types.ObjectId(_id),
+          status: "approved", // 👈 only successful
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: "$amount" },
+        },
+      },
+    ]);
+    console.log(cryptoWithdrawals)
+
+    // 🔥 2. Local Withdrawals
+    const localWithdrawals = await LocalWithdraw.aggregate([
+      {
+        $match: {
+          user: new mongoose.Types.ObjectId(_id),
+          status: "approved", // 👈 only approved
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: "$amount" },
+        },
+      },
+    ]);
+console.log(localWithdrawals)
+    // ✅ Combine both
+    const totalWithdrawals =
+      (cryptoWithdrawals[0]?.total || 0) +
+      (localWithdrawals[0]?.total || 0);
+    res.json({ name, balance, totalEarnings, investedBalance,teamSize,directReferrals,level,rewards,currentPackage,referralCode,totalWithdrawals });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
