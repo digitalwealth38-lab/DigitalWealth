@@ -3,6 +3,8 @@ import LocalWithdraw from "../models/LocalWithdraw.js";
 import User from "../models/user.model.js";
 import WithdrawLimit from "../models/WithdrawLimit.js";
 import { logActivity } from "../lib/logActivity.js";
+import TeamHierarchy from "../models/TeamHierarchy.js";
+import UserInvestment from "../models/UserInvestment.js";
 
 // 🟢 User creates a local withdrawal request
 export const createLocalWithdraw = async (req, res) => {
@@ -41,10 +43,22 @@ export const createLocalWithdraw = async (req, res) => {
     }
 
     // 🔹 ADDED: teamSize must be exactly 1
-if (user.teamSize < 1 && user.canWithdraw !== true) {
+// 🔹 Check if user has at least 1 direct referral with an active investment
+const userTeam = await TeamHierarchy.findOne({ userId: user._id });
+console.log(userTeam)
+
+const hasActiveReferral =
+  userTeam &&
+  userTeam.level1Members.length > 0 &&
+  (await UserInvestment.exists({
+    userId: { $in: userTeam.level1Members },
+    status: "ACTIVE",
+  }));
+
+if (!hasActiveReferral && user.canWithdraw !== true) {
   return res.status(403).json({
     message:
-      "Withdraw is restricted. Add at least 1 active member or wait for admin approval.",
+      "Withdraw is restricted. At least 1 direct referral must have an active investment, or wait for admin approval.",
   });
 }
     // 🔹 END ADDED LOGIC

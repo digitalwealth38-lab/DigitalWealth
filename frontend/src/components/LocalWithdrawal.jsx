@@ -400,7 +400,7 @@ console.log(history)
       <span className="font-medium">
         Eligibility:
         <span className="block text-sm text-gray-600">
-          You must have at least 1 active member to be eligible for withdrawal. Adding 1 member is mandatory.
+To withdraw, you must refer at least 1 person who has an active investment. If your referred member's investment has expired or is inactive, you are not eligible for withdrawal until they reinvest.
         </span>
       </span>
     </div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Banknote, Clock, CheckCircle2, XCircle, Wallet } from "lucide-react";
+import { Banknote, Clock, CheckCircle2, XCircle, Wallet, Timer, AlertTriangle, UserCheck } from "lucide-react";
 import { axiosInstance } from "../lib/axios";
 import { toast } from "react-hot-toast";
 
@@ -11,7 +11,11 @@ export default function Withdrawal() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [history, setHistory] = useState([]);
-
+  const [limit, setLimit] = useState({
+      minAmount: "",
+      maxAmount: "",
+      isActive: true,
+    });
   // ✅ Helper function to format transactions
  
   const formatTransactions = (transactions) => {
@@ -49,7 +53,22 @@ export default function Withdrawal() {
   useEffect(() => {
     fetchHistory();
   }, []);
+  const fetchLimit = async () => {
+    try {
+      const { data } = await axiosInstance.get(
+        "/admin/withdraw-limit"
+      );
+      if (data) {
+        setLimit(data);
+      }
+    } catch (err) {
+      toast.error("Failed to load withdraw limit");
+    }
+  };
 
+  useEffect(() => {
+    fetchLimit();
+  }, []);
   // ✅ Handle withdrawal request
   const handleWithdraw = async (e) => {
     e.preventDefault();
@@ -205,6 +224,90 @@ export default function Withdrawal() {
         ⚠️ Withdrawal fees: $0.50 (TRX) | $1.00 (USDT)
       </p>
             </div>
+
+                          <div className="bg-gradient-to-br from-sky-50 to-white border border-sky-200 p-5 rounded-2xl mb-5 shadow-sm">
+  <h3 className="text-sky-700 font-semibold mb-4 text-center text-lg">
+   Withdrawal Details
+  </h3>
+{limit && (
+  <div
+    className={`mb-6 p-4 rounded-2xl border text-center ${
+      limit.isActive
+        ? "bg-green-50 border-green-200"
+        : "bg-red-50 border-red-200"
+    }`}
+  >
+    <p
+      className={`font-semibold ${
+        limit.isActive ? "text-green-700" : "text-red-700"
+      }`}
+    >
+      {limit.isActive
+        ? "Withdrawals are currently ACTIVE"
+        : "Withdrawals are currently DISABLED"}
+    </p>
+
+    {limit.isActive && (
+      <p className="text-gray-700 mt-2 text-sm">
+        Minimum Withdraw:{" "}
+        <span className="font-bold text-gray-900">
+          ${limit.minAmount}
+        </span>{" "}
+        | Maximum Withdraw:{" "}
+        <span className="font-bold text-gray-900">
+          ${limit.maxAmount}
+        </span>
+      </p>
+    )}
+  </div>
+)}
+
+  <div className="space-y-3 text-gray-700">
+    <div className="flex items-start gap-3">
+      <Clock size={20} className="text-sky-600 mt-0.5" />
+      <span className="font-medium">
+        Processing Hours:
+        <span className="block text-sm text-gray-600">
+          9:00 AM – 5:00 PM (Monday to Friday)
+        </span>
+      </span>
+    </div>
+
+    <div className="flex items-start gap-3">
+      <Timer size={20} className="text-sky-600 mt-0.5" />
+      <span className="font-medium">
+        Maximum Processing Time:
+        <span className="block text-sm text-gray-600">
+          24 hours
+        </span>
+      </span>
+    </div>
+
+    <div className="flex items-start gap-3">
+      <AlertTriangle size={20} className="text-sky-600 mt-0.5" />
+      <span className="font-medium">
+        Note:
+        <span className="block text-sm text-gray-600">
+          If the selected bank's link is down or under maintenance, processing may take up to 7 business days.
+        </span>
+      </span>
+    </div>
+
+    <div className="flex items-start gap-3">
+      <UserCheck size={20} className="text-sky-600 mt-0.5" />
+      <span className="font-medium">
+        Eligibility:
+        <span className="block text-sm text-gray-600">
+To withdraw, you must refer at least 1 person who has an active investment. If your referred member's investment has expired or is inactive, you are not eligible for withdrawal until they reinvest.
+        </span>
+      </span>
+    </div>
+  </div>
+
+  <div className="mt-4 text-center text-xs text-gray-500">
+    Please ensure you meet all requirements before initiating a withdrawal.
+  </div>
+</div>
 
             {/* Wallet Address */}
             <div>

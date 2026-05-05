@@ -3,6 +3,8 @@ import Withdrawal from "../models/Withdrawal.js";
 import User from "../models/user.model.js";
 import WithdrawLimit from "../models/WithdrawLimit.js";
 import { logActivity } from "../lib/logActivity.js";
+import TeamHierarchy from "../models/TeamHierarchy.js";
+import UserInvestment from "../models/UserInvestment.js";
 // 🟢 User makes a withdrawal request
 export const createWithdrawal = async (req, res) => {
   try {
@@ -34,11 +36,21 @@ export const createWithdrawal = async (req, res) => {
     if (!user) return res.status(404).json({ msg: "User not found" });
 
     // 🔹 ADDED: teamSize must be 1
-    if (user.teamSize !== 1) {
-      return res
-        .status(400)
-        .json({ msg: "You must have exactly 1 active team member to withdraw" });
-    }
+ const userTeam = await TeamHierarchy.findOne({ userId: user._id });
+
+const hasActiveReferral =
+  userTeam &&
+  userTeam.level1Members.length > 0 &&
+  (await UserInvestment.exists({
+    userId: { $in: userTeam.level1Members },
+    status: "ACTIVE",
+  }));
+
+if (!hasActiveReferral && user.canWithdraw !== true) {
+  return res.status(403).json({
+    msg: "Withdraw is restricted. At least 1 direct referral must have an active investment, or wait for admin approval.",
+  });
+}
     // 🔹 END ADDED LOGIC
 
     if (user.balance < amount) {
