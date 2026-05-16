@@ -12,16 +12,48 @@ const Assets = () => {
   }, [getAssets]);
 
   // Loading / Empty State
-  if (!assets.length) {
-    return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-sky-200 border-t-sky-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-500 font-medium animate-pulse">Initializing market data...</p>
+
+// Loading State
+if (!assets) {
+  return (
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="text-center">
+        <div className="w-16 h-16 border-4 border-sky-200 border-t-sky-600 rounded-full animate-spin mx-auto mb-4"></div>
+
+        <p className="text-gray-500 font-medium animate-pulse">
+          Initializing market data...
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// Empty State
+if (assets.length === 0) {
+  return (
+    <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center px-6">
+      <div className="max-w-md w-full bg-white border border-slate-200 shadow-xl rounded-[2rem] p-10 text-center">
+        
+        <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-sky-50 flex items-center justify-center">
+          <Sparkles size={36} className="text-sky-600" />
+        </div>
+
+        <h2 className="text-3xl font-black text-slate-800 mb-3">
+          No Assets Available
+        </h2>
+
+        <p className="text-slate-500 leading-relaxed">
+          There are currently no investment assets available in the marketplace.
+          Please check back later for new earning opportunities.
+        </p>
+
+        <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-sky-50 text-sky-700 text-sm font-semibold">
+          Marketplace Updating
         </div>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   return (
     <div className="relative min-h-screen bg-[#F8FAFC] overflow-hidden">
