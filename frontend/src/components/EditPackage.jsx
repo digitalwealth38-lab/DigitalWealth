@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
+import LoadingSpinner from "./LoadingSpinner";
+import Price from "./Price";
 const formatDate = (date) =>
   date
     ? new Date(date).toLocaleDateString("en-US", {
@@ -115,8 +117,8 @@ console.log("FORM DATA BEFORE UPDATE:", formData);
   // ⏳ Loading UI
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-sky-700 text-xl font-semibold">
-        Loading investment packages...
+      <div className="flex justify-center items-center h-screen">
+        <LoadingSpinner />
       </div>
     );
   }
@@ -180,7 +182,7 @@ console.log("FORM DATA BEFORE UPDATE:", formData);
                         className="border rounded p-1 w-24"
                       />
                     ) : (
-                      `$${pkg.investmentAmount}`
+                      <Price amount={pkg.investmentAmount || 0} />
                     )}
                   </td>
 
@@ -227,7 +229,8 @@ console.log("FORM DATA BEFORE UPDATE:", formData);
                         className="border rounded p-1 w-20"
                       />
                     ) : (
-                      `$${pkg.pkgReturn}`
+                       <Price amount={pkg.pkgReturn || 0} />
+                     
                     )}
                   </td>
                       <td className="p-3">
@@ -240,7 +243,7 @@ console.log("FORM DATA BEFORE UPDATE:", formData);
                         className="border rounded p-1 w-20"
                       />
                     ) : (
-                      `$${pkg.commissionPercent}`
+                      <Price amount={pkg.commissionPercent || 0} />
                     )}
                   </td>
                   

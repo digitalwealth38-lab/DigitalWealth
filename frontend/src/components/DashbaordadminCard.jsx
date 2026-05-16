@@ -17,7 +17,8 @@ Share2,
   CreditCard ,
   Bitcoin, 
   Edit,
-  Bell
+  Bell,
+  PackagePlus
 } from "lucide-react";
 import CurrencyToggle from "./CurrencyToggle";
 import Modal from "./Modal"; // New
@@ -33,6 +34,8 @@ import AdminWithdrawals from "./AdminWithdrawals";
 import AdminLocalWithdrawals from "./AdminLocalWithdrawals";
 import AdminManualDeposits from "./Adminmanualdeposite";
 import AdminNotifications from "./AdminNotifications";
+import AdminCreateAsset from "./AdminCreateAsset";
+import AdminEditAsset from "./AdminEditAsset";
 
 export default function DashboardAdminCard() {
   const [stats, setStats] = useState(null);
@@ -51,6 +54,8 @@ const [openCryptoWithdraw, setOpenCryptoWithdraw] = useState(false);
 const [openLocalWithdraw, setOpenLocalWithdraw] = useState(false);
 const [openLocalDeposit, setOpenLocalDeposit] = useState(false);
 const [openNotification, setopenNotification] = useState(false);
+const [openCreateAsset, setopenCreateAsset] = useState(false);
+const [openEditAsset, setopenEditAsset] = useState(false);
   useEffect(() => {
     const fetchStats = async () => {
       try {
@@ -217,6 +222,22 @@ const [openNotification, setopenNotification] = useState(false);
   bg: "bg-amber-100",
   clickable: true,
 },
+{
+  icon: PackagePlus,
+  title: "Create Asset",
+  value: "Manage Assets",
+  color: "text-sky-600",
+  bg: "bg-sky-100",
+  clickable: true,
+},
+{
+  icon: PackagePlus,
+  title: "Edit Asset",
+  value: "Edit Asset",
+  color: "text-sky-600",
+  bg: "bg-sky-100",
+  clickable: true,
+}
   ];
 
   return (
@@ -279,6 +300,8 @@ const [openNotification, setopenNotification] = useState(false);
   if (title === "Local Withdraw") setOpenLocalWithdraw(true);
   if (title === "Local Deposit") setOpenLocalDeposit(true);
     if (title === "Notifications") setopenNotification(true);
+    if (title === "Create Asset") setopenCreateAsset(true);
+     if (title === "Edit Asset") setopenEditAsset(true)
  // ✅ new // ✅ new// ✅ open trading modal
   }}
   whileHover={{
@@ -414,6 +437,20 @@ const [openNotification, setopenNotification] = useState(false);
           ]}
         />
       </Modal>
+      <Modal
+  isOpen={openCreateAsset}
+  onClose={() => setopenCreateAsset(false)}
+  title="Create Asset"
+>
+  <AdminCreateAsset/> {/* your existing AdminTrading component */}
+</Modal>
+    <Modal
+  isOpen={openEditAsset}
+  onClose={() => setopenEditAsset(false)}
+  title="Edit Asset"
+>
+  <AdminEditAsset/> {/* your existing AdminTrading component */}
+</Modal>
     </div>
   );
 }

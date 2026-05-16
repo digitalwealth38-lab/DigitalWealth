@@ -24,6 +24,8 @@ import Profile from "./components/Profile";
 import Contact from './components/Contact.jsx'
 import AuthLayout from './layouts/AuthLayout.jsx'
 import MainLayout from './layouts/MainLayout.jsx'
+import Assets from './components/Assets.jsx'
+import MyAssets from './components/MyAssets.jsx'
 
 const App = () => {
 
@@ -113,6 +115,7 @@ const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
 />
 </Route>
  <Route element={<MainLayout />}>
+
       {/* User Dashboard */}
       <Route
         path="/dashboard"
@@ -126,6 +129,15 @@ const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
         path="/packages"
         element={authUser ? <PackagesSwitcher/> : <Navigate to="/" />}
       />
+       <Route
+        path="/asset"
+        element={authUser ? <Assets/> : <Navigate to="/" />}
+      />
+        <Route
+        path="/myasset"
+        element={authUser ? <MyAssets/> : <Navigate to="/" />}
+      />
+      
        <Route
         path="/investment"
         element={authUser ? <MyInvestments />: <Navigate to="/" />}

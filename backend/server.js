@@ -13,8 +13,11 @@ import paymentMethodRoutes from "./routes/paymentMethodRoutes.js"
 import localWithdrawRoutes from "./routes/localWithdrawRoutes.js"
 import {restrictToLoggedinUserOnly} from "./middleware/auth.middleware.js"
 import notificationRoutes from "./routes/notification.routes.js";
+import assetRoutes from "./routes/assetRoutes.js";
+import userAssetRoutes from "./routes/userAssetRoutes.js";
 import {connectDB} from "./lib/db.js"
 import "./cron/dailyROI.js";
+import "./cron/expireInvestments.js";
 dotenv.config()
 const app= express()
 app.use(cookieParser());
@@ -38,6 +41,8 @@ app.use("/api/packages",restrictToLoggedinUserOnly,packagesRoutes);
 app.use("/api/home",homeRoutes);
 app.use("/api/admin",adminRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/assets", assetRoutes);
+app.use("/api/user-assets", userAssetRoutes);
 app.listen(PORT,()=>{
     console.log("server is running",PORT)
     
