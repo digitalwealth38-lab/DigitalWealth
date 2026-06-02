@@ -5,7 +5,7 @@ import AssetCard from "../components/AssetCard";
 import { Sparkles } from "lucide-react";
 
 const Assets = () => {
-  const { assets, getAssets } = useAssetStore();
+  const { assets, getAssets,loading } = useAssetStore();
 
   useEffect(() => {
     getAssets();
@@ -14,7 +14,7 @@ const Assets = () => {
   // Loading / Empty State
 
 // Loading State
-if (!assets) {
+if (loading) {
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center">
       <div className="text-center">
