@@ -6,7 +6,7 @@ export const useAssetStore = create((set) => ({
   assets: [],
   myAssets: [],
   loading: false,
-  buying: false, 
+  buyingAssetId: null,
 
   // =========================
   // Get All Assets
@@ -35,11 +35,10 @@ export const useAssetStore = create((set) => ({
   // =========================
   // Buy Asset
   // =========================
-  buying: false,
   buyAsset: async (assetId, quantity) => {
     try {
       
-      set({ buying: true });
+      set({ buyingAssetId: assetId });
 
       const res = await axiosInstance.post("/user-assets/buy", {
         assetId,
@@ -57,7 +56,7 @@ export const useAssetStore = create((set) => ({
       );
     }
     finally {
-    set({ buying: false });
+    set({ buyingAssetId: null });
   }
   },
 

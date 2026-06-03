@@ -8,8 +8,7 @@ const AssetCard = ({ asset }) => {
   console.log(asset)
   const [quantity, setQuantity] = useState(1);
   
-  const { buyAsset,buying } = useAssetStore();
-
+  const { buyAsset,buyingAssetId } = useAssetStore();
 
   const total = quantity * asset.price;
 
@@ -102,12 +101,12 @@ const AssetCard = ({ asset }) => {
                 <Price amount={total} />
               </div>
             </div>
-          <button
+     <button
   onClick={() => buyAsset(asset._id, quantity)}
-  disabled={buying}
+  disabled={buyingAssetId === asset._id}
   className="bg-white text-sky-600 px-5 py-2 rounded-xl font-bold text-sm hover:bg-sky-50 transition-colors disabled:opacity-70 flex items-center gap-2"
 >
-  {buying ? (
+  {buyingAssetId === asset._id ? (
     <>
       <div className="w-4 h-4 border-2 border-sky-600 border-t-transparent rounded-full animate-spin"></div>
       Buying...
