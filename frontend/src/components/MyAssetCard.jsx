@@ -42,8 +42,8 @@ const MyAssetCard = ({ investment }) => {
             isActive ? "border-sky-50 shadow-inner" : "border-red-50"
           }`}>
             <img
-              src={investment.assetImage || investment.asset?.image}
-              alt={investment.assetName || investment.asset?.name}
+              src={investment.asset?.image}
+              alt={investment.asset?.name}
               className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
             />
           </div>
@@ -58,7 +58,7 @@ const MyAssetCard = ({ investment }) => {
       {/* Header Info */}
       <div className="text-center mb-8">
         <h2 className="text-3xl font-[1000] text-slate-800 tracking-tight leading-tight">
-          {investment.assetName || investment.asset?.name}
+          {investment.asset?.name}
         </h2>
         
         <div className="flex flex-col items-center gap-2 mt-2">
