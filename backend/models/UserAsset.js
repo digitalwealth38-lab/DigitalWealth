@@ -15,7 +15,16 @@ const userAssetSchema = new mongoose.Schema(
       ref: "Asset",
       required: true,
     },
+    
+    assetName: {
+      type: String,
+      required: true,
+    },
 
+    assetImage: {
+      type: String,
+      required: true,
+    },
     // Quantity purchased
     quantity: {
       type: Number,

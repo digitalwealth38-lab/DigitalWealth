@@ -6,6 +6,7 @@ export const useAssetStore = create((set) => ({
   assets: [],
   myAssets: [],
   loading: false,
+  buying: false, 
 
   // =========================
   // Get All Assets
@@ -34,9 +35,11 @@ export const useAssetStore = create((set) => ({
   // =========================
   // Buy Asset
   // =========================
+  buying: false,
   buyAsset: async (assetId, quantity) => {
     try {
-      set({ loading: true });
+      
+      set({ buying: true });
 
       const res = await axiosInstance.post("/user-assets/buy", {
         assetId,
@@ -53,6 +56,9 @@ export const useAssetStore = create((set) => ({
         error.response?.data?.message || "Failed to buy asset"
       );
     }
+    finally {
+    set({ buying: false });
+  }
   },
 
   // =========================

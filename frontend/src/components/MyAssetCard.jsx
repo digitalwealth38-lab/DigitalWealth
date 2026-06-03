@@ -5,6 +5,7 @@ import { Calendar, Wallet, ArrowUpRight, CheckCircle2, AlertCircle, Clock, Shiel
 import Price from "./Price";
 
 const MyAssetCard = ({ investment }) => {
+  console.log(investment)
   const { claimReward } = useAssetStore();
 
   // Premium Date Formatter: "13 May 2026"
@@ -41,8 +42,8 @@ const MyAssetCard = ({ investment }) => {
             isActive ? "border-sky-50 shadow-inner" : "border-red-50"
           }`}>
             <img
-              src={investment.asset.image}
-              alt={investment.asset.name}
+              src={investment.assetImage}
+              alt={investment.assetName}
               className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
             />
           </div>
@@ -57,7 +58,7 @@ const MyAssetCard = ({ investment }) => {
       {/* Header Info */}
       <div className="text-center mb-8">
         <h2 className="text-3xl font-[1000] text-slate-800 tracking-tight leading-tight">
-          {investment.asset.name}
+          {investment.assetName}
         </h2>
         
         <div className="flex flex-col items-center gap-2 mt-2">
@@ -93,13 +94,21 @@ const MyAssetCard = ({ investment }) => {
   </div>
 
   {/* 2. Quantity - Clean Slate */}
-  <div className="bg-slate-50/50 backdrop-blur-md p-4 rounded-[1.8rem] border border-slate-100 hover:bg-white hover:shadow-md transition-all duration-300">
-    <p className="text-[9px] text-slate-400 uppercase font-black tracking-widest mb-1">Quantity</p>
-    <p className="text-slate-800 text-lg font-[1000] flex items-center gap-2">
-       <div className="w-1.5 h-1.5 rounded-full bg-sky-500 shadow-[0_0_8px_rgba(14,165,233,0.5)]" />
-       {investment.quantity} <span className="text-[10px] text-slate-400 font-black uppercase">Units</span>
-    </p>
-  </div>
+<div className="bg-slate-50/50 backdrop-blur-md p-4 rounded-[1.8rem] border border-slate-100 hover:bg-white hover:shadow-md transition-all duration-300">
+  <p className="text-[9px] text-slate-400 uppercase font-black tracking-widest mb-1">
+    Quantity
+  </p>
+
+  <p className="text-slate-800 text-lg font-[1000] flex items-center gap-2">
+    <span className="w-1.5 h-1.5 rounded-full bg-sky-500 shadow-[0_0_8px_rgba(14,165,233,0.5)] inline-block" />
+
+    {investment.quantity}
+
+    <span className="text-[10px] text-slate-400 font-black uppercase">
+      Units
+    </span>
+  </p>
+</div>
 
   {/* 3. Daily Profit - Success Emerald */}
   <div className="bg-emerald-50/30 backdrop-blur-md p-4 rounded-[1.8rem] border border-emerald-100 hover:bg-white hover:shadow-md transition-all duration-300">

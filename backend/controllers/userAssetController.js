@@ -2,6 +2,7 @@ import Asset from "../models/Asset.js";
 import User from "../models/user.model.js";
 import UserAsset from "../models/UserAsset.js";
 import Transaction from "../models/Assettransaction.js";
+import { logActivity } from "../lib/logActivity.js";
 
 export const buyAsset = async (req, res) => {
   try {
@@ -77,12 +78,20 @@ const totalReturn = investedAmount + totalProfit;
     
 
     await user.save();
-
+  await logActivity(
+  user._id,
+  "ASSET_PURCHASE",
+  `Purchased ${quantity} unit(s) of ${asset.name} for PKR ${investedAmount}`
+);
+ 
     // 1️⃣3️⃣ Create User Asset
     const userAsset = await UserAsset.create({
       user: userId,
 
       asset: asset._id,
+      assetName: asset.name,
+
+      assetImage: asset.image,
 
       quantity,
 
