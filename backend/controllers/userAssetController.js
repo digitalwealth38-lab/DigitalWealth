@@ -181,7 +181,7 @@ console.log("duration:", investment.duration);
       return res.status(404).json({ success: false, message: "User not found" });
     }
 
-    const today = new Date(); // remove in production
+    const today = new Date(); 
     const startDate = new Date(investment.startDate);
     startDate.setHours(0, 0, 0, 0);
     today.setHours(0, 0, 0, 0);

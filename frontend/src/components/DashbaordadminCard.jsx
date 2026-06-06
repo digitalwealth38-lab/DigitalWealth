@@ -97,6 +97,7 @@ const [openEditAsset, setopenEditAsset] = useState(false);
       color: "text-green-600",
       bg: "bg-green-100",
     },
+
     {
       icon: Wallet,
       title: "Platform Balance",
@@ -118,6 +119,7 @@ const [openEditAsset, setopenEditAsset] = useState(false);
       color: "text-rose-600",
       bg: "bg-rose-100",
     },
+    
       {
       icon: Users,
       title: "Total Users",
@@ -125,6 +127,13 @@ const [openEditAsset, setopenEditAsset] = useState(false);
       color: "text-indigo-600",
       bg: "bg-indigo-100",
     },
+      {
+  icon: DollarSign,
+  title: "Missed Claims",
+  value: <Price amount={stats.missedClaimAmount || 0} />,
+  color: "text-orange-600",
+  bg: "bg-orange-100",
+},
     {
       icon: TrendingUp,
       title: "Trading Deposit",
@@ -238,6 +247,7 @@ const [openEditAsset, setopenEditAsset] = useState(false);
   bg: "bg-sky-100",
   clickable: true,
 }
+
   ];
 
   return (

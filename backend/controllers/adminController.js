@@ -8,6 +8,7 @@ import InvestmentPackage from "../models/InvestmentPackage.js";
 import UserInvestment from "../models/UserInvestment.js";
 import AdminTrading from "../models/AdminTrading.js";
 import ActivityLog from "../models/ActivityLog.js";
+import UserAsset from "../models/UserAsset.js";
 
 export const Adminreward = async (req, res) => {
   try {
@@ -304,11 +305,37 @@ const finalWithdrawal=totalWithdrawals+totalManual
 const platformBalanceAgg = await User.aggregate([
   { $group: { _id: null, total: { $sum: "$balance" } } },
 ]);
+const userAssets = await UserAsset.find();
+
+let missedClaimAmount = 0;
+
+// Change this date while testing
+const today = new Date("2026-06-12");
+
+for (const asset of userAssets) {
+  const daysPassed = Math.min(
+    Math.floor(
+      (today - new Date(asset.startDate)) /
+      (1000 * 60 * 60 * 24)
+    ),
+    asset.duration
+  );
+
+  const missedDays = Math.max(
+    0,
+    daysPassed - asset.claimedDays
+  );
+
+  missedClaimAmount += missedDays * asset.profitPerDay;
+}
+
+console.log("Missed Claim Amount:", missedClaimAmount);
 const platformBalance = platformBalanceAgg[0]?.total || 0;
 // 💼 6. Admin profit = deposits - withdrawals - platformBalance  
 const adminProfit = tradingDeposit + finalDeposits - finalWithdrawal - platformBalance -totalActiveInvested;
 
     console.log(
+      missedClaimAmount,
       totalUsers,
       finalDeposits,
       finalWithdrawal,
@@ -326,7 +353,8 @@ const adminProfit = tradingDeposit + finalDeposits - finalWithdrawal - platformB
       totalInvestedBalance,
       platformBalance,
       adminProfit,
-      tradingDeposit
+      tradingDeposit,
+      missedClaimAmount
     });
   } catch (error) {
     console.error("❌ Error fetching admin stats:", error);
