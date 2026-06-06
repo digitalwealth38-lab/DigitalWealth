@@ -309,8 +309,7 @@ const userAssets = await UserAsset.find();
 
 let missedClaimAmount = 0;
 
-// Change this date while testing
-const today = new Date("2026-06-12");
+const today = new Date();
 
 for (const asset of userAssets) {
   const daysPassed = Math.min(
