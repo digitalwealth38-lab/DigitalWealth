@@ -81,7 +81,7 @@ const totalReturn = investedAmount + totalProfit;
   await logActivity(
   user._id,
   "ASSET_PURCHASE",
-  `Purchased ${quantity} unit(s) of ${asset.name} for PKR ${investedAmount}`
+  `Purchased ${quantity} unit(s) of ${asset.name} for $ ${investedAmount}`
 );
  
     // 1️⃣3️⃣ Create User Asset
