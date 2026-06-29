@@ -143,6 +143,27 @@ export const toggleWithdrawPermission = async (req, res) => {
   }
 };
 
+export const getUserAssets = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const assets = await UserAsset.find({
+      user: userId,
+    })
+      .populate("asset")
+      .sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+      assets,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
 export const Userinvestment=async (req, res) => {
   try {

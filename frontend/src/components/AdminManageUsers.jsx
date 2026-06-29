@@ -27,6 +27,9 @@ const AdminManageUsers = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [showRewardModal, setShowRewardModal] = useState(false);
 const [rewardAmount, setRewardAmount] = useState("");
+const [userAssets, setUserAssets] = useState([]);
+const [assetLoading, setAssetLoading] = useState(false);
+const [showAssets, setShowAssets] = useState(false);
 
   /* ================= FETCH USERS ================= */
   const fetchUsers = async () => {
@@ -41,7 +44,24 @@ const [rewardAmount, setRewardAmount] = useState("");
     }
     setLoading(false);
   };
+const openAssets = async (user) => {
+  setSelectedUser(user);
+  setShowAssets(true);
+  setAssetLoading(true);
 
+  try {
+    const { data } = await axiosInstance.get(
+      `/admin/user-assets/${user._id}`,
+      { withCredentials: true }
+    );
+
+    setUserAssets(data.assets || []);
+  } catch {
+    toast.error("Failed to fetch assets");
+  }
+
+  setAssetLoading(false);
+};
   /* ================= OPEN INVESTMENTS MODAL ================= */
   const openInvestments = async (user) => {
     setSelectedUser(user);
@@ -267,6 +287,12 @@ const filteredUsers = searchreferralCode
                     <button onClick={()=>openInvestments(user)} className="px-4 py-1.5 rounded-full bg-gradient-to-r from-sky-500 to-blue-600 text-white">
                       📊 Investments
                     </button>
+                    <button
+  onClick={() => openAssets(user)}
+  className="px-4 py-1.5 rounded-full bg-gradient-to-r from-emerald-500 to-green-600 text-white"
+>
+   User Assets
+</button>
 
                     <button onClick={()=>{setSelectedUser(user);setShowNetworking(true)}} className="px-4 py-1.5 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white">
                       🌐 Networking
@@ -356,7 +382,92 @@ const filteredUsers = searchreferralCode
           )}
         </Modal>
       )}
+{showAssets && (
+  <Modal
+    title="User Asset Investments"
+    onClose={() => setShowAssets(false)}
+    printable
+  >
+    <div className="mb-6 border-b pb-4 text-sm print-only">
+      <p><b>Member ID:</b> {selectedUser?.userId}</p>
+      <p><b>Name:</b> {selectedUser?.name}</p>
+      <p><b>Email:</b> {selectedUser?.email}</p>
+    </div>
 
+    {assetLoading ? (
+      <Loader className="animate-spin mx-auto" />
+    ) : userAssets.length === 0 ? (
+      <p className="text-center text-gray-500">
+        No Assets Found
+      </p>
+    ) : (
+      <div className="overflow-x-auto">
+        <table className="min-w-full border text-center">
+          <thead className="bg-gray-200">
+            <tr>
+              <th>Asset</th>
+              <th>Qty</th>
+              <th>Invested</th>
+              <th>Total Profit</th>
+              <th>Total Return</th>
+              <th>Claimed</th>
+              <th>Claimed Days</th>
+              <th>Status</th>
+              <th>Start</th>
+              <th>Expiry</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {userAssets.map((asset) => (
+              <tr key={asset._id} className="border-b">
+
+                <td>{asset.assetName}</td>
+
+                <td>{asset.quantity}</td>
+
+                <td>
+                  <Price amount={asset.investedAmount || 0} />
+                </td>
+
+                <td>
+                  <Price amount={asset.totalProfit || 0} />
+                </td>
+
+                <td>
+                  <Price amount={asset.totalReturn || 0} />
+                </td>
+
+                <td>
+                  <Price amount={asset.claimedAmount || 0} />
+                </td>
+
+                <td>
+                  {asset.claimedDays}/{asset.duration}
+                </td>
+
+                <td
+                  className={`font-semibold ${
+                    asset.active
+                      ? "text-green-600"
+                      : "text-red-600"
+                  }`}
+                >
+                  {asset.active ? "ACTIVE" : "COMPLETED"}
+                </td>
+
+                <td>{formatDate(asset.startDate)}</td>
+
+                <td>{formatDate(asset.endDate)}</td>
+
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    )}
+  </Modal>
+)}
       {/* NETWORKING MODAL */}
       {showNetworking && selectedUser && (
         <Modal title="Networking Details" onClose={()=>setShowNetworking(false)} printable>

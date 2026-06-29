@@ -1,5 +1,5 @@
 import express from "express";
-import { Adminreward, deleteInvestPackage, deletePackage, deleteUserByAdmin, getAdminStats, getAdminTrading, getRecentActivities, toggleBlockUser, toggleWithdrawPermission, updateAdminTrading, updateInvestPackage, updatePackage, Userinvestment } from "../controllers/adminController.js";
+import { Adminreward, deleteInvestPackage, deletePackage, deleteUserByAdmin, getAdminStats, getAdminTrading, getRecentActivities, getUserAssets, toggleBlockUser, toggleWithdrawPermission, updateAdminTrading, updateInvestPackage, updatePackage, Userinvestment } from "../controllers/adminController.js";
 import { restrictToLoggedinUserOnly, verifyAdmin } from "../middleware/auth.middleware.js";
 import { getAllWithdrawals, updateWithdrawalStatus } from "../controllers/withdrawalController.js";
 import { createinvestPackage, createPackage } from "../controllers/packageController.js";
@@ -20,6 +20,7 @@ router.post("/investpackage",restrictToLoggedinUserOnly, verifyAdmin, createinve
 router.put("/investpackage/:id",restrictToLoggedinUserOnly, verifyAdmin, updateInvestPackage);
 router.delete("/investpackage/:id",restrictToLoggedinUserOnly, verifyAdmin, deleteInvestPackage);
 router.get("/user-investments/:userId",restrictToLoggedinUserOnly,verifyAdmin,Userinvestment)
+router.get("/user-assets/:userId",restrictToLoggedinUserOnly,verifyAdmin,getUserAssets )
 router.delete("/delete-user/:userId",restrictToLoggedinUserOnly,verifyAdmin,deleteUserByAdmin)
 
 router.post("/give-reward/:userId",restrictToLoggedinUserOnly,verifyAdmin,Adminreward)
