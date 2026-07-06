@@ -5,38 +5,42 @@ const CurrencyToggle = () => {
   const { currency, toggleCurrency } = useCurrency();
 
   return (
-    <div className="flex items-center justify-center">
-      <div className="relative flex items-center bg-white/80 backdrop-blur-md border border-sky-200 rounded-full shadow-lg p-1">
-        
-        {/* Sliding Indicator */}
-        <motion.div
-          layout
-          transition={{ type: "spring", stiffness: 300, damping: 20 }}
-          className={`absolute top-1 bottom-1 w-16 rounded-full bg-sky-500 ${
-            currency === "USD" ? "left-1" : "left-[4.25rem]"
-          }`}
-        />
+    <div className="relative flex items-center p-[2px] rounded-full bg-white/80 backdrop-blur-2xl border border-sky-100 shadow-xl">
 
-        {/* USD Button */}
-        <button
-          onClick={() => currency !== "USD" && toggleCurrency()}
-          className={`relative z-10 w-16 py-1 text-sm font-semibold rounded-full transition-colors
-            ${currency === "USD" ? "text-white" : "text-sky-600 hover:text-sky-800"}
-          `}
-        >
-          USD $
-        </button>
+      {/* Active Indicator */}
+      <motion.div
+        layout
+        transition={{
+          type: "spring",
+          stiffness: 500,
+          damping: 35,
+        }}
+        className={`absolute h-6 w-9 rounded-full bg-gradient-to-r from-sky-500 to-cyan-400 ${
+          currency === "USD" ? "left-[2px]" : "left-[38px]"
+        }`}
+      />
 
-        {/* PKR Button */}
-        <button
-          onClick={() => currency !== "PKR" && toggleCurrency()}
-          className={`relative z-10 w-16 py-1 text-sm font-semibold rounded-full transition-colors
-            ${currency === "PKR" ? "text-white" : "text-sky-600 hover:text-sky-800"}
-          `}
-        >
-          PKR ₨
-        </button>
-      </div>
+      <button
+        onClick={() => currency !== "USD" && toggleCurrency()}
+        className={`relative z-10 w-9 h-6 text-[9px] font-semibold rounded-full transition-all duration-300 ${
+          currency === "USD"
+            ? "text-white"
+            : "text-slate-600 hover:text-sky-600"
+        }`}
+      >
+        USD
+      </button>
+
+      <button
+        onClick={() => currency !== "PKR" && toggleCurrency()}
+        className={`relative z-10 w-9 h-6 text-[9px] font-semibold rounded-full transition-all duration-300 ${
+          currency === "PKR"
+            ? "text-white"
+            : "text-slate-600 hover:text-sky-600"
+        }`}
+      >
+        PKR
+      </button>
     </div>
   );
 };

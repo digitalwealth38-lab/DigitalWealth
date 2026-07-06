@@ -47,14 +47,6 @@ const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
   return (
     
     <div>
-     <motion.div
-      drag
-      dragMomentum={false}
-      dragElastic={0.1}
-      className="fixed top-1/6 left-6 -translate-y-1/2 z-[9999] cursor-grab active:cursor-grabbing"
-    >
-      <CurrencyToggle />
-    </motion.div>
        <Routes>
         
       {/* Public Routes */}
