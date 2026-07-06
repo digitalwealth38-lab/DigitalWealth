@@ -91,9 +91,7 @@ const stats = [
   <div className="flex items-center justify-between">
     <p className="text-gray-500 text-sm">{title}</p>
 
-    {title === "Total Balance" && (
-      <CurrencyToggle />
-    )}
+    {title === "Total Balance"}
   </div>
 
   <h3 className={`text-2xl font-bold ${color} mt-1`}>

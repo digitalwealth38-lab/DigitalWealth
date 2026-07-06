@@ -26,6 +26,9 @@ import AuthLayout from './layouts/AuthLayout.jsx'
 import MainLayout from './layouts/MainLayout.jsx'
 import Assets from './components/Assets.jsx'
 import MyAssets from './components/MyAssets.jsx'
+import CurrencyToggle from "./components/CurrencyToggle";
+import { motion } from "framer-motion";
+
 
 const App = () => {
 
@@ -42,7 +45,16 @@ const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
     );
   }
   return (
+    
     <div>
+     <motion.div
+      drag
+      dragMomentum={false}
+      dragElastic={0.1}
+      className="fixed top-1/6 left-6 -translate-y-1/2 z-[9999] cursor-grab active:cursor-grabbing"
+    >
+      <CurrencyToggle />
+    </motion.div>
        <Routes>
         
       {/* Public Routes */}
