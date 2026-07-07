@@ -28,6 +28,7 @@ import Assets from './components/Assets.jsx'
 import MyAssets from './components/MyAssets.jsx'
 import CurrencyToggle from "./components/CurrencyToggle";
 import { motion } from "framer-motion";
+import AdminLayout from './layouts/AdminLayout.jsx'
 
 
 const App = () => {
@@ -94,18 +95,19 @@ const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
       <Route path="/reset-password" element={<ResetPassword />} />
 
       {/* Admin Dashboard */}
-      <Route
-        path="/admin"
-        element={
-          authUser?.isAdmin ? (
-            <Dashboardadmin />
-          ) : authUser ? (
-            <Navigate to="/dashboard" />
-          ) : (
-            <Navigate to="/" />
-          )
-        }
-      />
+  <Route
+  element={
+    authUser?.isAdmin ? (
+      <AdminLayout />
+    ) : authUser ? (
+      <Navigate to="/dashboard" />
+    ) : (
+      <Navigate to="/" />
+    )
+  }
+>
+<Route path="/admin" element={<Dashboardadmin />} />
+</Route>
 <Route
   path="/blocked"
   element={<BlockedUser />}

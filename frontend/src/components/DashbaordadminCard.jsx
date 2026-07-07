@@ -328,7 +328,7 @@ const [openEditAsset, setopenEditAsset] = useState(false);
   <div className="flex-1">
     <div className="flex items-center justify-between">
       <p className="text-gray-500 text-sm font-medium">{title}</p>
-      {title === "Total Invested" && <CurrencyToggle />}
+      {title === "Total Invested" }
     </div>
     <h3 className={`text-2xl font-bold ${color} mt-1`}>{value}</h3>
   </div>
