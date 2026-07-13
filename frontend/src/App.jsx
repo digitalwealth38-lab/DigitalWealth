@@ -29,6 +29,7 @@ import MyAssets from './components/MyAssets.jsx'
 import CurrencyToggle from "./components/CurrencyToggle";
 import { motion } from "framer-motion";
 import AdminLayout from './layouts/AdminLayout.jsx'
+import WithdrawalProofs from './components/WithdrawalProofs.jsx'
 
 
 const App = () => {
@@ -155,6 +156,10 @@ const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
       <Route
         path="/withdrawal"
         element={authUser ? <WithdrawSwitcher />: <Navigate to="/" />}
+      />
+       <Route
+        path="/withdrawal-proofs"
+        element={authUser ? <WithdrawalProofs />: <Navigate to="/" />}
       />
          <Route
         path="/referrals"

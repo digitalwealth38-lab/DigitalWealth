@@ -7,6 +7,7 @@ import {
 } from "../controllers/localWithdrawController.js";
 
 import { restrictToLoggedinUserOnly, verifyAdmin } from "../middleware/auth.middleware.js";
+import { getWithdrawalProofs } from "../controllers/adminController.js";
 
 const router = express.Router();
 
@@ -21,5 +22,6 @@ router.get("/all", restrictToLoggedinUserOnly, verifyAdmin, getAllLocalWithdrawa
 
 // ✅ Admin update status
 router.put("/:id", restrictToLoggedinUserOnly, verifyAdmin, updateLocalWithdrawStatus);
+router.get("/WithdrawalProofs", restrictToLoggedinUserOnly,getWithdrawalProofs);
 
 export default router;

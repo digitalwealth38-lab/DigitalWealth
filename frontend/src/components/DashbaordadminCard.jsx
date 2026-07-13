@@ -36,6 +36,8 @@ import AdminManualDeposits from "./Adminmanualdeposite";
 import AdminNotifications from "./AdminNotifications";
 import AdminCreateAsset from "./AdminCreateAsset";
 import AdminEditAsset from "./AdminEditAsset";
+import AdminWithdrawalProofs from "./AdminWithdrawalProofs";
+import AdminManageWithdrawalProofs from "./AdminManageWithdrawalProofs";
 
 export default function DashboardAdminCard() {
   const [stats, setStats] = useState(null);
@@ -56,6 +58,8 @@ const [openLocalDeposit, setOpenLocalDeposit] = useState(false);
 const [openNotification, setopenNotification] = useState(false);
 const [openCreateAsset, setopenCreateAsset] = useState(false);
 const [openEditAsset, setopenEditAsset] = useState(false);
+const [openWithdrawalProofs, setOpenWithdrawalProofs] = useState(false);
+const [openEditWithdrawalProofs,setOpenEditWithdrawalProofs]=useState(false);
   useEffect(() => {
     const fetchStats = async () => {
       try {
@@ -246,6 +250,22 @@ const [openEditAsset, setopenEditAsset] = useState(false);
   color: "text-sky-600",
   bg: "bg-sky-100",
   clickable: true,
+},
+{
+  icon: Wallet,
+  title: "Withdrawal Proofs",
+  value: "Manage",
+  color: "text-cyan-600",
+  bg: "bg-cyan-100",
+  clickable: true,
+},
+{
+ icon: Edit,
+ title:"Edit Withdrawal Proofs",
+ value:"Manage",
+ color:"text-cyan-600",
+ bg:"bg-cyan-100",
+ clickable:true
 }
 
   ];
@@ -312,6 +332,9 @@ const [openEditAsset, setopenEditAsset] = useState(false);
     if (title === "Notifications") setopenNotification(true);
     if (title === "Create Asset") setopenCreateAsset(true);
      if (title === "Edit Asset") setopenEditAsset(true)
+      if (title === "Withdrawal Proofs") setOpenWithdrawalProofs(true);
+     if(title==="Edit Withdrawal Proofs")
+setOpenEditWithdrawalProofs(true);
  // ✅ new // ✅ new// ✅ open trading modal
   }}
   whileHover={{
@@ -358,6 +381,7 @@ const [openEditAsset, setopenEditAsset] = useState(false);
 >
   <AdminLocalWithdrawals/>
 </Modal>
+
 <Modal
   isOpen={openNotification}
   onClose={() => setopenNotification(false)}
@@ -460,6 +484,22 @@ const [openEditAsset, setopenEditAsset] = useState(false);
   title="Edit Asset"
 >
   <AdminEditAsset/> {/* your existing AdminTrading component */}
+</Modal>
+
+<Modal
+  isOpen={openWithdrawalProofs}
+  onClose={() => setOpenWithdrawalProofs(false)}
+  title="Withdrawal Proofs"
+>
+  <AdminWithdrawalProofs />
+</Modal>
+
+<Modal
+ isOpen={openEditWithdrawalProofs}
+ onClose={()=>setOpenEditWithdrawalProofs(false)}
+ title="Manage Withdrawal Proofs"
+>
+ <AdminManageWithdrawalProofs/>
 </Modal>
     </div>
   );

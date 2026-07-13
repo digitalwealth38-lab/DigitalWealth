@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { LogOut,BriefcaseBusiness, Menu,Coins, X, LayoutDashboard, Wallet, Package, TrendingUp, ArrowLeftRight, Banknote, Users, Gift, User, Phone } from "lucide-react";
+import { LogOut,BriefcaseBusiness, Menu,Coins, X, LayoutDashboard, Wallet, Package, TrendingUp, ArrowLeftRight, Banknote, Users, Gift, User, Phone,Image } from "lucide-react";
 import { useAuthStore } from "../stores/useAuthStore";
 
 const navLinks = [
@@ -12,10 +12,17 @@ const navLinks = [
         { path: "/myasset",    label: "My Asset",       Icon:BriefcaseBusiness,           color: "bg-indigo-50 text-indigo-600" },
   { path: "/transfer",   label: "Transfer",      Icon: ArrowLeftRight,  color: "bg-orange-50 text-orange-600" },
   { path: "/withdrawal", label: "Withdrawal",    Icon: Banknote,        color: "bg-pink-50 text-pink-600" },
+  {
+  path: "/withdrawal-proofs",
+  label: "Withdrawal Proofs",
+  Icon: Image,
+  color: "bg-cyan-50 text-cyan-600",
+},
   { path: "/referrals",  label: "Referrals",     Icon: Users,           color: "bg-sky-50 text-sky-600" },
   { path: "/rewards",    label: "Rewards",       Icon: Gift,            color: "bg-amber-50 text-amber-600" },
   { path: "/profile",    label: "Profile",       Icon: User,            color: "bg-slate-50 text-slate-600" },
   { path: "/contact",    label: "Contact",       Icon: Phone,           color: "bg-teal-50 text-teal-600" },
+  
 
 ];
 

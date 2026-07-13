@@ -1,5 +1,5 @@
 import express from "express";
-import { Adminreward, deleteInvestPackage, deletePackage, deleteUserByAdmin, getAdminStats, getAdminTrading, getRecentActivities, getUserAssets, toggleBlockUser, toggleWithdrawPermission, updateAdminTrading, updateInvestPackage, updatePackage, Userinvestment } from "../controllers/adminController.js";
+import { Adminreward, createWithdrawalProof, deleteInvestPackage, deletePackage, deleteUserByAdmin, deleteWithdrawalProof, getAdminStats, getAdminTrading, getRecentActivities, getUserAssets, toggleBlockUser, toggleWithdrawPermission, updateAdminTrading, updateInvestPackage, updatePackage, updateWithdrawalProof, Userinvestment } from "../controllers/adminController.js";
 import { restrictToLoggedinUserOnly, verifyAdmin } from "../middleware/auth.middleware.js";
 import { getAllWithdrawals, updateWithdrawalStatus } from "../controllers/withdrawalController.js";
 import { createinvestPackage, createPackage } from "../controllers/packageController.js";
@@ -9,6 +9,21 @@ import { getWithdrawLimit, updateWithdrawLimit } from "../controllers/withdrawLi
 const router = express.Router();
 
 // Only admin users can access this
+router.post("/withdrawalproof", restrictToLoggedinUserOnly,verifyAdmin, createWithdrawalProof);
+
+router.put(
+  "/update/:proofId",
+  restrictToLoggedinUserOnly,
+  updateWithdrawalProof
+);
+
+router.delete(
+  "/delete/:proofId",
+  restrictToLoggedinUserOnly,
+  deleteWithdrawalProof
+);
+
+
 router.get("/stats",restrictToLoggedinUserOnly, verifyAdmin, getAdminStats);
 router.get("/withdrawals",restrictToLoggedinUserOnly, verifyAdmin, getAllWithdrawals);
 router.get("/deposits", restrictToLoggedinUserOnly, verifyAdmin, getAllDeposits);

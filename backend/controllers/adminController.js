@@ -9,6 +9,8 @@ import UserInvestment from "../models/UserInvestment.js";
 import AdminTrading from "../models/AdminTrading.js";
 import ActivityLog from "../models/ActivityLog.js";
 import UserAsset from "../models/UserAsset.js";
+import WithdrawalProof from "../models/WithdrawalProof.js";
+import cloudinary from "../lib/cloudinary.js";
 
 export const Adminreward = async (req, res) => {
   try {
@@ -488,4 +490,168 @@ export const updateAdminTrading = async (req, res) => {
   }
 };
 
+export const createWithdrawalProof = async (req, res) => {
+  try {
+    const { username, image } = req.body;
 
+    if (!username) {
+      return res.status(400).json({
+        success: false,
+        message: "Username is required",
+      });
+    }
+
+    if (!image) {
+      return res.status(400).json({
+        success: false,
+        message: "Screenshot is required",
+      });
+    }
+
+    const uploadResponse =
+      await cloudinary.uploader.upload(image, {
+        folder: "withdrawal-proofs",
+      });
+
+    const proof = await WithdrawalProof.create({
+      username,
+      image: uploadResponse.secure_url,
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "Withdrawal proof created successfully",
+      proof,
+    });
+
+  } catch (error) {
+
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+
+  }
+};
+
+export const getWithdrawalProofs = async (req, res) => {
+
+  try {
+
+    const proofs = await WithdrawalProof.find({
+      active: true,
+    }).sort({
+      createdAt: -1,
+    });
+
+    res.json({
+      success: true,
+      proofs,
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+
+  }
+
+};
+
+export const updateWithdrawalProof = async (req, res) => {
+
+  try {
+
+    const { username, image } = req.body;
+
+    const proof =
+      await WithdrawalProof.findById(
+        req.params.proofId
+      );
+
+    if (!proof) {
+      return res.status(404).json({
+        success: false,
+        message: "Withdrawal proof not found",
+      });
+    }
+
+    proof.username =
+      username || proof.username;
+
+    if (image) {
+
+      const uploadResponse =
+        await cloudinary.uploader.upload(
+          image,
+          {
+            folder:
+              "withdrawal-proofs",
+          }
+        );
+
+      proof.image =
+        uploadResponse.secure_url;
+
+    }
+
+    await proof.save();
+
+    res.status(200).json({
+      success: true,
+      message:
+        "Withdrawal proof updated successfully",
+      proof,
+    });
+
+  } catch (error) {
+
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+
+  }
+
+};
+
+export const deleteWithdrawalProof =
+  async (req, res) => {
+
+    try {
+
+      const proof =
+        await WithdrawalProof.findByIdAndDelete(
+          req.params.proofId
+        );
+
+      if (!proof) {
+        return res.status(404).json({
+          success: false,
+          message:
+            "Withdrawal proof not found",
+        });
+      }
+
+      res.status(200).json({
+        success: true,
+        message:
+          "Withdrawal proof deleted successfully",
+      });
+
+    } catch (error) {
+
+      res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+
+    }
+
+  }
