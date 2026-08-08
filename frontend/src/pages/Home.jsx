@@ -109,12 +109,13 @@ const Home = () => {
               Trust & Transparency First
             </motion.div>
             <motion.h1 variants={fadeUp} className="text-5xl md:text-7xl font-black text-gray-900 mb-8 leading-[0.95] tracking-tight">
-              Grow <span className="text-sky-600 italic">Your Wealth</span> <br /> 
+              Build  <span className="text-sky-600 italic">Your Wealth</span> <br /> 
               with Smart Investments
             </motion.h1>
             <motion.p variants={fadeUp} className="text-lg text-gray-600 mb-12 max-w-lg leading-relaxed">
-              Join thousands of users earning daily profits with safe, high-yield investment plans. Track your portfolio, invest smartly, and achieve financial freedom.
-            </motion.p>
+  Explore our investment products and digital earning opportunities,
+  with a separate rewards program featuring eligible partner offers
+  and activities.            </motion.p>
             <motion.div variants={fadeUp} className="flex flex-wrap gap-4">
                <a href="/signup" className="px-10 py-5 text-lg font-black bg-sky-600 text-white rounded-2xl shadow-2xl shadow-sky-200 hover:bg-sky-700 hover:scale-105 transition-all">Get Started</a>
              
@@ -208,15 +209,24 @@ const Home = () => {
       <Section id="Earn" className="py-32 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tighter">How You Can <span className="text-sky-600">Earn</span></h2>
-            <p className="text-gray-500 font-bold text-xs uppercase tracking-[0.2em] mt-4">Multiple streams of income</p>
+            <h2 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tighter">How You Can Grow <span className="text-sky-600">Earn</span></h2>
+          <p className="text-gray-500 font-bold text-xs uppercase tracking-[0.2em] mt-4">
+  Investment & Earning Opportunities
+</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
             {[
               { title: 'Earn Profit with Plans', desc: 'Invest in our carefully designed investment plans and earn consistent daily profits.', icon: '💹', color: 'bg-white', text: 'text-gray-900' },
               { title: 'Earn Profit with Network', desc: 'Refer others to join Digital Wealth and earn commissions from your network growth.', icon: '🌐', color: 'bg-white', text: 'text-gray-900' },
-              { title: 'Earn Profit with Crypto', desc: 'Invest in select cryptocurrencies and enjoy potential high-yield crypto profits safely.', icon: '🪙', color: 'bg-white', text: 'text-gray-900' },
+{ 
+  title: 'Earn Profit with Crypto', 
+  desc: 'Invest in select cryptocurrencies and enjoy potential high-yield crypto profits safely.', 
+  icon: '₿', 
+  color: 'bg-white', 
+  text: 'text-gray-900' 
+},           
+              
             ].map((item, i) => (
               <motion.div 
                 key={i} 
@@ -234,6 +244,38 @@ const Home = () => {
             ))}
           </div>
         </div>
+        <div className="mt-20">
+  <div className="bg-sky-50 border border-sky-100 rounded-[3rem] p-10 md:p-14">
+    <div className="max-w-3xl mx-auto text-center">
+
+      <div className="text-6xl mb-6">🎁</div>
+
+      <span className="inline-block px-4 py-2 mb-5 text-[10px] font-black
+        tracking-[0.2em] uppercase text-sky-600 bg-white rounded-full">
+        Separate Rewards Program
+      </span>
+
+      <h3 className="text-3xl md:text-4xl font-black text-gray-900 mb-5">
+        Earn Rewards Through Partner Offers
+      </h3>
+
+      <p className="text-gray-600 leading-relaxed max-w-2xl mx-auto mb-8">
+        Complete eligible surveys, offers, and partner activities to earn
+        rewards through our separate rewards program. Rewards are independent
+        of our investment products and are not investment returns.
+      </p>
+
+      <a
+        href="/signup"
+        className="inline-flex px-8 py-4 bg-sky-600 text-white
+        font-black rounded-2xl hover:bg-sky-700 transition-all"
+      >
+        Join & Explore Rewards
+      </a>
+
+    </div>
+  </div>
+</div>
       </Section>
 
       {/* Testimonials */}
@@ -281,7 +323,8 @@ const Home = () => {
               <div className="text-2xl font-black text-gray-800 tracking-tighter mb-6 uppercase">
                 DIGITAL <span className="text-sky-600">WEALTH</span>
               </div>
-              <p className="max-w-xs font-medium text-sm leading-relaxed">The most transparent daily profit platform built on trust and smart investment algorithms.</p>
+              <p className="max-w-xs font-medium text-sm leading-relaxed"> Digital Wealth provides investment products and separate digital
+  rewards opportunities through selected partner activities.</p>
             </div>
             <div>
               <h5 className="font-black text-gray-900 uppercase text-xs tracking-widest mb-6">Explore</h5>
@@ -297,6 +340,9 @@ const Home = () => {
                 <li className="hover:text-sky-600 transition cursor-pointer">Terms of Service</li>
                 <li className="hover:text-sky-600 transition cursor-pointer">Privacy Policy</li>
                 <li className="hover:text-sky-600 transition cursor-pointer">Risk Disclosure</li>
+                <li className="hover:text-sky-600 transition cursor-pointer">
+  Rewards Terms
+</li>
               </ul>
             </div>
           </div>

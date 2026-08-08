@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { LogOut,BriefcaseBusiness, Menu,Coins, X, LayoutDashboard, Wallet, Package, TrendingUp, ArrowLeftRight, Banknote, Users, Gift, User, Phone,Image } from "lucide-react";
+import { LogOut,BriefcaseBusiness, Menu,Coins, X, LayoutDashboard, Wallet, Package, TrendingUp, ArrowLeftRight, Banknote, Users, Gift, User, Phone,Image, Target } from "lucide-react";
 import { useAuthStore } from "../stores/useAuthStore";
 
 const navLinks = [
@@ -9,6 +9,12 @@ const navLinks = [
   { path: "/packages",   label: "Packages",      Icon: Package,         color: "bg-yellow-50 text-yellow-600" },
   { path: "/investment", label: "My Investment", Icon: TrendingUp,      color: "bg-purple-50 text-purple-600" },
     { path: "/asset",    label: "Asset-Based Claim Earning",       Icon:Coins,           color: "bg-emerald-50 text-emerald-600" },
+      { 
+  path: "/offers",
+  label: "Earn Offers",
+  Icon: Target,
+  color: "bg-orange-50 text-orange-600"
+},
         { path: "/myasset",    label: "My Asset",       Icon:BriefcaseBusiness,           color: "bg-indigo-50 text-indigo-600" },
   { path: "/transfer",   label: "Transfer",      Icon: ArrowLeftRight,  color: "bg-orange-50 text-orange-600" },
   { path: "/withdrawal", label: "Withdrawal",    Icon: Banknote,        color: "bg-pink-50 text-pink-600" },
@@ -20,6 +26,7 @@ const navLinks = [
 },
   { path: "/referrals",  label: "Referrals",     Icon: Users,           color: "bg-sky-50 text-sky-600" },
   { path: "/rewards",    label: "Rewards",       Icon: Gift,            color: "bg-amber-50 text-amber-600" },
+
   { path: "/profile",    label: "Profile",       Icon: User,            color: "bg-slate-50 text-slate-600" },
   { path: "/contact",    label: "Contact",       Icon: Phone,           color: "bg-teal-50 text-teal-600" },
   

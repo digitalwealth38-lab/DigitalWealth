@@ -30,6 +30,7 @@ import CurrencyToggle from "./components/CurrencyToggle";
 import { motion } from "framer-motion";
 import AdminLayout from './layouts/AdminLayout.jsx'
 import WithdrawalProofs from './components/WithdrawalProofs.jsx'
+import EarnOffers from './components/EarnOffers.jsx'
 
 
 const App = () => {
@@ -124,6 +125,12 @@ const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
  <Route element={<MainLayout />}>
 
       {/* User Dashboard */}
+
+
+       <Route
+  path="/offers"
+  element={authUser ? <EarnOffers /> : <Navigate to="/" />}
+/>
       <Route
         path="/dashboard"
         element={authUser ? <Dashboard /> : <Navigate to="/" />}
