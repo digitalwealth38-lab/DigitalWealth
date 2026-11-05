@@ -209,32 +209,34 @@ const filteredUsers = searchreferralCode
 </div>
 
 
-      {/* SEARCH */}
-     <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-4 mb-6">
-  <input
-    placeholder="Search ID"
-    onChange={(e) => setSearchId(e.target.value)}
-    className="p-3 border rounded-lg"
-  />
-  <input
-    placeholder="Search Referral Code "
-    onChange={(e) => setreferralCode(e.target.value)}
-    className="p-3 border rounded-lg"
-  />
-  <input
-    placeholder="Search Email"
-    onChange={(e) => setSearchEmail(e.target.value)}
-    className="p-3 border rounded-lg"
-  />
-</div>
+      {/* SEARCH (STICKY) */}
+      <div className="sticky top-0 z-30 bg-gray-50 py-3 mb-4">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-4">
+          <input
+            placeholder="Search ID"
+            onChange={(e) => setSearchId(e.target.value)}
+            className="p-3 border rounded-lg bg-white"
+          />
+          <input
+            placeholder="Search Referral Code "
+            onChange={(e) => setreferralCode(e.target.value)}
+            className="p-3 border rounded-lg bg-white"
+          />
+          <input
+            placeholder="Search Email"
+            onChange={(e) => setSearchEmail(e.target.value)}
+            className="p-3 border rounded-lg bg-white"
+          />
+        </div>
+      </div>
 
       {/* TABLE */}
-      <div className="max-w-7xl mx-auto bg-white rounded-xl shadow overflow-auto">
+      <div className="max-w-7xl mx-auto bg-white rounded-xl shadow overflow-auto max-h-[70vh]">
         <table className="min-w-full">
-          <thead className="bg-sky-600 text-white">
+          <thead>
             <tr>
              {["ID","Name","Email","Referral","Referred By","Balance","Invested","Earnings","Action"].map(h => (
-  <th key={h} className="p-3">{h}</th>
+  <th key={h} className="p-3 sticky top-0 z-20 bg-sky-600 text-white">{h}</th>
 ))}
 
             </tr>
