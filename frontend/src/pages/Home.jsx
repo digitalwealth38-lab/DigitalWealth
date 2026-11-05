@@ -330,7 +330,7 @@ const Home = () => {
             initial="hidden" animate="visible" variants={{
             visible: { transition: { staggerChildren: 0.2 } }
           }}>
-            <motion.div variants={fadeUp} className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-[9px] sm:text-[10px] font-black tracking-[0.2em] text-sky-700 uppercase bg-white/80 backdrop-blur border border-sky-100 rounded-full shadow-sm">
+            <motion.div variants={fadeUp} className="inline-flex max-w-full items-center gap-2 px-3 sm:px-4 py-1.5 mb-6 text-[9px] sm:text-[10px] font-black tracking-[0.12em] sm:tracking-[0.2em] whitespace-nowrap text-sky-700 uppercase bg-white/80 backdrop-blur border border-sky-100 rounded-full shadow-sm">
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75 animate-ping" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-sky-600" />
@@ -339,7 +339,7 @@ const Home = () => {
             </motion.div>
             <motion.h1 variants={fadeUp} className="text-[2.6rem] leading-[1.02] sm:text-6xl lg:text-7xl font-black text-gray-900 mb-6 sm:mb-8 sm:leading-[0.95] tracking-tight">
               Build{' '}
-              <span className="dw-shimmer text-transparent bg-clip-text bg-gradient-to-r from-sky-500 via-blue-700 to-sky-400 italic">
+              <span className="dw-shimmer inline-block pr-2 pb-1 text-transparent bg-clip-text bg-gradient-to-r from-sky-500 via-blue-700 to-sky-400 italic">
                 Your Wealth
               </span>{' '}
               <br className="hidden sm:block" />
@@ -711,11 +711,11 @@ const Home = () => {
       </Section>
 
       {/* CTA Footer Section */}
-      <Section className="relative py-20 sm:py-28 lg:py-32 bg-white overflow-hidden">
+      <Section className="relative py-12 sm:py-24 lg:py-32 bg-white overflow-hidden">
         <div className="absolute inset-0 dw-grid [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_70%)]" />
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[22rem] h-[22rem] sm:w-[34rem] sm:h-[34rem] rounded-full bg-sky-200/50 blur-3xl" />
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 text-center">
-          <h2 className="text-4xl sm:text-5xl md:text-7xl font-black text-gray-900 tracking-tighter mb-10 sm:mb-12 leading-[1.05] sm:leading-none">
+          <h2 className="text-4xl sm:text-5xl md:text-7xl font-black text-gray-900 tracking-tighter mb-8 sm:mb-12 leading-[1.05] sm:leading-none">
             Ready to Build Your{' '}
             <span className="dw-shimmer text-transparent bg-clip-text bg-gradient-to-r from-sky-500 via-blue-700 to-sky-400">Future?</span>
           </h2>
@@ -732,7 +732,7 @@ const Home = () => {
       </Section>
 
       {/* Footer */}
-      <footer className="relative py-14 sm:py-20 bg-gradient-to-b from-white to-sky-50 border-t border-sky-100 text-gray-500">
+      <footer className="relative py-10 sm:py-20 bg-gradient-to-b from-white to-sky-50 border-t border-sky-100 text-gray-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-10 sm:gap-12 mb-12 sm:mb-16">
             <div className="col-span-2">
